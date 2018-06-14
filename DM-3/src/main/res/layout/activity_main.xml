@@ -1,16 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.user.dm_3.MainActivity">
 
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#4468d4"
+        >
+        <TextView
+            android:id="@+id/tv_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主菜单"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            />
+    </LinearLayout>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="没有连接蓝牙"
+        android:textSize="@dimen/tishitextSize"
+        android:id="@+id/msg"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/lin1"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentRight="true"
+        />
+    <LinearLayout
+
+        android:id="@+id/lin2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/marginTop"
+
+        android:paddingLeft="@dimen/paddingLeft"
+        android:paddingRight="@dimen/paddingRight"
+        android:weightSum="10"
+        android:layout_below="@+id/msg"
+
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="连接蓝牙"
+            android:id="@+id/connect"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSize"
+            android:drawableLeft="@drawable/bluetooth"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置信息"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/setinfo"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/setinfo"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            android:layout_centerHorizontal="true"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始测试"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/ontest"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/test"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            android:layout_centerHorizontal="true"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="导入数据"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/importdata"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/importdata"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            android:layout_centerHorizontal="true"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="打开文件"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/openfile"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/openfile"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            android:layout_centerHorizontal="true"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="清空数据"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/cleardata"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/clear"
+            android:paddingLeft="@dimen/paddingPic"
+            android:gravity="center_vertical"
+            android:drawablePadding="10dip"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:background="@drawable/button_shape"
+            />
+        </LinearLayout>
+
 </RelativeLayout>

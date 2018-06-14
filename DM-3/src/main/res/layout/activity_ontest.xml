@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:background="#c060d5e2"
+                android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="#4468d4"
+        >
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            />
+
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/arrow_left"
+            android:layout_alignTop="@+id/titleText"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:text="New Button"
+        android:id="@+id/button"
+        android:layout_below="@+id/lin1">
+        <TextView
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="测试方式：" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="未选择"
+            android:textColor="#df131d"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/button"
+        >
+        <Button
+            android:id="@+id/startTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始测试"
+            android:background="@drawable/button_style"
+            />
+        <Button
+            android:id="@+id/stopTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="停止测试"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_style"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="返回主菜单"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_style"
+            android:id="@+id/backMain"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin3"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/lin2"
+        >
+        <TextView
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="测试状态："
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="未开始测试"
+            android:textColor="#df131d"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin4"
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/lin3"
+        >
+        <TextView
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="压力值："
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="null"
+            android:textColor="#df131d"
+            android:id="@+id/textForce"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:paddingLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="位移值："
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="null"
+            android:textColor="#df131d"
+            android:id="@+id/textDis"
+            android:layout_gravity="center_horizontal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/lin4"
+        >
+        <Button
+            android:id="@+id/dataResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="点击查看测试结果"
+            android:visibility="invisible"
+            android:clickable="false"
+            android:background="@drawable/button_style"
+
+            />
+    </LinearLayout>
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="收发信息"
+        android:id="@+id/picture"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>

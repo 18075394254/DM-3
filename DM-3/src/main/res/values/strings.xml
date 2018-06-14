@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">DM-3</string>
+    <string name="signin">登录</string>
+    <string name="regist">注册</string>
+
+    <string name="input_userName">请输入用户名</string>
+    <string name="input_passWord">请输入密码</string>
+    <string name="input_phone">请输入手机号</string>
+    <string name="register">注册</string>
+    <string name="login">登录</string>
+    <string name="import_all">正在导入...</string>
+    <string name="user">用户名：</string>
+    <string name="pwd">密码为：</string>
+    <string name="phone">手机号：</string>
+    <string name="click">点击注册</string>
+    <string name="back">返回</string>
+    <string name="remeber">记住密码</string>
+    <string name="surepwd">确认为：</string>
+    <string name="pwd2">再次输入密码</string>
+    <string name="forgotpwd">忘记密码</string>
+
+    <string name="testid">设备编号</string>
+    <string name="testtime">Time</string>
+    <string name="operator">操作员</string>
+    <string name="location">地点</string>
+    <string name="save_text">保存</string>
+    <string name="cancel_text">取消</string>
+
+    <string name="moremessage">详细信息</string>
+    <string name="allmessage">全部信息 ：</string>
+    <string name="chooseFile">选择文件夹</string>
+    <string name="backMain">返回主菜单</string>
+    <string name="pacthOpen">批量打开</string>
+    <string name="cancel">撤销    |</string>
+    <string name="Sum">共计</string>
+    <string name="delete">|  删除</string>
+    <string name="setting">设置</string>
+    <string name="next">下一条</string>
+    <string name="previous">上一条</string>
+    <string name="testResult">测试结果</string>
+    <string name="backTestView">返回测试界面</string>
+    <string name="deviceName">设备名称</string>
+    <string name="yindao">DM-3</string>
 </resources>

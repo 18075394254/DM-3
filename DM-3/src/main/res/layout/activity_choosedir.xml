@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+        <TextView
+        android:id="@+id/curdir"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:text="" android:textSize="20sp"/>
+
+    <TextView
+        android:layout_marginTop="8dp"
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/curdir"
+        android:paddingRight="10dp"
+        />
+
+
+    <ListView
+        android:id="@+id/dirlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:divider="@null"
+        android:layout_above="@+id/iconGroup"
+        android:layout_below="@+id/line"/>
+
+    <RelativeLayout
+        android:id="@+id/iconGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/topboder">
+
+
+        <ImageView
+            android:id="@+id/canceldlView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:src="@mipmap/back"
+             />
+
+        <ImageView
+            android:id="@+id/startView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@mipmap/download" />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

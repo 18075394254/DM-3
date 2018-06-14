@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/cyan"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/testid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:layout_below="@+id/lin1">
+        <TextView
+        android:id="@+id/textView1"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:text="@string/testid" />
+
+   		<EditText
+        android:id="@+id/liftid"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@color/white"
+        android:ems="10" 
+        android:singleLine="true"/>
+   
+        
+    </LinearLayout>
+
+    <LinearLayout 
+        android:id="@+id/operator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:layout_below="@+id/testid">
+        <TextView
+        android:id="@+id/textView2"
+        android:layout_width="100dp"
+            android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:text="@string/operator" />
+
+   		<EditText
+        android:id="@+id/operatorname"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+            android:background="@color/white"
+        android:ems="10" 
+        android:singleLine="true"/>
+
+    
+        
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/locLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:orientation="horizontal"
+        android:layout_below="@+id/operator">
+   		<TextView
+        android:id="@+id/loctiontext"
+        android:layout_width="100dp"
+            android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:text="@string/location" />
+
+   		<EditText
+   		    android:id="@+id/location"
+   		    android:layout_width="match_parent"
+   		    android:layout_height="35dp"
+            android:background="@color/white"
+   		    android:ems="10"
+   		    android:singleLine="true"/>
+      
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_below="@+id/locLinear">
+   		<Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/save_text"
+            android:onClick="onSave"/>
+   		 <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/cancel_text"
+            android:onClick="onCancel" />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

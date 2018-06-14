@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="40dp"
+   >
+
+    <ImageView
+        android:id="@+id/icon2"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/listview_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ListView批量删除"
+        android:layout_centerVertical="true"
+        android:textSize="22sp"
+        android:paddingLeft="5dp"
+        android:layout_toRightOf="@+id/icon2"
+        />
+    <CheckBox
+        android:id="@+id/listview_select_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/listview_tv"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+         />
+    <TextView
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignParentBottom="true"
+        />
+</RelativeLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:minHeight="50dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_gravity="center"/>
+
+
+
+    <TextView
+        android:id="@+id/file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:text="123456"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:singleLine="true" />
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+    <CheckBox
+        android:id="@+id/check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:clickable="false"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        />
+</RelativeLayout>
+</LinearLayout>
+    
+   <TextView
+       android:layout_marginTop="2dp"
+       android:layout_width="match_parent"
+       android:layout_height="1dp"
+       android:background="@color/line"
+       android:paddingLeft="10dp"
+       android:paddingRight="10dp"
+       />
+
+
+    
+</LinearLayout>

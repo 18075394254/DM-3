@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chooseFile"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvpath"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="10dp"
+        android:layout_below="@+id/lin1"
+        android:text=""
+        android:textSize="20sp"/>
+
+
+    <TextView
+        android:layout_marginTop="8dp"
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line"
+        android:layout_below="@+id/tvpath"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        />
+    <ListView
+        android:id="@+id/files"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/iconGroup"
+        android:layout_below="@+id/line"
+        android:divider="#e3e3e3"
+        android:dividerHeight="1px"
+        />
+    <RelativeLayout
+        android:id="@+id/iconGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/topboder">
+
+        <Button
+            android:id="@+id/backView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/backMain"
+             />
+
+        <Button
+            android:id="@+id/batchOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/pacthOpen" />
+
+
+    </RelativeLayout>
+    <RelativeLayout
+
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/topboder"
+        android:visibility="gone"
+        >
+        <ListView
+            android:id="@+id/main_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@color/line"
+            android:footerDividersEnabled="false"
+            android:layout_above="@+id/lay"/>
+        <LinearLayout
+            android:id="@+id/lay"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/topboder"
+            android:layout_alignParentBottom="true"
+            android:weightSum="4"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/operate_back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="返回"
+                />
+            <Button
+                android:id="@+id/operate_select"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="全选"
+
+                />
+            <Button
+                android:id="@+id/invert_select"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="反选"
+                />
+            <Button
+                android:id="@+id/operate_delete"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="刪除"
+               />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
