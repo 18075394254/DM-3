@@ -356,7 +356,7 @@ public class MainActivity extends BaseActivity {
                             // Toast.makeText(this, "远程设备发送蓝牙配对请求", Toast.LENGTH_SHORT).show();
                             //这里只需要createBond就行了
                             ClsUtils.createBond(btDev.getClass(), btDev);
-                            // ClsUtils.cancelPairingUserInput(btDev.getClass(),btDev);
+                             //ClsUtils.cancelPairingUserInput(btDev.getClass(),btDev);
                         }else if(btDev.getBondState() == BluetoothDevice.BOND_BONDED){
                             mBinder.connectd(deviceAddress, deviceName);
                             //Toast.makeText(this," ....正在连接..", Toast.LENGTH_SHORT).show();

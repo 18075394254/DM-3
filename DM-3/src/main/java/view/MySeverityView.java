@@ -38,7 +38,8 @@ public class MySeverityView extends View {
     ArrayList<Point> Accpoints = new ArrayList<>();
     private ArrayList<Float> points_x = null;
     private ArrayList<Float> points_y = null;
-    private ArrayList<Float> v_speed=new ArrayList<>();
+    private ArrayList<Float> forceData=new ArrayList<>();
+    private ArrayList<Float> disData=new ArrayList<>();
     private ArrayList<Float> mData=new ArrayList<>();
     private ArrayList<Point> RateValueY=new ArrayList<>();
     Paint paint;
@@ -47,8 +48,7 @@ public class MySeverityView extends View {
     Paint paint4;
     private Paint paint6;
     private int STEPS=12;
-    private float S=0;
-    private float allS=0;
+
     private int width=0;
     private int height=0;
     private Path path2=new Path();
@@ -56,7 +56,6 @@ public class MySeverityView extends View {
     StringBuilder sb=new StringBuilder();
     float max1=0;
     float max2=0;
-    private float Acc=0;
     private Paint paint5;
     private Float MaxAcc2;
     private Float MaxAcc1;
@@ -66,27 +65,36 @@ public class MySeverityView extends View {
 
 
     //建议添加，当在java文件中new此控件对象时，运行此构造方法
-    public MySeverityView(Context context, ArrayList<Float> pointY) {
+    //将压力数据集合和位移数据集合传递进来
+    public MySeverityView(Context context, ArrayList<Float> m_ForceDat,ArrayList<Float> m_DisData) {
         super(context);
         points_x = new ArrayList<Float>();
         points_y = new ArrayList<Float>();
 
-        if (pointY != null) {
-
-            if (pointY.size() < 400 || pointY.size() == 400){
+        //将时间轴与压力轴的数据绑定在一起
+        if (m_ForceDat != null) {
+            //根据压力数据的个数调整时间轴的长度
+            if (m_ForceDat.size() < 400 || m_ForceDat.size() == 400){
                     timeLength=1;
-                }else if(pointY.size() > 800 || pointY.size() == 800 && pointY.size() < 1200){
+                }else if(m_ForceDat.size() > 800 || m_ForceDat.size() == 800 && m_ForceDat.size() < 1200){
                     timeLength=2;
                 }else{
                     timeLength=3;
                 }
-            for (int i = 0; i < pointY.size(); i++) {
-                points.add(new Point((float) (0.025+ 0.025 * (i-1)), pointY.get(i)));
-                v_speed.add(pointY.get(i));
+            for (int i = 0; i < m_ForceDat.size(); i++) {
+                points.add(new Point((float) (0.025+ 0.025 * (i-1)), m_ForceDat.get(i)));
+                forceData.add(m_ForceDat.get(i));
             }
-        max1 = CalcMax(v_speed);
+            //max1 = CalcMax(forceData);
     }
-
+        //将时间轴与位移轴的数据绑定在一起
+        if (m_DisData != null) {
+            for (int i = 0; i < m_DisData.size(); i++) {
+                points.add(new Point((float) (0.025+ 0.025 * (i-1)), m_DisData.get(i)));
+                disData.add(m_DisData.get(i));
+            }
+           // max1 = CalcMax(disData);
+        }
 
 
     }
@@ -151,7 +159,7 @@ public class MySeverityView extends View {
 
         paint3.setColor(Color.BLACK);
         paint3.setAntiAlias(true);
-        // paint3.setStyle(Paint.Style.STROKE);
+
         paint3.setStrokeWidth(2);
         paint3.setTextSize(40);
         //设置抗锯齿效果
@@ -163,11 +171,11 @@ public class MySeverityView extends View {
 
         paint4.setColor(Color.BLACK);
         paint4.setAntiAlias(true);
-        // paint4.setStyle(Paint.Style.STROKE);
+
         paint4.setStrokeWidth(2);
         paint4.setTextSize(40);
 
-       // paint5.setColor(this.getResources().getColor(R.color.fuchsia));
+
         paint5.setColor(Color.GREEN);
         paint5.setAntiAlias(true);
         paint5.setStyle(Paint.Style.STROKE);
@@ -176,7 +184,7 @@ public class MySeverityView extends View {
 
         Resources resources = this.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
-        float density1 = dm.density;
+
         width = dm.widthPixels;
         height = dm.heightPixels;
         viewHeigth=height*9/16-height/32;
@@ -185,19 +193,7 @@ public class MySeverityView extends View {
         for(int i=0;i< 9;i++){
             canvas.drawLine(width/8-15, height/32 +viewHeigth/10 + viewHeigth/10 * i, width * 7/8+50 -15,height/32 +viewHeigth/10 + viewHeigth/10 * i,paint);
             canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,height/32,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*9/16,paint);
-            /*if(i==8){
-                //绘制标准线
-                paint.setColor(Color.GREEN);
-                paint.setStrokeWidth(3);
-                int Y=(height/32 +viewHeigth/10 + viewHeigth/10 * i);
-                canvas.drawLine(width / 8, Y, width * 7 / 8 + 50, Y, paint);
-                int Y2=height/32 +viewHeigth/10 + viewHeigth/10 * 5;
-                canvas.drawLine(width / 8, Y2, width * 7 / 8 + 50, Y2, paint);
-                paint.setTextSize(40);
-                canvas.drawText("0.2m/s",width/8+10,Y-5,paint);
-                //canvas.drawText("0.8m/s",width/8+10,Y2-5,paint);
 
-            }*/
         }
 
         //绘制矩形
@@ -215,42 +211,34 @@ public class MySeverityView extends View {
         * */
         paint.setStyle(Paint.Style.FILL);
 
-        String speed;
+        String forceValue;
+        String disValue;
         String time;
-        String weiyi;
+
         //画坐标轴上的刻度
         for(int i=0;i<=10;i++) {
-            if(i==0){
-                canvas.drawText("0",width/8-45-15,height*9/16+30,paint);
-            }else if (i > 0 &&  i < 4) {
+            if (i == 0) {
+                canvas.drawText("0", width / 8 - 45 - 15, height * 9 / 16 + 30, paint);
+            } else if(i > 0 && i < 10){
+                //时间轴坐标值
                 time = timeLength * i + "";
-                canvas.drawText(time, width/8-20 -15 + (viewWidth)/10 * i, height*9/16+30, paint);
-                speed = (float)i/10 + "";
-                canvas.drawText(speed, width / 8 - 50 -15, height / 32 + (viewHeigth) / 10 * (10 - i) + 10, paint);
-                canvas.drawText(speed, width*7/8+50+10 -15, height/32 +10+(viewHeigth) / 10 * (10 - i), paint);
-            }else if(i==4){
-                weiyi=(float)4/10+"";
-                time = timeLength * i + "";
-                canvas.drawText(time, width/8-20 -15 + (viewWidth)/10 * i, height*9/16+30, paint);
-                canvas.drawText("Speed/V",0, height/32+10+(viewHeigth) / 10 * (10 - i), paint);
-                canvas.drawText("S/m",width*7/8+50+10 -25, height/32+10, paint);
-                canvas.drawText("Time/S",width*7/8-15,height*9/16+30,paint);
-                canvas.drawText(weiyi, width*7/8+50+10 -15, height/32 +(viewHeigth)/10*(10-i)+10, paint);
-            }else if(i>4 && i<10){
-                time = timeLength * i + "";
-                speed = (float)(i-7)/2 + "";
-                weiyi=(float)i/10 + "";
-                Log.i("lol", "speed = " + speed);
-                canvas.drawText(time, width / 8 - 20 -15 + (viewWidth) / 10 * i, height*9/16+30, paint);
-                canvas.drawText(speed, width / 8 - 50 -15, height / 32 + (viewHeigth) / 10 * (10 - i) + 10, paint);
-                canvas.drawText(weiyi, width*7/8+50+10 -15, height/32 +(viewHeigth)/10*(10-i)+10, paint);
-                canvas.drawText("Acc/a",30 -15, height/32+10 , paint);
+                canvas.drawText(time, width / 8 - 20 - 15 + (viewWidth) / 10 * i, height * 9 / 16 + 30, paint);
+                //压力轴坐标值
+                forceValue = (float) i * 100 + "";
+                canvas.drawText(forceValue, width / 8 - 50 - 15, height / 32 + (viewHeigth) / 10 * (10 - i) + 10, paint);
+                //位移轴坐标值
+                disValue = i * 10 + "";
+                canvas.drawText(disValue, width * 7 / 8 + 50 + 10 - 15, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
+
+            }else{
+                canvas.drawText("Force/N", 0, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
+                canvas.drawText("S/m", width * 7 / 8 + 50 + 10 - 25, height / 32 + 10, paint);
+                canvas.drawText("Time/S", width * 7 / 8 - 15, height * 9 / 16 + 30, paint);
             }
         }
 
 
-
-        if(points != null) {
+        /*if(points != null) {
             for (int i = 0; i < points.size(); i++) {
                 points_x.add(points.get(i).getX());
                 points_y.add(points.get(i).getY());
@@ -263,7 +251,7 @@ public class MySeverityView extends View {
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
             float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY()*max1/max2)/0.1);
-            Log.i("mtag","y = "+y + "max1 = "+max1 +"max2 = "+max2);
+
             if (i==0){
                 path.moveTo(x,y);
             }else {
@@ -276,29 +264,7 @@ public class MySeverityView extends View {
         RateValueY.clear();
 
 
-        if(v_speed != null){
-            for(int i=0;i< v_speed.size();i++) {
 
-                if (i == 0) {
-                    S = 0;
-                    Acc=0;
-                } else {
-                    if (v_speed.get(i) - v_speed.get(i - 1) == 0) {
-                        S = (float) 0.1 * v_speed.get(i);
-                    } else {
-                        S = (float) (0.1 * Math.abs(v_speed.get(i) * v_speed.get(i) - v_speed.get(i - 1) * v_speed.get(i - 1))) / (2 * Math.abs(v_speed.get(i) - v_speed.get(i - 1)));
-                    }
-                    //加速度集合
-                    Acc=(float)((v_speed.get(i) - v_speed.get(i - 1))/0.1);
-                }
-                allS = allS + S;
-
-                points2.add(new Point((float) (0.1 + 0.1 * (i-1)), allS));
-
-                Accpoints.add(new Point((float) (0.1 + 0.1 * (i-1)), Acc));
-            }
-
-        }
         if(points2 != null) {
             for (int i = 0; i < points2.size(); i++) {
                 points_x.add(points2.get(i).getX());
@@ -312,11 +278,9 @@ public class MySeverityView extends View {
             for (int i = 0; i < RateValueY.size(); i++) {
                 float x = (width / 8 + (viewWidth) / 10 * RateValueY.get(i).getX()/timeLength);
                 float y = (float) (height * 9 / 16 - (viewHeigth) / 10 * RateValueY.get(i).getY() / 0.1);
-                /*if (i==0){
-                    path2.moveTo(x,y);
-                }else {*/
+
                     path2.lineTo(x, y);
-               // }
+
             }
             canvas.drawPath(path2, paint2);
         }
@@ -356,7 +320,7 @@ public class MySeverityView extends View {
         Accpoints.clear();
         points_x.clear();
         points_y.clear();
-        RateValueY.clear();
+        RateValueY.clear();*/
 
         canvas.drawLine(width / 8 + 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, (float) width / 8 + 10 + viewWidth / 5, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, paint6);
         canvas.drawText("V", (float) width / 8 + 10 + viewWidth / 5 + 20, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 + 5, paint4);
@@ -408,30 +372,26 @@ public class MySeverityView extends View {
     public void pathLine(ArrayList<Float> points_x,ArrayList<Float> points_y,Path path,int flag){
         List<Cubic> calculate_x = calculate(points_x);
         List<Cubic> calculate_y = calculate(points_y);
-       /* if (flag == 1) {
-            path.moveTo(width / 8, height * 9 / 16);
-        }else{
-            path.moveTo(width / 8, height * 9 / 16 -(viewHeigth)/10*7);
-        }*/
+
 
         for (int i = 0; i < calculate_x.size(); i++) {
             for (int j = 1; j <= STEPS; j++) {
                 float u =  j / (float) STEPS;
                 float pointx=calculate_x.get(i).eval(u);
-                float pointy=calculate_y.get(i).eval(u);
+                float m_ForceDat=calculate_y.get(i).eval(u);
                 if (flag == 1) {
-                    if (pointy < 0){
-                        pointy=0;
+                    if (m_ForceDat < 0){
+                        m_ForceDat=0;
                     }
                 }else{
 
                 }
-                mData.add(pointy);
-                RateValueY.add(new Point(pointx,pointy));
+                mData.add(m_ForceDat);
+                RateValueY.add(new Point(pointx,m_ForceDat));
             }
         }
        // path.moveTo(RateValueY.get(0).getX(), RateValueY.get(0).getY());
-        Log.i("123","allPointY = "+sb.toString());
+        Log.i("123","allm_ForceDat = "+sb.toString());
     }
 
     public Float CalcMax(ArrayList<Float> m_filterData) {

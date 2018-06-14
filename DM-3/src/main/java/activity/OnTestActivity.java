@@ -54,87 +54,78 @@ import view.MySeverityView;
  * Created by Administrator on 16-10-17.
  */
 public class OnTestActivity extends BaseActivity {
-    private Spinner spinner;
     private TextView tv_testWay;
     private TextView tv_testStatus;
     private Button startTest,stopTest,backMain,pictureShow;
     private Button dataResult;
     final String[] arrayWay = new String[] { "测试电梯门刚度" };
-    private String state=null;
     PictureDatabase pictureDB;
     SQLiteDatabase db;
     private int indexF=1;
-    private int indexS=1;
-    private int indexB=1;
     Bitmap bitmap;
-
-
-    //测试状态
-    String Force_State="Force";
-    String Speed_State="Speed";
-    String Both_State="Both";
-
-    String testWay=Force_State;
-    ArrayList<Point> pointsF=new ArrayList<>();
-    ArrayList<Point> pointsS=new ArrayList<>();
-    private ArrayList<Float> m_filterData = new ArrayList<Float>();
-    private ArrayList<Float> m_cutData = new ArrayList<Float>();
-    private ArrayList<Float> Distance = new ArrayList<Float>();
-    private ArrayList<Float> Speed = new ArrayList<Float>();
-    private ArrayList<Float> Acclerate = new ArrayList<Float>();
+    //测试压力数据的集合
+    private ArrayList<Float> m_ForceData = new ArrayList<Float>();
+    //测试位移数据的集合
+    private ArrayList<Float> m_DisData = new ArrayList<Float>();
+    
     private float fmax=0;
     private float energy=0;
     private float fKin=0;
-    private float speedAve=0;
-    private float speedMax=0;
-    private float speedAcc=0;
-    private float openTime=0;
-    private float closeTime=0;
     private boolean isConnect=true;
     private boolean isStart=false;
-    StringBuilder sb=new StringBuilder();
     String totalData = "";
     private float value=0;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 0) {
-                m_cutData.clear();
+                m_DisData.clear();
+                m_ForceData.clear();
                 String message = (String) msg.obj;
                 Log.i("wpcyy628254", "message = "+message );
+                //下位机回复A1，表示仪器接收到测试信息，开始测试
                 if (message.equals("A1") ) {
-                    state="force";
                     tv_testStatus.setText("正在测试中...");
+
+                    //表示下位机将测试的三组数据，自己设置回复A2，并通过MyApplication.getString方法获取存入的数据
                 }else if (message.equals("A2")) {
                     String msgdata = MyApplication.getString();
+                    //将数据拼接起来，当测试完成后，解析数据绘制图形
                     totalData = totalData + msgdata;
-                    Log.i("wpcyy628254", "msgdata = "+msgdata );
+                    
+                    //分隔字符串
                     String[] s = msgdata.split(",");
-                   // if (s.length == 6){
+                    //三组数据(压力，位移，压力，位移，压力，位移)
                     float a = Float.parseFloat(s[0]) / 100;
                     float b = Float.parseFloat(s[2]) / 100;
                     float c = Float.parseFloat(s[4]) / 100;
-                       float forceValue =  (a+b+c)/3;
-                    Log.i("wpcyy628254", "a = "+a +" b = "+b+" c= "+c+" forceValue"+forceValue);
+                    float forceValue =  (a+b+c)/3;
+                        //将压力平均值显示到文本中
                         textForce.setText(forceValue +"");
                         float disValue =  (Float.parseFloat(s[1]) / 100+ Float.parseFloat(s[3]) / 100+ Float.parseFloat(s[5]) / 100)/3;
-                        textDis.setText(disValue + "");
+                        //将位移平均值显示到文本中
+                         textDis.setText(disValue + "");
                    // }
+                    
+                    //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
 
                     final String[] s = totalData.split(",");
+                    //s.length - 1是为了防止最后一个""信息影响数据解析
                          for (int i = 0; i < s.length -1; i++) {
 
-
                                  value = ((Float.parseFloat(s[i]) / 100));
-                                 sb.append(s[i] + " , ");
-                                 Log.i("ggg", "value =" + value);
-                                 m_cutData.add(value);
+
+                             if (i/2 == 0) {
+                                 m_ForceData.add(value);
+                             }else{
+                                 m_DisData.add(value);
+                             }
 
                          }
-                    if(m_cutData.size() != 0){
+                    if(m_DisData.size() != 0){
 
-                        map=calculate.CalcForceMax(m_cutData);
+                        map=calculate.CalcForceMax(m_DisData);
 
                         fmax=(float)map.get("speedMax");
                         fKin=(float)map.get("MaxAcc");
@@ -145,17 +136,19 @@ public class OnTestActivity extends BaseActivity {
                         energy = 0;
                         map.clear();
                         tv_testStatus.setText("测试完成");
-                        state = null;
                         dataResult.setVisibility(View.VISIBLE);
                         dataResult.setClickable(true);
                         stopTest.setTextColor(Color.BLACK);
                     }
                     startTest.setEnabled(true);
-                    //Log.i("wyy123", "all value = " + sb.toString());
+
 
                 }
+
             }else if(msg.what==1){
                 isConnect=true;
+
+                //表示蓝牙突然断开，就关闭测试界面
             }else if(msg.what==2){
                 OnTestActivity.this.finish();
             }
@@ -236,39 +229,6 @@ public class OnTestActivity extends BaseActivity {
             dataResult.setVisibility(View.INVISIBLE);
             dataResult.setClickable(false);
             cantest = true;
-        }else if(name.equals("DM-2-2")){
-            tv_testWay.setText(arrayWay[1]);
-            final String[] arrayClear = new String[] { "测试中分式电梯门", "测试旁开式电梯门"};
-            Dialog alertDialog = new AlertDialog.Builder(this).
-                    setTitle("请选择测试的电梯门类型？").
-                    setIcon(R.mipmap.launcher)
-                    .setSingleChoiceItems(arrayClear, 0, new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(which == 0) {
-                                type = 0;
-                            }else if(which ==1){
-                                type = 1;
-                            }
-                        }
-                    }).
-                            setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                }
-                            }).
-                            setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // TODO Auto-generated method stub
-                                }
-                            }).
-                            create();
-            alertDialog.show();
-            cantest = true;
         }else{
             tv_testWay.setText(arrayWay[0]);
             cantest = false;
@@ -306,12 +266,6 @@ public class OnTestActivity extends BaseActivity {
                             textForce.setText("null");
                             textDis.setText("null");
 
-                        } else if (name.equals("DM-2-2")) {
-                            mBinder.sendMessage("A2", BluetoothState.ONTESTACTIVITY);
-                            startTest.setTextColor(Color.RED);
-                            dataResult.setVisibility(View.INVISIBLE);
-                            dataResult.setClickable(false);
-                            isStart=true;
                         }
                         startTest.setEnabled(false);
                     } else{
@@ -335,12 +289,6 @@ public class OnTestActivity extends BaseActivity {
                         stopTest.setTextColor(Color.RED);
                         tv_testStatus.setText("数据上传中...");
                         isStart=false;
-                    }else if(name.equals("DM-2-2")){
-                        mBinder.sendMessage("B2",BluetoothState.ONTESTACTIVITY);
-                        startTest.setTextColor(Color.BLACK);
-                        stopTest.setTextColor(Color.RED);
-                        tv_testStatus.setText("数据上传中...");
-                        isStart=false;
                     }
                 }else{
                     Toast.makeText(OnTestActivity.this, "还未开始测试", Toast.LENGTH_SHORT).show();
@@ -351,7 +299,7 @@ public class OnTestActivity extends BaseActivity {
         dataResult.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              /*  Intent intent = new Intent(OnTestActivity.this, ResultActivity.class);
+                Intent intent = new Intent(OnTestActivity.this, ResultActivity.class);
                 if (tv_testWay.getText().toString().equals(arrayWay[0])) {
                     String data = "Force";
                     intent.putExtra("extra_data", data);
@@ -360,7 +308,7 @@ public class OnTestActivity extends BaseActivity {
                     String data = "Speed";
                     intent.putExtra("extra_data", data);
                     startActivity(intent);
-                }*/
+                }
             }
         });
 
@@ -402,9 +350,9 @@ public class OnTestActivity extends BaseActivity {
             String name = dateStr + "-" + String.valueOf(indexF) + ".ds";
 
             //保存图片到数据库
-            MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_filterData);
+            MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
             bitmap = createViewBitmap(severityView);
-            //bitmap = getViewBitmap(forceView);
+
             Log.i("cyy628254","bitmap = "+bitmap);
             pictureDB.initDataBaseF(db, bitmap, MyApplication.FORCE, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, fmax, fKin, energy);
             // pointsF.clear();

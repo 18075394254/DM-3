@@ -42,7 +42,7 @@
         <activity android:name="activity.ChooseDirActivity"/>
         <activity android:name="activity.OnTestActivity"/>
         <activity android:name="controller.BaseActivity"/>
-
+        <activity android:name="activity.ResultActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 
