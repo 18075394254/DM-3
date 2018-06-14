@@ -1,1 +1,1 @@
-include ':DM-3'
+include ':DM-3', ':slidelibrary'
