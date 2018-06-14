@@ -238,15 +238,15 @@ public class MySeverityView extends View {
         }
 
 
-        /*if(points != null) {
+        if(points != null) {
             for (int i = 0; i < points.size(); i++) {
                 points_x.add(points.get(i).getX());
                 points_y.add(points.get(i).getY());
             }
 
             pathLine(points_x, points_y, path,1);
-            max2 = CalcMax(mData);
-            mData.clear();
+            /*max2 = CalcMax(mData);
+            mData.clear();*/
         }
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
@@ -271,7 +271,7 @@ public class MySeverityView extends View {
                 points_y.add(points2.get(i).getY());
             }
             pathLine(points_x, points_y, path2,1);
-            mData.clear();
+            //mData.clear();
         }
         path2.moveTo(width / 8-15, height * 9 / 16);
         if (RateValueY != null) {
@@ -288,39 +288,8 @@ public class MySeverityView extends View {
         points_y.clear();
         RateValueY.clear();
 
-        if(Accpoints != null) {
-            for (int i = 0; i < Accpoints.size(); i++) {
-                points_x.add(Accpoints.get(i).getX());
-                points_y.add(Accpoints.get(i).getY());
-            }
-            MaxAcc1=CalcMax(points_y);
-            min1=CalcMin(points_y);
-            Log.i("mmm", "MaxAcc1 = " + MaxAcc1 );
-            pathLine(points_x, points_y, path3, 0);
-            MaxAcc2=CalcMax(mData);
-            min2=CalcMin(mData);
-            Log.i("mmm", "MaxAcc2 = " + MaxAcc2 );
-            mData.clear();
-
-        }
-        if (RateValueY != null) {
-            for (int i = 0; i < RateValueY.size(); i++) {
-                float x = (width / 8-15 + (viewWidth) / 10 * RateValueY.get(i).getX()/timeLength);
-                float y = (float)(height * 9 / 16 -(viewHeigth)/10*7 - (viewHeigth) / 10 * RateValueY.get(i).getY()/0.5*((MaxAcc1-min1)/(MaxAcc2-min2)));
-                if (i==0){
-                    path3.moveTo(x,y);
-                }else {
-                    path3.lineTo(x, y);
-                }
-            }
-            canvas.drawPath(path3, paint5);
-        }
         points.clear();
         points2.clear();
-        Accpoints.clear();
-        points_x.clear();
-        points_y.clear();
-        RateValueY.clear();*/
 
         canvas.drawLine(width / 8 + 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, (float) width / 8 + 10 + viewWidth / 5, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, paint6);
         canvas.drawText("V", (float) width / 8 + 10 + viewWidth / 5 + 20, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 + 5, paint4);
