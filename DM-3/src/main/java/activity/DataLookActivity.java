@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -173,7 +174,29 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         }
     }
 
-    public class MyViewPagerAdapter extends FragmentPagerAdapter {
+    public class MyViewPagerAdapter extends FragmentStatePagerAdapter{
+
+        public MyViewPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+
+            return super.instantiateItem(container, position);
+        }
+    }
+   /* public class MyViewPagerAdapter extends FragmentPagerAdapter {
         public MyViewPagerAdapter(FragmentManager fm) {
             super(fm);
             // TODO Auto-generated constructor stub
@@ -206,10 +229,10 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
             return PagerAdapter.POSITION_NONE;
         }
 
-        /**
+        *//**
          * 释放图片资源的方法
          * @param imageView
-         */
+         *//*
         public void releaseImageViewResouce(ImageView imageView) {
             if (imageView == null) return;
             Drawable drawable = imageView.getDrawable();
@@ -223,6 +246,6 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
             }
             System.gc();
         }
-    }
+    }*/
 
 }

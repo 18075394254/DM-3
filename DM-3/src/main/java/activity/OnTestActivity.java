@@ -110,7 +110,7 @@ public class OnTestActivity extends BaseActivity {
                     //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
 
-                    final String[] s = totalData.split(",");
+                    String[] s = totalData.split(",");
                     Log.i("points.size ", "s.length = " + s.length);
                     //s.length - 1是为了防止最后一个""信息影响数据解析
                          for (int i = 0; i < s.length -1; i++) {
@@ -132,6 +132,7 @@ public class OnTestActivity extends BaseActivity {
                         fKin=(float)map.get("MaxAcc");
                         energy=(float)map.get("MinAcc");
                         onSave();
+                        totalData = "";
                         fmax = 0;
                         fKin=0;
                         energy = 0;

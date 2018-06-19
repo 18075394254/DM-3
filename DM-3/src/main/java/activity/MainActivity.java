@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (isConnect) {
-
+                    mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
                 } else {
                     Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
                 }

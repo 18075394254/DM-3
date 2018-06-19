@@ -74,6 +74,19 @@ public class DataFragment extends Fragment{
 
     }
 
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+       /* outState.putString("data", mData + "_save");*/
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +98,7 @@ public class DataFragment extends Fragment{
 
         pictureDB = new PictureDatabase(getContext());
         db = pictureDB.getWritableDatabase();
+
         view=inflater.inflate(R.layout.dataitem, container, false);
         imageView=(ImageView)view.findViewById(R.id.pinchImageView);
         textFmax=(TextView)view.findViewById(R.id.open_forceMax);
