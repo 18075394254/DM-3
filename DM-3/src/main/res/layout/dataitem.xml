@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootslayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:background="#303330"
+        >
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/arrow_left"/>
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="15"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:paddingLeft="10dp"
+            android:textSize="25sp" />
+        <!--<ImageView
+            android:id="@+id/deleteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@mipmap/delete"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lin2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+        android:layout_below="@+id/lin1"
+        >
+
+            <TextView
+                android:id="@+id/open_forceMax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#df131d"
+                android:textSize="20sp"
+                />
+            <TextView
+                android:id="@+id/open_forceKin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#df131d"
+                android:textSize="20sp"
+                android:paddingLeft="20dp"
+                />
+
+    </LinearLayout>
+    <HorizontalScrollView
+        android:id="@+id/lin3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lin2">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="20dp"
+
+        >
+        <TextView
+            android:id="@+id/open_energy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#df131d"
+            android:textSize="20sp"
+            />
+        <TextView
+            android:id="@+id/open_MinAcc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#df131d"
+            android:textSize="20sp"
+            android:paddingLeft="20dp"
+            />
+
+    </LinearLayout>
+    </HorizontalScrollView>
+    <LinearLayout
+        android:id="@+id/lin4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:weightSum="3"
+        android:layout_below="@+id/lin3"
+        >
+        <Button
+            android:id="@+id/previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/previous"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/moremessage"
+            android:id="@+id/allmessage"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#534a4a"
+        android:layout_below="@+id/lin4"
+        />
+    <view.PinchImageView
+        android:id="@+id/pinchImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/ic_launcher"
+        android:layout_below="@+id/tv">
+    </view.PinchImageView>
+
+
+
+</RelativeLayout>
