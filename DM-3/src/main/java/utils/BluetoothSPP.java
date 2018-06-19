@@ -254,7 +254,8 @@ public class BluetoothSPP {
 
     public void connect(String address,String deviceName) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
-        if (deviceName.contains("DM-2-1")) {
+        mChatService.connect(device);
+       /* if (deviceName.contains("DM-2-1")) {
 
             mChatService.connect(device);
 
@@ -264,7 +265,7 @@ public class BluetoothSPP {
         } else if (deviceName.contains("DM-2-2")) {
 
             mChatService.connect(device);
-        }
+        }*/
     }
 
 

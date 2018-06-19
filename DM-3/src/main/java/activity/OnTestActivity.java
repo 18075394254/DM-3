@@ -96,13 +96,13 @@ public class OnTestActivity extends BaseActivity {
                     //分隔字符串
                     String[] s = msgdata.split(",");
                     //三组数据(压力，位移，压力，位移，压力，位移)
-                    float a = Float.parseFloat(s[0]) / 100;
-                    float b = Float.parseFloat(s[2]) / 100;
-                    float c = Float.parseFloat(s[4]) / 100;
+                    float a = Float.parseFloat(s[0]) /*/ 100*/;
+                    float b = Float.parseFloat(s[2]) /*/ 100*/;
+                    float c = Float.parseFloat(s[4]) /*/ 100*/;
                     float forceValue =  (a+b+c)/3;
                         //将压力平均值显示到文本中
                         textForce.setText(forceValue +"");
-                        float disValue =  (Float.parseFloat(s[1]) / 100+ Float.parseFloat(s[3]) / 100+ Float.parseFloat(s[5]) / 100)/3;
+                        float disValue =  (Float.parseFloat(s[1]) /*/ 100*/+ Float.parseFloat(s[3]) /*/ 100*/+ Float.parseFloat(s[5]) /*/ 100*/)/3;
                         //将位移平均值显示到文本中
                          textDis.setText(disValue + "");
                    // }
@@ -111,12 +111,13 @@ public class OnTestActivity extends BaseActivity {
                 }else if(message.equals("B1")) {
 
                     final String[] s = totalData.split(",");
+                    Log.i("points.size ", "s.length = " + s.length);
                     //s.length - 1是为了防止最后一个""信息影响数据解析
                          for (int i = 0; i < s.length -1; i++) {
 
-                                 value = ((Float.parseFloat(s[i]) / 100));
+                                 value = ((Float.parseFloat(s[i]) /*/ 100*/));
 
-                             if (i/2 == 0) {
+                             if (i%2 == 0) {
                                  m_ForceData.add(value);
                              }else{
                                  m_DisData.add(value);
@@ -178,12 +179,6 @@ public class OnTestActivity extends BaseActivity {
     private boolean cantest=true;
     Calculate calculate=new Calculate();
     HashMap map=new HashMap();
-    private float S=0;
-    private float Acc=0;
-    private float allS=0;
-    private float MaxAcc=0;
-    private float MinAcc=0;
-    private int type;
     private ImageView backimage;
     private TextView textForce;
     private TextView textDis;

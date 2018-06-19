@@ -32,6 +32,7 @@ import java.util.List;
 import adapter.Adapter;
 import controller.MyApplication;
 import controller.PictureDatabase;
+import fragment.DataFragment;
 import model.ItemBean;
 
 
@@ -56,8 +57,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
     private static String m_lastPath = "";
     private String m_openPath = null;
 
-    ArrayList<String> listDf = new ArrayList<>();
-    ArrayList<String> listDv = new ArrayList<>();
+    ArrayList<String> listDs = new ArrayList<>();
     private RelativeLayout layout2;
     private RelativeLayout layout;
     private Adapter adapter;
@@ -198,14 +198,14 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                             } else {
                                 strExt = fileName+" 1 ";
                             }
-                            if (!strExt.equals("df") && !strExt.equals("dv")) {
-                                Toast.makeText(OpenAllActivity.this, "不是电梯门综合检测系统文件！", Toast.LENGTH_SHORT).show();
+                            if (!strExt.equals("ds")) {
+                                Toast.makeText(OpenAllActivity.this, "不是电梯门刚度测试文件！", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
                             //传递需要打开的文件名给MainActivity;
                            // Intent intent = new Intent(OpenAllActivity.this, OpenPictureActivity.class);
-                          /*  Intent intent = new Intent(OpenAllActivity.this, Ceshi2Activity.class);
+                            Intent intent = new Intent(OpenAllActivity.this, DataLookActivity.class);
                             String mPath = curdir.getAbsolutePath();
                             m_lastPath = mPath;
 
@@ -215,7 +215,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                             intent.putExtra("filename", fileName);
                             intent.putExtra("position", position - 1);
                             //startActivity(intent);
-                            startActivityForResult(intent, 0x01);*/
+                            startActivityForResult(intent, 0x01);
                         } else {
                             // 获取用户点击的文件夹 下的所有文件
                             File[] tem = currentFiles[position - 1].listFiles();
@@ -242,8 +242,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
         batchOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listDf.clear();
-                listDv.clear();
+                listDs.clear();
                 batchOpen.setTextColor(Color.RED);
                 m_openPath = pathText.getText().toString();
                 File dirfile = new File(m_openPath);
@@ -264,21 +263,19 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                             }
                             Log.i("cyy123", "filename=" + filename);
                             Log.i("cyy123", "str=" + str);
-                            if (str.equals("df")) {
-                                listDf.add(filename);
-                            } else if (str.equals("dv")) {
-                                listDv.add(filename);
-                            }
+                            if (str.equals("ds")) {
+                                listDs.add(filename);
+                            } 
                         }
                     }
-                    if (listDf.size() == 0 && listDv.size() == 0) {
+                    if (listDs.size() == 0) {
                         batchOpen.setTextColor(Color.BLACK);
                         Toast.makeText(OpenAllActivity.this, "该文件夹下没有电梯门综合检测系统文件", Toast.LENGTH_SHORT).show();
                     } else {
                         /*Intent intent = new Intent(OpenAllActivity.this, PacthOpenActivity.class);
                         Bundle bundle = new Bundle();
-                        bundle.putStringArrayList("listDf", listDf);
-                        bundle.putInt("listDf.size()", listDf.size());
+                        bundle.putStringArrayList("listDs", listDs);
+                        bundle.putInt("listDs.size()", listDs.size());
                         bundle.putStringArrayList("listDv", listDv);
                         bundle.putInt("listDv.size()", listDv.size());
                         intent.putExtras(bundle);
@@ -395,19 +392,17 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                             count1++;
                                         }
 
-                                    } else if (!str.equals("df") && !str.equals("dv")) {
+                                    } else if (!str.equals("ds")) {
                                         if (count2 == 1) {
-                                            Toast.makeText(OpenAllActivity.this, "不能删除DM-2以外的文件", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(OpenAllActivity.this, "不能删除DM-3以外的文件", Toast.LENGTH_SHORT).show();
                                             count2++;
                                         }
 
                                     } else {
                                         dirfile.delete();
                                         dataList.remove(j);
-                                        if (str.equals("df")) {
+                                        if (str.equals("ds")) {
                                             pictureDB.delete(db, MyApplication.FORCE, filename);
-                                        } else if (str.equals("dv")) {
-                                            pictureDB.delete(db, MyApplication.SPEED, filename);
                                         }
 
                                     }

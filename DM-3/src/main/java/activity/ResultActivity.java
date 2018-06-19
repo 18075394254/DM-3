@@ -55,7 +55,7 @@ public class ResultActivity extends BaseActivity {
         Log.i("wp123","data = " + data);
 
         if(data.equals(MyApplication.FORCE)) {
-                strExt="df";
+                strExt="ds";
             if (pd.getLastBitmap(sd, MyApplication.FORCE) != null) {
                 imageView.setImageBitmap(pd.getLastBitmap(sd, MyApplication.FORCE));
             }

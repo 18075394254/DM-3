@@ -43,6 +43,8 @@
         <activity android:name="activity.OnTestActivity"/>
         <activity android:name="controller.BaseActivity"/>
         <activity android:name="activity.ResultActivity"/>
+        <activity android:name="activity.DataLookActivity"/>
+        <activity android:name="activity.MoreMessageActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 

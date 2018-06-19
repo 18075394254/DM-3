@@ -94,13 +94,16 @@ public class MainActivity extends BaseActivity {
     private Handler mhandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
+            //蓝牙连接完成
             if (msg.what == 1){
                 blueToothMsg.setText((String)msg.obj);
                 isConnect=true;
+                //蓝牙连接失败
             }else if(msg.what==2){
                 blueToothMsg.setText((String)msg.obj);
                 mBinder.closeConnect();
                 isConnect=false;
+                //蓝牙断开连接
             }else if(msg.what ==3){
                 blueToothMsg.setText((String)msg.obj);
                 isConnect=false;
@@ -145,12 +148,12 @@ public class MainActivity extends BaseActivity {
 
 
         // 注册Receiver来获取蓝牙设备相关的结果
-        IntentFilter intent = new IntentFilter();
+      /*  IntentFilter intent = new IntentFilter();
         intent.addAction(BluetoothDevice.ACTION_FOUND);// 用BroadcastReceiver来取得搜索结果
         intent.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         intent.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         intent.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(searchDevices, intent);
+        registerReceiver(searchDevices, intent);*/
 
         //按钮的监听
         onClick();
@@ -352,15 +355,16 @@ public class MainActivity extends BaseActivity {
                     BluetoothDevice btDev = btAdapt.getRemoteDevice(deviceAddress);
                     try {
                         Boolean returnValue = false;
-                        if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
+                        mBinder.connectd(deviceAddress, deviceName);
+                     /*   if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
                             // Toast.makeText(this, "远程设备发送蓝牙配对请求", Toast.LENGTH_SHORT).show();
                             //这里只需要createBond就行了
                             ClsUtils.createBond(btDev.getClass(), btDev);
-                             //ClsUtils.cancelPairingUserInput(btDev.getClass(),btDev);
+
                         }else if(btDev.getBondState() == BluetoothDevice.BOND_BONDED){
                             mBinder.connectd(deviceAddress, deviceName);
                             //Toast.makeText(this," ....正在连接..", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
