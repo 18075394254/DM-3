@@ -374,11 +374,7 @@ public class OnTestActivity extends BaseActivity {
         Bitmap bitmap = Bitmap.createBitmap(width, height,
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
-        Log.i("cyy628254", "制作图片前 = " + dateStr);
         v.draw(canvas);
-        String dateStr2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
-        Log.i("cyy628254", "制作图片后 = " + dateStr2);
         return bitmap;
     }
 

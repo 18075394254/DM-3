@@ -92,13 +92,13 @@ public class ChooseDirActivity extends BaseActivity {
 		startView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				/*m_savaPath = pathText.getText().toString();
-				Intent intent = new Intent(ChooseDirAvt.this,ImportAllActivity.class);
+				m_savaPath = pathText.getText().toString();
+				Intent intent = new Intent(ChooseDirActivity.this,ImportAllActivity.class);
 				//Bundle newbundle = new Bundle();
 				intent.putExtra("path", m_savaPath);
 				intent.putExtra("name", name);
 				startActivity(intent);
-				m_savaPath=null;*/
+				m_savaPath=null;
 
 			}
 		});
