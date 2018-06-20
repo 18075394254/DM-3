@@ -276,8 +276,6 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("listDs", listDs);
                         bundle.putInt("listDs.size()", listDs.size());
-                        bundle.putStringArrayList("listDv", listDv);
-                        bundle.putInt("listDv.size()", listDv.size());
                         intent.putExtras(bundle);
                         startActivity(intent);*/
                     }
