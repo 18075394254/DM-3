@@ -23,7 +23,6 @@ public class MyApplication extends Application{
     private static Context context;
     public static String FORCE="Force";
     public static String SPEED="Speed";
-    public static String BOTH="Both";
     public static String alldata;
     UserDatabase helper;
     PictureDatabase pdb;

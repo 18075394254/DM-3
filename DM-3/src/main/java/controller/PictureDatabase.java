@@ -66,25 +66,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
 
             + "closeTime real)";
 
-    public static final String CREATE_BOTH = "create table Both ("
 
-            + "id integer primary key autoincrement, "
-
-            + "liftid text, "
-
-            + "operator text, "
-
-            + "location text, "
-
-            + "name text, "
-
-            + "picture blob, "
-
-            + "fmax real, "
-
-            + "fkin real, "
-
-            + "energy real)";
 
     //数据库的字段
     public static class PictureColumns implements BaseColumns {
@@ -94,7 +76,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
     private Context mContext;
 
     //数据库名
-    private static final String DATABASE_NAME = "DM--2.db";
+    private static final String DATABASE_NAME = "DM--3.db";
     //数据库版本号
     private static final int DATABASE_Version = 1;
 
@@ -111,10 +93,10 @@ public class PictureDatabase extends SQLiteOpenHelper {
 
         db.execSQL(CREATE_FORCE);
         db.execSQL(CREATE_SPEED);
-        db.execSQL(CREATE_BOTH);
+
          Toast.makeText(mContext, "表创建成功", Toast.LENGTH_SHORT).show();
         String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        File file = new File(sdpath + "/" + "DM-2");
+        File file = new File(sdpath + "/" + "DM-3");
         if (file.exists()) {
             DeleteFile(file);
             //Toast.makeText(mContext, "删除DM-2成功", Toast.LENGTH_SHORT).show();
@@ -199,7 +181,6 @@ public class PictureDatabase extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.FORCE);
         db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.SPEED);
-        db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.BOTH);
         onCreate(db);
     }
 
