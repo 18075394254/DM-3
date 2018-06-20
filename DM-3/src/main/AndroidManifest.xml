@@ -45,6 +45,7 @@
         <activity android:name="activity.ResultActivity"/>
         <activity android:name="activity.DataLookActivity"/>
         <activity android:name="activity.MoreMessageActivity"/>
+        <activity android:name="activity.ImportAllActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 
