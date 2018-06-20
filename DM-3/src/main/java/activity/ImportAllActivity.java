@@ -263,13 +263,13 @@ public class ImportAllActivity extends BaseActivity{
         daoru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (name.equals("DM-2-1")) {
+               // if (name.equals("DM-2-1")) {
                     daoru.setTextColor(Color.RED);
                     mBinder.sendMessage("D1", BluetoothState.IMPORTALLACTIVITY);
                     Log.i("mtag", "发送D1的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                     biaoti.setText("正在导入，请稍等...");
                     progressValue.setText("正在接收数据...");
-                }
+               // }
 
             }
         });
@@ -312,7 +312,7 @@ public class ImportAllActivity extends BaseActivity{
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String dateStr = formatter.format(curDate);
         File newfile=null;
-        if (name.equals("DM-2-1")) {
+       // if (name.equals("DM-2-1")) {
             String name = dateStr + "-" + i + ".ds";
             String path = savepath + "/" + name;
             newfile = new File(path);
@@ -325,7 +325,7 @@ public class ImportAllActivity extends BaseActivity{
             bitmap = createViewBitmap(forceView);
             pictureDB.initDataBaseF(db, bitmap, MyApplication.FORCE, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, fmax, fKin, energy);
             map.clear();
-        }
+       // }
         fmax = 0;
         fKin=0;
         energy = 0;

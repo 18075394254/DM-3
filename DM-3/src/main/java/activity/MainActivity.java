@@ -349,7 +349,7 @@ public class MainActivity extends BaseActivity {
                 //得到蓝牙的名称
                 deviceName = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_NAME);
                 //判断是不是目标蓝牙，是的话就配对连接，不是就提示
-                if (deviceName.contains("DM-2-1") || deviceName.contains("DM-2-2")) {
+               // if (deviceName.contains("DM-3") || deviceName.contains("DM-3")) {
                     // mBinder.connectd(deviceAddress, deviceName);
                     BluetoothAdapter btAdapt = BluetoothAdapter.getDefaultAdapter();
                     BluetoothDevice btDev = btAdapt.getRemoteDevice(deviceAddress);
@@ -368,9 +368,9 @@ public class MainActivity extends BaseActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                } else {
+               /* } else {
                     Toast.makeText(this, "连接的不是测试仪器的蓝牙，请重新选择！", Toast.LENGTH_SHORT).show();
-                }
+                }*/
             }
 
 

@@ -220,15 +220,15 @@ public class OnTestActivity extends BaseActivity {
         name=intent.getStringExtra("name");
 
 
-        if (name.equals("DM-2-1")){
+       // if (name.equals("DM-2-1")){
             tv_testWay.setText(arrayWay[0]);
             dataResult.setVisibility(View.INVISIBLE);
             dataResult.setClickable(false);
             cantest = true;
-        }else{
+      /*  }else{
             tv_testWay.setText(arrayWay[0]);
             cantest = false;
-        }
+        }*/
 
         receiver = new MyReceiver();
         IntentFilter filter=new IntentFilter();
@@ -249,7 +249,7 @@ public class OnTestActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isConnect) {
                     if (cantest) {
-                        if (name.equals("DM-2-1")) {
+                       // if (name.equals("DM-2-1")) {
                             mBinder.sendMessage("A1", BluetoothState.ONTESTACTIVITY);
                             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             Date curDate = new Date(System.currentTimeMillis());//获取当前时间
@@ -264,9 +264,9 @@ public class OnTestActivity extends BaseActivity {
 
                         }
                         startTest.setEnabled(false);
-                    } else{
+                    /*} else{
                         Toast.makeText(OnTestActivity.this, "连接的不是所测试的蓝牙设备，请重新连接设备", Toast.LENGTH_SHORT).show();
-                    }
+                    }*/
 
                 } else {
                     Toast.makeText(OnTestActivity.this, "未连接蓝牙设备", Toast.LENGTH_SHORT).show();
