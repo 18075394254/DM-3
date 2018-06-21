@@ -15,6 +15,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -29,7 +30,7 @@ import utils.MyService;
  */
 public class DecForceActivity extends BaseActivity {
     private Button btn_decForceZero,btn_decFuZai;
-
+    private ImageView backimage;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -64,6 +65,7 @@ public class DecForceActivity extends BaseActivity {
     private Intent bindIntent;
     private MyReceiver receiver;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,14 @@ public class DecForceActivity extends BaseActivity {
             public void onClick(View v) {
                 mBinder.sendMessage("E2", BluetoothState.DECFORCEACTIVITY);
                 btn_decFuZai.setTextColor(Color.RED);
+            }
+        });
+
+        backimage= (ImageView) findViewById(R.id.back);
+        backimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

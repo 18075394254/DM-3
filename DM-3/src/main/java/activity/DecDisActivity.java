@@ -15,6 +15,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,8 @@ import utils.MyService;
 public class DecDisActivity extends BaseActivity {
     private Button btn_decDisZero,btn_decDisFuZai,btn_resetDisFuZai;
     private TextView textDisValue;
+
+    private ImageView backimage;
     String string = "当前位移量：";
     //表示位移量
     private int disValue =0;
@@ -73,12 +76,13 @@ public class DecDisActivity extends BaseActivity {
     private Intent bindIntent;
     private MyReceiver receiver;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
-        setContentView(R.layout.activity_decforce);
+        setContentView(R.layout.activity_decdis);
         bindIntent = new Intent(this, MyService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
@@ -101,7 +105,7 @@ public class DecDisActivity extends BaseActivity {
             }
         });
 
-        btn_decDisFuZai=getView(R.id.btn_decFuZai);
+        btn_decDisFuZai=getView(R.id.btn_decDisFuZai);
         btn_decDisFuZai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,12 +116,20 @@ public class DecDisActivity extends BaseActivity {
         });
 
 
-        btn_resetDisFuZai=getView(R.id.btn_decFuZai);
+        btn_resetDisFuZai=getView(R.id.btn_resetDisFuzai);
         btn_resetDisFuZai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mBinder.sendMessage("F3", BluetoothState.DECFORCEACTIVITY);
                 btn_resetDisFuZai.setTextColor(Color.RED);
+            }
+        });
+
+        backimage= (ImageView) findViewById(R.id.back);
+        backimage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
             }
         });
     }
