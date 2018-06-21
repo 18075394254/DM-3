@@ -49,6 +49,7 @@
         <activity android:name="activity.PacthOpenActivity"/>
         <activity android:name="activity.DeclareActivity"/>
         <activity android:name="activity.DecForceActivity"/>
+        <activity android:name="activity.DecDisActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 
