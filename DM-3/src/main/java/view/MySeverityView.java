@@ -193,7 +193,19 @@ public class MySeverityView extends View {
         for(int i=0;i< 9;i++){
             canvas.drawLine(width/8-15, height/32 +viewHeigth/10 + viewHeigth/10 * i, width * 7/8+50 -15,height/32 +viewHeigth/10 + viewHeigth/10 * i,paint);
             canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,height/32,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*9/16,paint);
+        if(i==7){
+                //绘制标准线
+                paint.setColor(Color.GREEN);
+                paint.setStrokeWidth(3);
+                int Y=(height/32 +viewHeigth/10 + viewHeigth/10 * i);
+                canvas.drawLine(width / 8, Y, width * 7 / 8 + 50, Y, paint);
+               /* int Y2=height/32 +viewHeigth/10 + viewHeigth/10 * 5;
+                canvas.drawLine(width / 8, Y2, width * 7 / 8 + 50, Y2, paint);*/
+                paint.setTextSize(40);
+                canvas.drawText("300/N",width/8+10,Y-5,paint);
+                //canvas.drawText("0.8m/s",width/8+10,Y2-5,paint);
 
+            }
         }
 
         //绘制矩形

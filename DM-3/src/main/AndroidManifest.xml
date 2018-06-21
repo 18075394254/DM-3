@@ -47,6 +47,8 @@
         <activity android:name="activity.MoreMessageActivity"/>
         <activity android:name="activity.ImportAllActivity"/>
         <activity android:name="activity.PacthOpenActivity"/>
+        <activity android:name="activity.DeclareActivity"/>
+        <activity android:name="activity.DecForceActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 

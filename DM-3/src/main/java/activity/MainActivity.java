@@ -256,7 +256,12 @@ public class MainActivity extends BaseActivity {
         declare_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(MainActivity.this,DeclareActivity.class));
+                if (isConnect) {
+                    startActivity(new Intent(MainActivity.this, DeclareActivity.class));
+                }else{
+                    Toast.makeText(MainActivity.this, "蓝牙未连接", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
         ArrayList<String> list=new ArrayList<>();

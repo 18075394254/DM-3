@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:id="@+id/lin1"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标定位移"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textForce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_decDisZero"
+        android:text="零点标定："
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/lin1"
+        android:layout_marginTop="20dp"
+        />
+    <Button
+        android:id="@+id/btn_decDisZero"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="位移零点标定"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/button_style"
+
+        />
+    <TextView
+        android:id="@+id/textFuzai"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="负载标定："
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/btn_decDisZero"
+        android:layout_marginTop="20dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="加1mm位移"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/btn_decDisFuZai"
+        android:layout_below="@+id/textFuzai"
+        android:background="@drawable/button_style"
+        />
+    <TextView
+        android:id="@+id/disValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="当前位移量：null"
+        android:textSize="20sp"
+        android:layout_marginLeft="20dp"
+        android:layout_below="@+id/btn_decDisZero"
+        android:layout_marginTop="20dp"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="复位负载标定"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:id="@+id/btn_resetDisFuzai"
+        android:layout_below="@+id/textFuzai"
+        android:background="@drawable/button_style"
+        />
+
+</LinearLayout>
