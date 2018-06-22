@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.example.user.dm_3.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import controller.BaseActivity;
@@ -290,7 +292,8 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case 2:
-                       // startActivity(new Intent(MainActivity.this,UseExplainActivity.class));
+                        //startActivity(getPdfFileIntent(new File("file:///android_asset/DM-3蓝牙通讯协议.pdf")));
+                        startActivity(new Intent(MainActivity.this,UserExplainActivity.class));
                         break;
                     case 3:
                         //startActivity(new Intent(MainActivity.this,DeviceDetailsActivity.class));
@@ -329,6 +332,16 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+    }
+    //android获取一个用于打开PDF文件的intent
+    public static Intent getPdfFileIntent(File file)
+    {
+        Intent intent = new Intent("android.intent.action.VIEW");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Uri uri = Uri.fromFile(file);
+        intent.setDataAndType(uri, "application/pdf");
+        return intent;
     }
     public void onStart() {
         super.onStart();
