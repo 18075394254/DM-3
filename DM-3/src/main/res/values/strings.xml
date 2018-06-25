@@ -41,4 +41,8 @@
     <string name="backTestView">返回测试界面</string>
     <string name="deviceName">设备名称</string>
     <string name="yindao">DM-3</string>
+    <string name="kongzai">空载标定:</string>
+    <string name="fuzai50N">50N负载标定:</string>
+    <string name="fuzai100N">100N负载标定:</string>
+
 </resources>

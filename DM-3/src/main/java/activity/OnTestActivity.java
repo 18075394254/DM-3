@@ -35,6 +35,7 @@ import com.example.user.dm_3.R;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -96,26 +97,33 @@ public class OnTestActivity extends BaseActivity {
                     //分隔字符串
                     String[] s = msgdata.split(",");
                     //三组数据(压力，位移，压力，位移，压力，位移)
-                    float a = Float.parseFloat(s[0]) /*/ 100*/;
-                    float b = Float.parseFloat(s[2]) /*/ 100*/;
-                    float c = Float.parseFloat(s[4]) /*/ 100*/;
+                    float a = Float.parseFloat(s[0]) / 100;
+                    float b = Float.parseFloat(s[2]) / 100;
+                    float c = Float.parseFloat(s[4]) / 100;
                     float forceValue =  (a+b+c)/3;
+                    BigDecimal forceValue2 = new BigDecimal(forceValue);
+                    forceValue = forceValue2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
                         //将压力平均值显示到文本中
                         textForce.setText(forceValue +"");
-                        float disValue =  (Float.parseFloat(s[1]) /*/ 100*/+ Float.parseFloat(s[3]) /*/ 100*/+ Float.parseFloat(s[5]) /*/ 100*/)/3;
-                        //将位移平均值显示到文本中
+                        float disValue =  (Float.parseFloat(s[1]) / 100+ Float.parseFloat(s[3]) / 100+ Float.parseFloat(s[5]) / 100)/3;
+
+                    BigDecimal disValue2 = new BigDecimal(disValue);
+                    disValue = disValue2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
+
+                    //将位移平均值显示到文本中
                          textDis.setText(disValue + "");
                    // }
                     
                     //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
+                    Log.i("mtag", "接收到B1时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
 
                     String[] s = totalData.split(",");
                     Log.i("points.size ", "s.length = " + s.length);
                     //s.length - 1是为了防止最后一个""信息影响数据解析
                          for (int i = 0; i < s.length -1; i++) {
 
-                                 value = ((Float.parseFloat(s[i]) /*/ 100*/));
+                                 value = ((Float.parseFloat(s[i]) / 100));
 
                              if (i%2 == 0) {
                                  m_ForceData.add(value);
@@ -131,6 +139,8 @@ public class OnTestActivity extends BaseActivity {
                         fmax=(float)map.get("speedMax");
                         fKin=(float)map.get("MaxAcc");
                         energy=(float)map.get("MinAcc");
+                        Log.i("mtag", "数据处理中间时间 " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
+
                         onSave();
                         totalData = "";
                         fmax = 0;
@@ -143,6 +153,7 @@ public class OnTestActivity extends BaseActivity {
                         stopTest.setTextColor(Color.BLACK);
                     }
                     startTest.setEnabled(true);
+                    Log.i("mtag", "数据处理完成时间 " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
 
 
                 }

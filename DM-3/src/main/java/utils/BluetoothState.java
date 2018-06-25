@@ -40,7 +40,7 @@ public class BluetoothState {
     public static final int ONTESTACTIVITY = 2;
     public static final int CESHIACTIVITY = 3;
     public static final int DECFORCEACTIVITY = 4;
-    public static final int DECSPEEDACTIVITY = 5;
+    public static final int DECDISACTIVITY = 5;
     public static final int IMPORTALLACTIVITY = 6;
     
     // Intent request codes

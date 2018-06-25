@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/paleturquoise"
     >
     <RelativeLayout
         android:id="@+id/lin1"
@@ -31,46 +32,64 @@
             android:layout_alignParentEnd="true" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textForce"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_decDisZero"
-        android:text="零点标定："
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        />
-    <Button
-        android:id="@+id/btn_decDisZero"
+    <LinearLayout
+        android:id="@+id/lin_tishi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="压力零点标定"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/button_style"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        />
-    <TextView
-        android:id="@+id/textFuzai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="负载标定："
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_below="@+id/btn_decDisZero"
-        android:layout_marginTop="20dp"
-        />
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="50N负载测试"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:id="@+id/btn_decFuZai"
-        android:layout_below="@+id/textFuzai"
-        android:background="@drawable/button_style"
-        />
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical"
+       android:layout_below="@+id/lin1"
+        >
+        <TextView
+            android:id="@+id/text_tishi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_marginLeft="20dp"
+            android:text="@string/kongzai" />
+
+        <EditText
+            android:id="@+id/et_tishi"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@color/white"
+            android:ems="10"
+            android:text="点击按钮开始空载标定"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:textColor="@color/red"
+            android:enabled="false"
+            android:singleLine="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"/>
+
+        <Button
+            android:id="@+id/btn_startDec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始标定"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_style"
+
+            />
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="下一步"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_style"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+
 
 
 </RelativeLayout>

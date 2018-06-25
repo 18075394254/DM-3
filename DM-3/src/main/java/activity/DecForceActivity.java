@@ -12,14 +12,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
 import com.example.user.dm_3.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import controller.BaseActivity;
 import utils.BluetoothState;
@@ -29,18 +35,36 @@ import utils.MyService;
  * Created by Administrator on 16-10-27.
  */
 public class DecForceActivity extends BaseActivity {
-    private Button btn_decForceZero,btn_decFuZai;
+    private Button btn_startDec,btn_next;
+    private TextView text_tishi;
+    private EditText et_tishi;
     private ImageView backimage;
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             String message = (String) msg.obj;
+            Log.i("mtag", "handler接收的数据为 ：" + message);
             if (message.equals("E1")) {
-                btn_decForceZero.setTextColor(Color.BLACK);
-                Toast.makeText(DecForceActivity.this, "零点标定成功", Toast.LENGTH_SHORT).show();
-            } else if (message.equals("E2")) {
-                btn_decFuZai.setTextColor(Color.BLACK);
-                Toast.makeText(DecForceActivity.this, "负载标定成功", Toast.LENGTH_SHORT).show();
+                if (text_tishi.getText().equals(getResources().getString(R.string.kongzai))) {
+                    et_tishi.setText("点击下一步进行50N负载标定！");
+                    Toast.makeText(DecForceActivity.this, "空载标定成功", Toast.LENGTH_SHORT).show();
+                    btn_startDec.setTextColor(Color.BLACK);
+                    btn_startDec.setText("空载标定成功");
+                    btn_next.setVisibility(View.VISIBLE);
+
+                }else if(text_tishi.getText().equals(getResources().getString(R.string.fuzai50N))){
+                    et_tishi.setText("点击下一步进行100N负载标定！");
+                    Toast.makeText(DecForceActivity.this, "50N负载标定成功", Toast.LENGTH_SHORT).show();
+                    btn_startDec.setTextColor(Color.BLACK);
+                    btn_startDec.setText("50N负载标定成功");
+                    btn_next.setVisibility(View.VISIBLE);
+
+                }else if(text_tishi.getText().equals(getResources().getString(R.string.fuzai100N))){
+                    et_tishi.setText("负载标定完成，可以进行测试！");
+                    Toast.makeText(DecForceActivity.this, "100N负载标定成功", Toast.LENGTH_SHORT).show();
+                    btn_startDec.setText("标定完成，返回上一界面");
+                    btn_startDec.setTextColor(Color.BLACK);
+                }
             }
         }
     };
@@ -83,24 +107,42 @@ public class DecForceActivity extends BaseActivity {
     }
 
     private void initView() {
-        btn_decForceZero=getView(R.id.btn_decDisZero);
-        btn_decForceZero.setOnClickListener(new View.OnClickListener() {
+        text_tishi = getView(R.id.text_tishi);
+        et_tishi = getView(R.id.et_tishi);
+        btn_startDec = getView(R.id.btn_startDec);
+        btn_next = getView(R.id.btn_next);
+        btn_startDec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinder.sendMessage("E1", BluetoothState.DECFORCEACTIVITY);
-                btn_decForceZero.setTextColor(Color.RED);
+                if (btn_startDec.getText().equals("标定完成，返回上一界面")){
+                    finish();
+                }else {
+                    mBinder.sendMessage("E1", BluetoothState.DECFORCEACTIVITY);
+                    btn_startDec.setTextColor(Color.RED);
+                }
             }
         });
-
-        btn_decFuZai=getView(R.id.btn_decFuZai);
-        btn_decFuZai.setOnClickListener(new View.OnClickListener() {
+        btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinder.sendMessage("E2", BluetoothState.DECFORCEACTIVITY);
-                btn_decFuZai.setTextColor(Color.RED);
+
+                btn_next.setVisibility(View.GONE);
+                btn_startDec.setText("开始标定");
+                if (text_tishi.getText().equals(getResources().getString(R.string.kongzai))) {
+
+                    et_tishi.setText("手动加到50N负载进行标定！");
+                    text_tishi.setText(getResources().getString(R.string.fuzai50N));
+
+
+                } else if (text_tishi.getText().equals(getResources().getString(R.string.fuzai50N))){
+
+                    et_tishi.setText("手动加到100N负载进行标定！");
+                    text_tishi.setText(getResources().getString(R.string.fuzai100N));
+
+
+                }
             }
         });
-
         backimage= (ImageView) findViewById(R.id.back);
         backimage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,6 +172,7 @@ public class DecForceActivity extends BaseActivity {
                 message.what = 0;
                 message.obj = message1;
                 handler.sendMessage(message);
+
             }
         }
     }

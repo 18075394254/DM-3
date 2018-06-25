@@ -73,9 +73,10 @@ public class MyService extends Service {
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.decForceActivity");
                         sendBroadcast(intent);
+                        Log.i("mtag", "发送广播的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         break;
 
-                    case BluetoothState.DECSPEEDACTIVITY:
+                    case BluetoothState.DECDISACTIVITY:
                         intent = new Intent();
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.decSpeedActivity");

@@ -50,6 +50,7 @@
         <activity android:name="activity.DeclareActivity"/>
         <activity android:name="activity.DecForceActivity"/>
         <activity android:name="activity.DecDisActivity"/>
+        <activity android:name="activity.UseExplainActivity"/>
         <service android:name="utils.MyService"></service>
     </application>
 

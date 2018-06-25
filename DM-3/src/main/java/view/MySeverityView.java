@@ -199,11 +199,8 @@ public class MySeverityView extends View {
                 paint.setStrokeWidth(3);
                 int Y=(height/32 +viewHeigth/10 + viewHeigth/10 * i);
                 canvas.drawLine(width / 8, Y, width * 7 / 8 + 50, Y, paint);
-               /* int Y2=height/32 +viewHeigth/10 + viewHeigth/10 * 5;
-                canvas.drawLine(width / 8, Y2, width * 7 / 8 + 50, Y2, paint);*/
                 paint.setTextSize(40);
                 canvas.drawText("300/N",width/8+10,Y-5,paint);
-                //canvas.drawText("0.8m/s",width/8+10,Y2-5,paint);
 
             }
         }

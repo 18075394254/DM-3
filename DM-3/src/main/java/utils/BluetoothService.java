@@ -664,7 +664,7 @@ public class BluetoothService {
 
                     }else if(command.equals(DataTrans.FORCECONTINUETEST)){
                         Log.i("wp123","发送E1到设备，让测力仪设备持续测试");
-                        receiveState=RECEIVE_FORCE_SPEED_TESTVALUE;
+                        receiveState=RECEIVE_COMMAND;
 
                     }else if(command.equals(DataTrans.DECLAREZERO)){
                         Log.i("wp123","发送H1到设备，让测力仪标定零点");

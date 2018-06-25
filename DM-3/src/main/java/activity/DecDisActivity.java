@@ -100,7 +100,7 @@ public class DecDisActivity extends BaseActivity {
         btn_decDisZero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinder.sendMessage("F1", BluetoothState.DECFORCEACTIVITY);
+                mBinder.sendMessage("F1", BluetoothState.DECDISACTIVITY);
                 btn_decDisZero.setTextColor(Color.RED);
             }
         });
@@ -110,7 +110,7 @@ public class DecDisActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 disValue++;
-                mBinder.sendMessage("F2", BluetoothState.DECFORCEACTIVITY);
+                mBinder.sendMessage("F2", BluetoothState.DECDISACTIVITY);
                 btn_decDisFuZai.setTextColor(Color.RED);
             }
         });
@@ -120,7 +120,7 @@ public class DecDisActivity extends BaseActivity {
         btn_resetDisFuZai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinder.sendMessage("F3", BluetoothState.DECFORCEACTIVITY);
+                mBinder.sendMessage("F3", BluetoothState.DECDISACTIVITY);
                 btn_resetDisFuZai.setTextColor(Color.RED);
             }
         });
