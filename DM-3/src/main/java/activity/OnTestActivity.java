@@ -279,13 +279,11 @@ public class OnTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(isStart) {
-                    if (name.equals("DM-2-1")) {
                         mBinder.sendMessage("B1",BluetoothState.ONTESTACTIVITY);
                         startTest.setTextColor(Color.BLACK);
                         stopTest.setTextColor(Color.RED);
                         tv_testStatus.setText("数据上传中...");
                         isStart=false;
-                    }
                 }else{
                     Toast.makeText(OnTestActivity.this, "还未开始测试", Toast.LENGTH_SHORT).show();
                 }
