@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:weightSum="2"
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/tv"
         >
     <LinearLayout
@@ -71,7 +71,7 @@
         android:paddingLeft="20dp"
         >
         <TextView
-            android:id="@+id/forceMax"
+            android:id="@+id/forcevalue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#df131d"
@@ -86,7 +86,7 @@
         android:paddingLeft="20dp"
         >
         <TextView
-            android:id="@+id/forceKin"
+            android:id="@+id/disvalue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#df131d"
@@ -94,45 +94,14 @@
             />
     </LinearLayout>
     </LinearLayout>
-    <HorizontalScrollView
-        android:id="@+id/lin4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lin3"
-        >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        >
 
-        <TextView
-            android:id="@+id/energy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#df131d"
-            android:textSize="20sp"
-            android:paddingLeft="20dp"
-            />
-
-            <TextView
-                android:paddingLeft="20dp"
-                android:id="@+id/MinAcc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#df131d"
-                android:textSize="20sp"
-                />
-
-    </LinearLayout>
-    </HorizontalScrollView>
     <LinearLayout
         android:id="@+id/layoutImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@+id/lin4"
+        android:layout_below="@+id/lin3"
+        android:layout_marginTop="15dp"
         >
 
         <view.PinchImageView

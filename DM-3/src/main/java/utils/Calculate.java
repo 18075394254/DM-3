@@ -4,29 +4,27 @@ import android.util.Log;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import model.Point;
 
 /**
  * Created by Administrator on 2016/12/16 0016.
  */
 public class Calculate {
-    private float S=0;
-    private float Acc=0;
-    private float allS=0;
-    private float MaxAcc=0;
-    private float MinAcc=0;
-    private float fmax=0;
-    private float speedMax=0;
-    private float fKin=0;
-    private float energy=0;
-    private float Vave=0;
+
+    private float forceMax=0;
+    private float standerdValue = (float) 300.0;
+    //数据是否合格 0是1否
+    private int isQualified = 0;
     private HashMap map=new HashMap();
     public Calculate() {
 
     }
     //压力数据滤波,滤波频率30hz
     //X=250,Y=30
-    public ArrayList<Float> lvbo30(ArrayList<Float> m_cutData, ArrayList<Float> m_filterData, int X, int Y) {
+    public ArrayList<Float> lvbo40(ArrayList<Float> m_cutData, ArrayList<Float> m_filterData, int X, int Y) {
         m_filterData.clear();
         double[] y = new double[3];
         Double t, a, b, k;
@@ -55,222 +53,153 @@ public class Calculate {
         return m_filterData;
     }
 
-//计算平均速度
-    public Float CalcVave(ArrayList<Float> distance,int type){
-        int FirstIndex=0;
-        int MaxIndex=0;
-        int LastIndex=0;
-        float max=0;
-        if (distance != null) {
-            //求最大点坐标位置和起始点坐标位置
-            for (int i = 0; i < distance.size(); i++) {
-                Log.i("hhh", "distance.get(i)  =" + distance.get(i) + " " + i);
-                if (distance.get(i) > max) {
-                    max = distance.get(i);
-                    MaxIndex = i;
-                }
-                if (type == 0) {
-                    if (i < distance.size() - 1) {
-                        if (distance.get(i) - 0.025 == 0) {
-                            FirstIndex = i;
-                        } else if (distance.get(i) - 0.025 < 0 && distance.get(i + 1) - 0.025 > 0) {
-                            if (Math.abs(distance.get(i) - 0.025) > Math.abs(distance.get(i + 1) - 0.025)) {
-                                FirstIndex = i + 1;
-                            } else {
-                                FirstIndex = i;
-                            }
-                        }
-                    } else {
-                        LastIndex = MaxIndex;
-                    }
-                }else{
-                    if (i < distance.size() - 1) {
-                        if (distance.get(i) - 0.05 == 0) {
-                            FirstIndex = i;
-                        } else if (distance.get(i) - 0.05 < 0 && distance.get(i + 1) - 0.05 > 0) {
-                            if (Math.abs(distance.get(i) - 0.05) > Math.abs(distance.get(i + 1) - 0.05)) {
-                                FirstIndex = i + 1;
-                            } else {
-                                FirstIndex = i;
-                            }
-                        }
-                    } else {
-                        LastIndex = MaxIndex;
-                    }
-                }
-            }
-            //求终点的坐标位置
-            for (int i=FirstIndex;i<MaxIndex+1;i++) {
-                if(type == 0){
-                if (i < MaxIndex) {
-                    if (distance.get(MaxIndex) - distance.get(i) == 0.025) {
-                        LastIndex = i;
-                    } else if (distance.get(MaxIndex) - distance.get(i) > 0.025 && distance.get(MaxIndex) - distance.get(i + 1) < 0.025) {
-                        if (Math.abs(distance.get(i) - distance.get(MaxIndex) + 0.025) > Math.abs(distance.get(i + 1) - distance.get(MaxIndex) + 0.025)) {
-                            LastIndex = i + 1;
-                        } else {
-                            LastIndex = i;
-                        }
-                    }
-                }
-                }else{
-                    if (i < MaxIndex) {
-                        if (distance.get(MaxIndex) - distance.get(i) == 0.05) {
-                            LastIndex = i;
-                        } else if (distance.get(MaxIndex) - distance.get(i) > 0.05 && distance.get(MaxIndex) - distance.get(i + 1) < 0.05) {
-                            if (Math.abs(distance.get(i) - distance.get(MaxIndex) + 0.05) > Math.abs(distance.get(i + 1) - distance.get(MaxIndex) + 0.05)) {
-                                LastIndex = i + 1;
-                            } else {
-                                LastIndex = i;
-                            }
-                        }
-                    }
-                }
-            }
 
 
-            Vave= (float) ((distance.get(LastIndex) - distance.get(FirstIndex))/((LastIndex - FirstIndex)*0.1));
-            Log.i("hhh","distance.get(LastIndex) = "+distance.get(LastIndex) + "  "+LastIndex);
-            Log.i("hhh","distance.get(FirstIndex) = "+distance.get(FirstIndex)+ "  "+FirstIndex);
-            if (Vave>0) {
-                BigDecimal b = new BigDecimal(Vave);
-                Vave = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-            }else {
-                Vave=0;
-            }
-        }
-        return Vave;
-    }
-//计算距离
-    public ArrayList<Float> CalcDistance(ArrayList<Float> v_speed){
-         ArrayList<Float> Distance=new ArrayList<>();
-            S=0;
-            allS=0;
-        if(v_speed != null){
-            for(int i=0;i< v_speed.size();i++) {
 
-                if (i == 0) {
-                    S = (float) (0.5 * 0.1 * v_speed.get(i));
-                } else {
-                    if (v_speed.get(i) - v_speed.get(i - 1) == 0) {
-                        S = (float) 0.1 * v_speed.get(i);
-                    } else {
-                        S = (float) (0.1 * Math.abs(v_speed.get(i) * v_speed.get(i) - v_speed.get(i - 1) * v_speed.get(i - 1))) / (2 * Math.abs(v_speed.get(i) - v_speed.get(i - 1)));
-                    }
-                }
-                allS = allS + S;
-                Log.i("ggg", "allS11111 =" + allS);
-                Distance.add(allS);
-            }
-
-        }
-        return Distance;
-    }
-//计算加速度
-    public ArrayList<Float> CalcAcclerate(ArrayList<Float> v_speed){
-         ArrayList<Float> Acclerate=new ArrayList<>();
-        if(v_speed != null){
-            for(int i=0;i< v_speed.size();i++) {
-
-                if (i == 0) {
-                    Acc=(float)(v_speed.get(i)/0.1);
-                } else {
-                    //加速度集合
-                    Acc=(float)((v_speed.get(i) - v_speed.get(i - 1))/0.1);
-                }
-
-                Acclerate.add(Acc);
-            }
-
-        }
-
-        return Acclerate;
-    }
 //计算最大值
-    public HashMap CalcForceMax(ArrayList<Float> Speed) {
-        ArrayList<Float> Acclerate=new ArrayList<>();
-        MaxAcc=0;
-        MinAcc=0;
-        speedMax=0;
-        map.clear();
-        Acclerate.clear();
+    public float getMax(ArrayList<Float> array) {
 
-            if (Speed != null){
-                for (int i=0;i<Speed.size();i++){
-                    float value = Speed.get(i).floatValue();
-                    if (value > speedMax){
-                        speedMax=value;
-                        BigDecimal b = new BigDecimal(speedMax);
-                        speedMax = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+
+        float Max=0;
+
+            //求出最大值，以及测试数据的合格情况
+            if (array != null){
+                for (int i=0;i<array.size();i++){
+                    float value = array.get(i).floatValue();
+                    if (value > Max){
+                        Max=value;
                     }
                 }
-                map.put("speedMax",speedMax);
-                speedMax=0;
-
-                Acclerate=CalcAcclerate(Speed);
 
             }
-            if (Acclerate != null) {
-                for (int i = 0; i < Acclerate.size(); i++) {
-                    float value = Acclerate.get(i).floatValue();
 
-                    if (value > MaxAcc) {
-                        MaxAcc = value;
-                        BigDecimal b = new BigDecimal(MaxAcc);
-                        MaxAcc = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                    }
-
-                }
-            }
-            map.put("MaxAcc",MaxAcc);
-
-            MaxAcc=0;
-
-            for (int i=0;i<Acclerate.size();i++){
-                float value = Acclerate.get(i).floatValue();
-
-                if (value < MinAcc){
-                    MinAcc=value;
-                    BigDecimal b = new BigDecimal(MinAcc);
-                    MinAcc = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                }
-
-            }
-            map.put("MinAcc",MinAcc);
-            MinAcc=0;
-
-
-
-            return map;
+            return Max;
     }
-//计算测试时间
-    public Float testTime(ArrayList<Float> distance){
-        float time=0;
-        int FirstIndex=0;
-        int LastIndex=0;
-        float max=0;
-        if(distance != null) {
-            for (int i = 0; i < distance.size(); i++) {
-                if (distance.get(i) > max){
-                    max=distance.get(i);
-                }
+
+    //计算平均值
+    public float getAverage(ArrayList<Float> array) {
+
+
+        float average =0;
+        float sum = 0;
+        //求出最大值，以及测试数据的合格情况
+        if (array != null){
+            for (int i=0;i<array.size();i++){
+                sum += array.get(i).floatValue();
+
             }
-            for (int i = 0; i < distance.size(); i++) {
-                if (distance.get(i) > 0){
-                    FirstIndex=i;
-                    break;
-                }
-            }
-            for (int i=0;i<distance.size();i++){
-                if(distance.get(i) == max){
-                    LastIndex=i;
-                    break;
-                }
-            }
-            time= (float) ((LastIndex - FirstIndex)*0.1);
+            average = sum/array.size();
+
         }
-        return time;
-    }
 
+        return average;
+    }
+    //计算最小值
+    public float getMin(ArrayList<Float> array) {
+
+
+        float Min=0;
+
+        //求出最大值，以及测试数据的合格情况
+        if (array != null){
+            for (int i=0;i<array.size();i++){
+                float value = array.get(i).floatValue();
+                if (value < Min){
+                    Min = value;
+                }
+            }
+
+        }
+
+        return Min;
+    }
+    /**
+
+     * //计算出最接近300N的那个数对应的位移值
+
+     * @param m_DisData 表示位移点的数组集合
+
+     * @param forceValues 压力的数据集合
+
+     * @param targetNum 标准线 300
+
+     * @return
+
+     */
+
+    public HashMap getDisValue(ArrayList<Float> m_DisData,ArrayList<Float> forceValues, int targetNum) {
+            float disValue =0;
+            float forceValue =0;
+            forceMax=0;
+            map.clear();
+        //根据数组长度判断forceValue中等于300的数有几个
+        ArrayList<Float> disValueArr =new ArrayList<>();
+
+        //当没有压力值等于300N但是最大值大于300N时，将压力值与300的绝对值添加到数组中，再算出最小值，就是最接近300的值
+        ArrayList<Float> forceValueArr =new ArrayList<>();
+
+        //当没有压力值等于300N但是最大值大于300N时，且压力值与300N的差的绝对值有多个相同时，计算位移平均值，就是最接近300的值
+        ArrayList<Float> disValueArray =new ArrayList<>();
+
+        if (forceValues != null) {
+            //计算出最大值
+           forceMax = getMax(forceValues);
+            Log.i("2018-06-26 ", "forceMax = " + forceMax);
+            //最大值大于299时表示测试的数据合格，然后求位移距离
+            if (forceMax > 299){
+                for (int i = 0; i < forceValues.size(); i++) {
+                    if (forceValues.get(i) == targetNum) {
+
+                        //将压力值等于300N时对应的位移值添加到数组
+                        disValueArr.add(m_DisData.get(i));
+                    }
+                }
+                isQualified = 0;
+                //大于299表示测试有数据达到300N，本次数据合格
+                map.put("isQualified",isQualified);
+
+                //只有一个等于300N,找到对应的值
+                if (disValueArr.size() == 1){
+                    disValue = disValueArr.get(0);
+                    map.put("disValue",disValue);
+
+                    //有多个压力值等于300N时，取对应的最大的位移值
+                }else if (disValueArr.size() > 1){
+                    disValue = getMax(disValueArr);
+                    map.put("disValue",disValue);
+
+                    //压力数组中没有等于300N的值，取最接近300N的压力值对应的位移值
+                }else if (disValueArr.size() == 0){
+                    //将压力值与300差的绝对值添加到数组中
+                    for (int i = 0; i < forceValues.size(); i++) {
+                        float value = forceValues.get(i)-300;
+                        forceValueArr.add(Math.abs(value));
+                    }
+                    //计算出绝对值中最小的值
+                    float forceValueAbs = getMin(forceValueArr);
+                    //如果有多个最小绝对值，就将这几个值的位移值保存到数组中
+                    for (int i = 0; i< forceValueArr.size();i++){
+                        if (forceValueAbs == forceValueArr.get(i)){
+                            disValueArray.add(m_DisData.get(i));
+                        }
+                    }
+                    disValue = getAverage(disValueArray);
+                    map.put("disValue",disValue);
+                }
+                map.put("forceValue","300");
+            }else{
+                isQualified = 1;
+                //小于299表示测试的所有数据都不到300N，本次数据不合格
+                map.put("isQualified",isQualified);
+                map.put("disValue",disValue);
+                map.put("forceValue",forceValue);
+            }
+
+
+
+        }
+            return map;
+
+    }
 
 }

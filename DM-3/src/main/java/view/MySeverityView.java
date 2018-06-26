@@ -18,6 +18,7 @@ import java.util.List;
 
 import model.Cubic;
 import model.Point;
+import utils.Calculate;
 
 
 /**
@@ -25,62 +26,57 @@ import model.Point;
  */
 public class MySeverityView extends View {
 
-    static final int UNKNOW_STATE = 0;
-    static final int UPDATE = 1;
-
-    //ArrayList<Point> points=new ArrayList<>();
-    public int test_state = UNKNOW_STATE;
     // 控件宽高
     private int viewWidth, viewHeigth;
     Path path=new Path();
     ArrayList<Point> points = new ArrayList<>();
     ArrayList<Point> points2 = new ArrayList<>();
-    ArrayList<Point> Accpoints = new ArrayList<>();
-    private ArrayList<Float> points_x = null;
-    private ArrayList<Float> points_y = null;
-    private ArrayList<Float> forceData=new ArrayList<>();
-    private ArrayList<Float> disData=new ArrayList<>();
-    private ArrayList<Float> mData=new ArrayList<>();
+
+    private ArrayList<Float> m_ForceData=new ArrayList<>();
+    private ArrayList<Float> m_DisData=new ArrayList<>();
     private ArrayList<Point> RateValueY=new ArrayList<>();
+    //画坐标轴
     Paint paint;
+    //画位移曲线
     Paint paint2;
-    Paint paint3;
+    //画标识线
     Paint paint4;
-    private Paint paint6;
-    private int STEPS=12;
+    //画压力曲线
+    private Paint paint3;
 
     private int width=0;
     private int height=0;
     private Path path2=new Path();
-    private Path path3=new Path();
-    StringBuilder sb=new StringBuilder();
-    float max1=0;
-    float max2=0;
-    private Paint paint5;
     int timeLength=1;
 
 
     //建议添加，当在java文件中new此控件对象时，运行此构造方法
     //将压力数据集合和位移数据集合传递进来
-    public MySeverityView(Context context, ArrayList<Float> m_ForceData,ArrayList<Float> m_DisData) {
+    public MySeverityView(Context context, ArrayList<Float> forceData,ArrayList<Float> disData) {
         super(context);
-        points_x = new ArrayList<Float>();
-        points_y = new ArrayList<Float>();
 
+        m_ForceData = new Calculate().lvbo40(forceData,m_ForceData,40,40);
+        m_DisData = new Calculate().lvbo40(disData,m_DisData,40,40);
         //将时间轴与压力轴的数据绑定在一起
         if (m_ForceData != null) {
             //根据压力数据的个数调整时间轴的长度
-            if (m_ForceData.size() < 400 || m_ForceData.size() == 400){
-                    timeLength=1;
-                }else if(m_ForceData.size() > 800 || m_ForceData.size() == 800 && m_ForceData.size() < 1200){
+                if (m_ForceData.size() < 800 ){
                     timeLength=2;
-                }else{
+                }else if(m_ForceData.size() > 799  && m_ForceData.size() < 1200){
                     timeLength=3;
-                }
+                }else if (m_ForceData.size() > 1199 && m_ForceData.size() < 1600){
+                    timeLength=4;
+                }else if (m_ForceData.size() > 1599 && m_ForceData.size() < 2000){
+                    timeLength=5;
+                }else if (m_ForceData.size() > 1999  && m_ForceData.size() < 2400){
+                    timeLength=6;
+                }else{
+                timeLength=7;
+            }
+            Log.i("2018-06-26","timeLength = "+timeLength);
+            Log.i("2018-06-26","m_ForceData.size() = "+m_ForceData.size());
             for (int i = 0; i < m_ForceData.size(); i++) {
                 points.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_ForceData.get(i)));
-
-
                 forceData.add(m_ForceData.get(i));
             }
             //max1 = CalcMax(forceData);
@@ -128,16 +124,6 @@ public class MySeverityView extends View {
 
         //初始化画笔对象 画坐标及文字
         paint = new Paint();
-
-        paint2=new Paint();
-
-        paint3=new Paint();
-
-        paint4=new Paint();
-
-        paint5=new Paint();
-
-        paint6=new Paint();
         //设置画笔的颜色
         paint.setColor(Color.BLACK);
         //设置抗锯齿效果
@@ -147,40 +133,29 @@ public class MySeverityView extends View {
         //设置边框宽度
         paint.setStrokeWidth(1);
 
-        paint6.setColor(Color.RED);
-        paint6.setAntiAlias(true);
-        paint6.setStyle(Paint.Style.STROKE);
-        paint6.setStrokeWidth(4);
 
+        //画位移曲线
+        paint2=new Paint();
         paint2.setColor(Color.BLUE);
         paint2.setAntiAlias(true);
         paint2.setStyle(Paint.Style.STROKE);
         paint2.setStrokeWidth(4);
 
-        paint3.setColor(Color.BLACK);
+        //画压力曲线
+        paint3=new Paint();
+        paint3.setColor(Color.RED);
         paint3.setAntiAlias(true);
-
-        paint3.setStrokeWidth(2);
-        paint3.setTextSize(40);
-        //设置抗锯齿效果
-        paint3.setAntiAlias(true);
-        //设置画笔效果，如实心，空心等
         paint3.setStyle(Paint.Style.STROKE);
-        //设置边框宽度
-        paint3.setStrokeWidth(3);
+        paint3.setStrokeWidth(4);
 
-        paint4.setColor(Color.BLACK);
+
+        //画标识线
+        paint4 = new Paint();
+        paint4.setColor(Color.GREEN);
         paint4.setAntiAlias(true);
+        paint4.setStyle(Paint.Style.STROKE);
+        paint4.setStrokeWidth(4);
 
-        paint4.setStrokeWidth(2);
-        paint4.setTextSize(40);
-
-
-        paint5.setColor(Color.GREEN);
-        paint5.setAntiAlias(true);
-        paint5.setStyle(Paint.Style.STROKE);
-        paint5.setStrokeWidth(3);
-        paint5.setTextSize(40);
 
         Resources resources = this.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -195,19 +170,17 @@ public class MySeverityView extends View {
             canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,height/32,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*9/16,paint);
         if(i==7){
                 //绘制标准线
-                paint.setColor(Color.GREEN);
-                paint.setStrokeWidth(3);
-                int Y=(height/32 +viewHeigth/10 + viewHeigth/10 * i);
-                canvas.drawLine(width / 8, Y, width * 7 / 8 + 50, Y, paint);
-                paint.setTextSize(40);
-                canvas.drawText("300/N",width/8+10,Y-5,paint);
+                int Y=(height/32  + viewHeigth/10 * i);
+                canvas.drawLine(width /8 - 15, Y, width * 7 / 8 + 50, Y, paint4);
+                paint4.setTextSize(40);
+                canvas.drawText("300/N",width/8+10,Y-5,paint4);
 
             }
         }
 
         //绘制矩形
         paint.setColor(Color.BLACK);
-        canvas.drawRect(width / 8-15, height / 32, width * 7 / 8 + 50-15, height * 9 / 16, paint3);
+        canvas.drawRect(width / 8-15, height / 32, width * 7 / 8 + 50-15, height * 9 / 16, paint);
 
         //绘制文字
         paint.setColor(Color.BLACK);
@@ -241,46 +214,47 @@ public class MySeverityView extends View {
 
             }else{
                 canvas.drawText("Force/N", 0, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
-                canvas.drawText("S/mm", width * 7 / 8 - 20, height / 32 + 10, paint);
+                canvas.drawText("S/mm", width * 7 / 8 - 30, height / 32 + 10, paint);
                 canvas.drawText("Time/S", width * 7 / 8 - 15, height * 9 / 16 + 30, paint);
             }
         }
 
 
+
+        canvas.drawLine(width / 8 + 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, (float) width / 8 + 10 + viewWidth / 5, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, paint3);
+        canvas.drawText("压力曲线", (float) width / 8 + 10 + viewWidth / 5 + 20, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 + 5, paint);
+
+        canvas.drawLine((float) width / 8 + 10 + 5 * viewWidth / 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, (float) width / 8 + 10 + 7 * viewWidth / 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, paint2);
+        canvas.drawText("位移曲线", (float) width / 8 + 10 + 7 * viewWidth / 10 + 20, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 + 5, paint);
+
+
         if(points != null) {
             for (int i = 0; i < points.size(); i++) {
-                points_x.add(points.get(i).getX());
-                points_y.add(points.get(i).getY());
+                RateValueY.add(points.get(i));
             }
-            pathLine(points_x, points_y, path,1);
 
         }
-        Log.i("points.size ", "RateValueY.size = " + RateValueY.size());
+        Log.i("RateValueY.size ", "RateValueY.size = " + RateValueY.size());
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
             float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/100);
 
             if (i==0){
-                Log.i("points.size ", "RateValueY.get(i).getX() = " + RateValueY.get(i).getX());
                 path.moveTo(x,y);
             }else {
                 path.lineTo(x, y);
             }
         }
-        canvas.drawPath(path, paint6);
-        points_x.clear();
-        points_y.clear();
+        canvas.drawPath(path, paint3);
+
         RateValueY.clear();
 
 
 
         if(points2.size() != 0) {
             for (int i = 0; i < points2.size(); i++) {
-                points_x.add(points2.get(i).getX());
-                points_y.add(points2.get(i).getY());
+                RateValueY.add(points2.get(i));
             }
-            pathLine(points_x, points_y, path2,1);
-            //mData.clear();
         }
 
         if (RateValueY != null) {
@@ -298,82 +272,10 @@ public class MySeverityView extends View {
             }
             canvas.drawPath(path2, paint2);
         }
-        points_x.clear();
-        points_y.clear();
+
         RateValueY.clear();
 
         points.clear();
-       // points2.clear();
-
-        canvas.drawLine(width / 8 + 10, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, (float) width / 8 + 10 + viewWidth / 5, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 - 10, paint6);
-        canvas.drawText("压力曲线", (float) width / 8 + 10 + viewWidth / 5 + 20, height / 32 + (height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height / 32) / 10 * 10 + 5, paint4);
-
-        canvas.drawLine((float) width / 8 + 10 + 4*viewWidth / 10 , height/32 +(height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height/32)/10 * 10-10,(float) width / 8 + 10 + 6*viewWidth / 10,height/32 +(height*9/16-height/32)/10 + (height*9/16-height/32)/10 * 10-10,paint2);
-        canvas.drawText("位移曲线",(float) width / 8 + 10 + 6*viewWidth / 10+20,height/32 +(height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height/32)/10 * 10+5,paint4);
-
-       /* canvas.drawLine((float) width / 8 + 10 + 6*viewWidth / 10 , height/32 +(height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height/32)/10 * 10-10,(float) width / 8 + 10 + 8*viewWidth / 10,height/32 +(height*9/16-height/32)/10 + (height*9/16-height/32)/10 * 10-10,paint5);
-        canvas.drawText("A",(float) width / 8 + 10 + 8*viewWidth / 10+20,height/32 +(height * 9 / 16 - height / 32) / 10 + (height * 9 / 16 - height/32)/10 * 10+5,paint4);
-*/
-    }
-
-    private List<Cubic> calculate(List<Float> x) {
-        int n = x.size() - 1;
-        float[] gamma = new float[n + 1];
-        float[] delta = new float[n + 1];
-        float[] D = new float[n + 1];
-        int i;
-
-        gamma[0] = 1.0f / 2.0f;
-        for (i = 1; i < n; i++) {
-            gamma[i] = 1 / (4 - gamma[i - 1]);
-        }
-        gamma[n] = 1 / (2 - gamma[n - 1]);
-
-        delta[0] = 3 * (x.get(1) - x.get(0)) * gamma[0];
-        for (i = 1; i < n; i++) {
-            delta[i] = (3 * (x.get(i + 1) - x.get(i - 1)) - delta[i - 1])
-                    * gamma[i];
-        }
-        delta[n] = (3 * (x.get(n) - x.get(n - 1)) - delta[n - 1]) * gamma[n];
-
-        D[n] = delta[n];
-        for (i = n - 1; i >= 0; i--) {
-            D[i] = delta[i] - gamma[i] * D[i + 1];
-        }
-
-		/* now compute the coefficients of the cubics */
-        List<Cubic> cubics = new LinkedList<Cubic>();
-        for (i = 0; i < n; i++) {
-            Cubic c = new Cubic(x.get(i), D[i], 3 * (x.get(i + 1) - x.get(i))
-                    - 2 * D[i] - D[i + 1], 2 * (x.get(i) - x.get(i + 1)) + D[i]
-                    + D[i + 1]);
-            cubics.add(c);
-        }
-        return cubics;
-    }
-
-    public void pathLine(ArrayList<Float> points_x,ArrayList<Float> points_y,Path path,int flag){
-        List<Cubic> calculate_x = calculate(points_x);
-        List<Cubic> calculate_y = calculate(points_y);
-
-
-        for (int i = 0; i < calculate_x.size(); i++) {
-            for (int j = 1; j <= STEPS; j++) {
-                float u =  j / (float) STEPS;
-                float pointx=calculate_x.get(i).eval(u);
-                float forceData=calculate_y.get(i).eval(u);
-                if (flag == 1) {
-                    if (forceData < 0){
-                        forceData=0;
-                    }
-                }else{
-
-                }
-                mData.add(forceData);
-                RateValueY.add(new Point(pointx,forceData));
-            }
-        }
-        path.moveTo(RateValueY.get(0).getX(), RateValueY.get(0).getY());
 
     }
 

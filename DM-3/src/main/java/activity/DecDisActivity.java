@@ -211,8 +211,6 @@ public class DecDisActivity extends BaseActivity {
                 Log.d("aaa", device.getName() + " ACTION_ACL_CONNECTED");
             } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
                 Log.d("aaa", " ACTION_ACL_DISCONNECTED");
-                //String message1="蓝牙断开连接";
-                //handler.obtainMessage(2, 1, -1, message1).sendToTarget();
                 DecDisActivity.this.finish();
             }
         }

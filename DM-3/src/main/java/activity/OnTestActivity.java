@@ -59,7 +59,6 @@ public class OnTestActivity extends BaseActivity {
     private TextView tv_testStatus;
     private Button startTest,stopTest,backMain,pictureShow;
     private Button dataResult;
-    final String[] arrayWay = new String[] { "测试电梯门刚度" };
     PictureDatabase pictureDB;
     SQLiteDatabase db;
     private int indexF=1;
@@ -68,14 +67,32 @@ public class OnTestActivity extends BaseActivity {
     private ArrayList<Float> m_ForceData = new ArrayList<Float>();
     //测试位移数据的集合
     private ArrayList<Float> m_DisData = new ArrayList<Float>();
-    
-    private float fmax=0;
-    private float energy=0;
-    private float fKin=0;
+    //300N压力值
+    private float force=0;
+    //300N压力值下的位移值
+    private float dis=0;
     private boolean isConnect=true;
     private boolean isStart=false;
+    //将所有的测试数据拼接成一个字符串
     String totalData = "";
+    //用来表示接收到的每个数据的值
     private float value=0;
+    //数据是否合格的标志
+    private int isQualified = 0;
+
+    private Intent bindIntent;
+    private MyReceiver receiver;
+    String name=null;
+    private boolean cantest=true;
+
+    Calculate calculate=new Calculate();
+    //将数据计算后得到的map数组
+    HashMap map=new HashMap();
+    private ImageView backimage;
+    private TextView textForce;
+    private TextView textDis;
+
+
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -93,23 +110,28 @@ public class OnTestActivity extends BaseActivity {
                     String msgdata = MyApplication.getString();
                     //将数据拼接起来，当测试完成后，解析数据绘制图形
                     totalData = totalData + msgdata;
-                    
+                    Log.i("mtag", "msgdata" + msgdata);
+
                     //分隔字符串
                     String[] s = msgdata.split(",");
                     //三组数据(压力，位移，压力，位移，压力，位移)
                     float a = Float.parseFloat(s[0]) / 100;
                     float b = Float.parseFloat(s[2]) / 100;
                     float c = Float.parseFloat(s[4]) / 100;
+                    float d= Float.parseFloat(s[1]) / 100;
+                    float e = Float.parseFloat(s[3]) / 100;
+                    float f = Float.parseFloat(s[5]) / 100;
+
                     float forceValue =  (a+b+c)/3;
                     BigDecimal forceValue2 = new BigDecimal(forceValue);
                     forceValue = forceValue2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
                         //将压力平均值显示到文本中
                         textForce.setText(forceValue +"");
-                        float disValue =  (Float.parseFloat(s[1]) / 100+ Float.parseFloat(s[3]) / 100+ Float.parseFloat(s[5]) / 100)/3;
 
+
+                    float disValue =  (d+e+f)/3;
                     BigDecimal disValue2 = new BigDecimal(disValue);
                     disValue = disValue2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
-
                     //将位移平均值显示到文本中
                          textDis.setText(disValue + "");
                    // }
@@ -117,7 +139,7 @@ public class OnTestActivity extends BaseActivity {
                     //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
                     Log.i("mtag", "接收到B1时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
-
+                    tv_testStatus.setText("数据上传中...");
                     String[] s = totalData.split(",");
                     Log.i("points.size ", "s.length = " + s.length);
                     //s.length - 1是为了防止最后一个""信息影响数据解析
@@ -133,19 +155,14 @@ public class OnTestActivity extends BaseActivity {
 
                          }
                     if(m_DisData.size() != 0){
+                       map =  calculate.getDisValue(m_DisData, m_ForceData, 300);
+                        force = (float) map.get("forceValue");
+                        dis = (float) map.get("disValue");
+                        isQualified = (int) map.get("isQualified");
 
-                        map=calculate.CalcForceMax(m_DisData);
-
-                        fmax=(float)map.get("speedMax");
-                        fKin=(float)map.get("MaxAcc");
-                        energy=(float)map.get("MinAcc");
-                        Log.i("mtag", "数据处理中间时间 " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
-
+                        Log.i("2018-06-26 ", "isQualified = " + isQualified);
                         onSave();
                         totalData = "";
-                        fmax = 0;
-                        fKin=0;
-                        energy = 0;
                         map.clear();
                         tv_testStatus.setText("测试完成");
                         dataResult.setVisibility(View.VISIBLE);
@@ -185,15 +202,8 @@ public class OnTestActivity extends BaseActivity {
 
 
     };
-    private Intent bindIntent;
-    private MyReceiver receiver;
-    String name=null;
-    private boolean cantest=true;
-    Calculate calculate=new Calculate();
-    HashMap map=new HashMap();
-    private ImageView backimage;
-    private TextView textForce;
-    private TextView textDis;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -231,15 +241,12 @@ public class OnTestActivity extends BaseActivity {
         name=intent.getStringExtra("name");
 
 
-       // if (name.equals("DM-2-1")){
-            tv_testWay.setText(arrayWay[0]);
+
+            tv_testWay.setText("测试电梯门刚度:");
             dataResult.setVisibility(View.INVISIBLE);
             dataResult.setClickable(false);
             cantest = true;
-      /*  }else{
-            tv_testWay.setText(arrayWay[0]);
-            cantest = false;
-        }*/
+
 
         receiver = new MyReceiver();
         IntentFilter filter=new IntentFilter();
@@ -260,12 +267,7 @@ public class OnTestActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isConnect) {
                     if (cantest) {
-                       // if (name.equals("DM-2-1")) {
                             mBinder.sendMessage("A1", BluetoothState.ONTESTACTIVITY);
-                            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-                            String dateStr = formatter.format(curDate);
-                            Log.i("wp628254", "发送信号给下位机时间 = " + dateStr);
                             startTest.setTextColor(Color.RED);
                             dataResult.setVisibility(View.INVISIBLE);
                             dataResult.setClickable(false);
@@ -275,9 +277,7 @@ public class OnTestActivity extends BaseActivity {
 
                         }
                         startTest.setEnabled(false);
-                    /*} else{
-                        Toast.makeText(OnTestActivity.this, "连接的不是所测试的蓝牙设备，请重新连接设备", Toast.LENGTH_SHORT).show();
-                    }*/
+
 
                 } else {
                     Toast.makeText(OnTestActivity.this, "未连接蓝牙设备", Toast.LENGTH_SHORT).show();
@@ -290,10 +290,10 @@ public class OnTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if(isStart) {
-                        mBinder.sendMessage("B1",BluetoothState.ONTESTACTIVITY);
+                        mBinder.sendMessage("B1", BluetoothState.ONTESTACTIVITY);
                         startTest.setTextColor(Color.BLACK);
                         stopTest.setTextColor(Color.RED);
-                        tv_testStatus.setText("数据上传中...");
+                    Log.i("mtag", "发送B1的时间 " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         isStart=false;
                 }else{
                     Toast.makeText(OnTestActivity.this, "还未开始测试", Toast.LENGTH_SHORT).show();
@@ -305,15 +305,9 @@ public class OnTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OnTestActivity.this, ResultActivity.class);
-                if (tv_testWay.getText().toString().equals(arrayWay[0])) {
-                    String data = "Force";
-                    intent.putExtra("extra_data", data);
+
                     startActivity(intent);
-                } else if (tv_testWay.getText().toString().equals(arrayWay[1])) {
-                    String data = "Speed";
-                    intent.putExtra("extra_data", data);
-                    startActivity(intent);
-                }
+
             }
         });
 
@@ -342,7 +336,7 @@ public class OnTestActivity extends BaseActivity {
         //获取sd卡目录
         String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
         String appName = getString(R.string.app_name);
-        if (tv_testWay.getText().toString().equals(arrayWay[0])) {
+
             String fileDir = sdpath + "/" + appName + "/data";
             File newfileDir = new File(fileDir);
             if (!newfileDir.exists()) {
@@ -359,7 +353,7 @@ public class OnTestActivity extends BaseActivity {
             bitmap = createViewBitmap(severityView);
 
             Log.i("cyy628254","bitmap = "+bitmap);
-            pictureDB.initDataBaseF(db, bitmap, MyApplication.FORCE, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, fmax, fKin, energy);
+            pictureDB.initDataBase(db, bitmap, MyApplication.FORCEDIS, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, force, dis,isQualified);
             // pointsF.clear();
 
             indexF++;
@@ -371,7 +365,7 @@ public class OnTestActivity extends BaseActivity {
                 e.printStackTrace();
             }
 
-        }
+
     }
 
 
@@ -427,7 +421,6 @@ public class OnTestActivity extends BaseActivity {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date curDate = new Date(System.currentTimeMillis());//获取当前时间
                 String dateStr = formatter.format(curDate);
-                Log.i("wp628254", "handler发送数据时间 = " + dateStr);
                 handler.obtainMessage(0, 1, -1, message).sendToTarget();
             }else if(intent.getAction().equals("android.intent.action.connect")){
                 Bundle bundle = intent.getExtras();

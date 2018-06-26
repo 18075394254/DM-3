@@ -62,17 +62,10 @@ public class ImportAllActivity extends BaseActivity{
     PictureDatabase pictureDB;
     SQLiteDatabase db;
     Bitmap bitmap;
-    private float fmax=0;
-    private float energy=0;
-    private float fKin=0;
+    private float force=0;
+    private float dis=0;
     Calculate calculate=new Calculate();
-    private float speedAve=0;
-    private float speedMax=0;
-    private float MaxAcc=0;
-    private float MinAcc=0;
-    private float speedAcc=0;
-    private float openTime=0;
-    private float closeTime=0;
+    int isQualified =0;
 
     private int progress=0;
     private String message;
@@ -270,13 +263,11 @@ public class ImportAllActivity extends BaseActivity{
         daoru.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // if (name.equals("DM-2-1")) {
                     daoru.setTextColor(Color.RED);
                     mBinder.sendMessage("D1", BluetoothState.IMPORTALLACTIVITY);
                     Log.i("mtag", "发送D1的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                     biaoti.setText("正在导入，请稍等...");
                     progressValue.setText("正在接收数据...");
-               // }
 
             }
         });
@@ -324,8 +315,6 @@ public class ImportAllActivity extends BaseActivity{
                 Log.d("aaa", device.getName() + " ACTION_ACL_CONNECTED");
             } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
                 Log.d("aaa", " ACTION_ACL_DISCONNECTED");
-                //String message1="蓝牙断开连接";
-                //handler.obtainMessage(2, 1, -1, message1).sendToTarget();
                 ImportAllActivity.this.finish();
             }
         }
@@ -336,26 +325,16 @@ public class ImportAllActivity extends BaseActivity{
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
         String dateStr = formatter.format(curDate);
         File newfile=null;
-       // if (name.equals("DM-2-1")) {
+
             String name = dateStr + "-" + i + ".ds";
             String path = savepath + "/" + name;
             newfile = new File(path);
-            /*calculate.lvbo30(m_cutData, m_filterData, 250, 30);
-            map=calculate.CalcForceMax(m_filterData, m_cutData, 0);
-            fmax=(float)map.get("fmax");
-            fKin=(float)map.get("fKin");
-            energy=(float)map.get("energy");*/
-            MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData,m_DisData);
-            bitmap = createViewBitmap(forceView);
-            pictureDB.initDataBaseF(db, bitmap, MyApplication.FORCE, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, fmax, fKin, energy);
+
+            MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
+        bitmap = createViewBitmap(forceView);
+        pictureDB.initDataBase(db, bitmap, MyApplication.FORCEDIS, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, force, dis,isQualified);
             map.clear();
-       // }
-        fmax = 0;
-        fKin=0;
-        energy = 0;
-        speedMax=0;
-        MaxAcc=0;
-        MinAcc=0;
+
         m_DisData.clear();
         m_ForceData.clear();
         try {

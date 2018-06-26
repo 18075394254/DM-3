@@ -53,7 +53,6 @@ public class MyService extends Service {
                         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         Date curDate = new Date(System.currentTimeMillis());//获取当前时间
                         String dateStr = formatter.format(curDate);
-                        Log.i("wp628254", "广播发送数据时间 = " + dateStr);
                         intent = new Intent();
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.ontestActivity");
@@ -73,7 +72,6 @@ public class MyService extends Service {
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.decForceActivity");
                         sendBroadcast(intent);
-                        Log.i("mtag", "发送广播的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         break;
 
                     case BluetoothState.DECDISACTIVITY:
@@ -81,7 +79,6 @@ public class MyService extends Service {
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.decdisActivity");
                         sendBroadcast(intent);
-                        Log.i("mtag", "发送广播的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         break;
 
                     case BluetoothState.IMPORTALLACTIVITY:
@@ -89,7 +86,6 @@ public class MyService extends Service {
                         intent.putExtra("msg", message);
                         intent.setAction("android.intent.action.ceshiActivity");
                         sendBroadcast(intent);
-                        Log.i("mtag", "发送广播的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         break;
                 }
 

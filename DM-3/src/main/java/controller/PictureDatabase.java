@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * Created by Administrator on 16-10-20.
  */
 public class PictureDatabase extends SQLiteOpenHelper {
-    public static final String CREATE_FORCE = "create table Force ("
+    public static final String CREATE_FORCEDISDB = "create table ForceDisDB ("
 
             + "id integer primary key autoincrement, "
 
@@ -37,36 +37,11 @@ public class PictureDatabase extends SQLiteOpenHelper {
 
             + "picture blob, "
 
-            + "fmax real, "
+            + "force real, "
 
-            + "fkin real, "
+            + "dis real, "
 
-            + "energy real)";
-    public static final String CREATE_SPEED = "create table Speed ("
-
-            + "id integer primary key autoincrement, "
-
-            + "liftid text, "
-
-            + "operator text, "
-
-            + "location text, "
-
-            + "name text, "
-
-            + "picture blob, "
-
-            + "speedAve real, "
-
-            + "speedMax real, "
-
-            + "PspeedAcc real,"
-
-            + "NspeedAcc real,"
-
-            + "closeTime real)";
-
-
+            + "isQualified integer)";//是否是合格的标准数据，0表示是，1表示否
 
     //数据库的字段
     public static class PictureColumns implements BaseColumns {
@@ -91,8 +66,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(CREATE_FORCE);
-        db.execSQL(CREATE_SPEED);
+        db.execSQL(CREATE_FORCEDISDB);
 
          Toast.makeText(mContext, "表创建成功", Toast.LENGTH_SHORT).show();
         String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -127,46 +101,27 @@ public class PictureDatabase extends SQLiteOpenHelper {
     }
 
     //将转换后的图片存入到数据库中
-    public void initDataBaseF(SQLiteDatabase db, Bitmap bitmap, String tableName, String name, String liftid, String operator, String location, float fmax, float fkin, float energy) {
+    public void initDataBase(SQLiteDatabase db, Bitmap bitmap, String tableName, String name, String liftid, String operator, String location, float forcevalue, float disvalue,int isQualified) {
         ContentValues cv = new ContentValues();
         cv.put("name", name);
         cv.put("picture", getPicture(bitmap));
         cv.put("liftid", liftid);
         cv.put("operator", operator);
         cv.put("location", location);
-        cv.put("fmax", fmax);
-        cv.put("fkin", fkin);
-        cv.put("energy", energy);
+        cv.put("force", forcevalue);
+        cv.put("dis", disvalue);
+        cv.put("isQualified", isQualified);
         db.insert(tableName, null, cv);
         cv.clear();
     }
 
-    //将转换后的图片存入到数据库中
-    public void initDataBaseS(SQLiteDatabase db, Bitmap bitmap, String tableName, String name, String liftid, String operator, String location, float speedAve, float speedMax, float PspeedAcc, float NspeedAcc, float closeTime) {
-        ContentValues cv = new ContentValues();
-        cv.put("name", name);
-        cv.put("picture", getPicture(bitmap));
-        cv.put("liftid", liftid);
-        cv.put("operator", operator);
-        cv.put("location", location);
-        cv.put("speedAve", speedAve);
-        cv.put("speedMax", speedMax);
-        cv.put("PspeedAcc", PspeedAcc);
-        cv.put("NspeedAcc", NspeedAcc);
-        cv.put("closeTime", closeTime);
-        db.insert(tableName, null, cv);
-       // Toast.makeText(mContext, "插入数据成功", Toast.LENGTH_SHORT).show();
-        cv.clear();
-    }
 
     //删除表
     public void dropTable(SQLiteDatabase db) {
-        String sql1 = "drop table Force";
-        String sql2 = "drop table Speed";
-        String sql3 = "drop table Both";
+        String sql1 = "drop table ForceDisDB";
+
         db.execSQL(sql1);
-        db.execSQL(sql2);
-        db.execSQL(sql3);
+
     }
 
     //将drawable转换成可以用来存储的byte[]类型
@@ -179,8 +134,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
     //更新数据库
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.FORCE);
-        db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.SPEED);
+        db.execSQL(" DROP TABLE IF EXISTS " + MyApplication.FORCEDIS);
         onCreate(db);
     }
 
@@ -219,15 +173,15 @@ public class PictureDatabase extends SQLiteOpenHelper {
         if (c != null && c.getCount() != 0) {
             if (c.moveToFirst()) {
                 do {
-                        if (tableName.equals(MyApplication.FORCE)) {
+                        if (tableName.equals(MyApplication.FORCEDIS)) {
                             String name2 = c.getString(c.getColumnIndex("name"));
                             if (name2.equals(name)) {
-                                float fmax = c.getFloat(c.getColumnIndex("fmax"));
-                                infos.add(fmax+"");
-                                float fkin = c.getFloat(c.getColumnIndex("fkin"));
-                                infos.add(fkin+"");
-                                float energy = c.getFloat(c.getColumnIndex("energy"));
-                                infos.add(energy+"");
+                                float force = c.getFloat(c.getColumnIndex("force"));
+                                infos.add(force+"");
+                                float dis = c.getFloat(c.getColumnIndex("dis"));
+                                infos.add(dis+"");
+                                int isQualified = c.getInt(c.getColumnIndex("isQualified"));
+                                infos.add(isQualified+"");
                                 String liftid = c.getString(c.getColumnIndex("liftid"));
                                 infos.add(liftid);
                                 String operator = c.getString(c.getColumnIndex("operator"));
@@ -236,26 +190,7 @@ public class PictureDatabase extends SQLiteOpenHelper {
                                 infos.add(location);
 
                             }
-                        } else if (tableName.equals(MyApplication.SPEED)) {
-                            String name2 = c.getString(c.getColumnIndex("name"));
-                            if (name2.equals(name)) {
-                                float speedAve = c.getFloat(c.getColumnIndex("speedAve"));
-                                infos.add(speedAve+"");
-                                float speedMax = c.getFloat(c.getColumnIndex("speedMax"));
-                                infos.add(speedMax+"");
-                                float PspeedAcc = c.getFloat(c.getColumnIndex("PspeedAcc"));
-                                infos.add(PspeedAcc+"");
-                                float NspeedAcc = c.getFloat(c.getColumnIndex("NspeedAcc"));
-                                infos.add(NspeedAcc+"");
-                                float closeTime = c.getFloat(c.getColumnIndex("closeTime"));
-                                infos.add(closeTime+"");
-                                String liftid = c.getString(c.getColumnIndex("liftid"));
-                                infos.add(liftid);
-                                String operator = c.getString(c.getColumnIndex("operator"));
-                                infos.add(operator);
-                                String location = c.getString(c.getColumnIndex("location"));
-                                infos.add(location);
-                            }
+
                     }
                 } while (c.moveToNext());
             }
@@ -349,31 +284,17 @@ public class PictureDatabase extends SQLiteOpenHelper {
         if (c != null && c.getCount() != 0) {
             if (c.moveToFirst()) {
                 do {
-                    if (tableName.equals(MyApplication.FORCE)) {
+                    if (tableName.equals(MyApplication.FORCEDIS)) {
                         String name2 = c.getString(c.getColumnIndex("name"));
                         if (name2.equals(name)) {
-                            float fmax = c.getFloat(c.getColumnIndex("fmax"));
-                            infos.add(fmax);
-                            float fkin = c.getFloat(c.getColumnIndex("fkin"));
-                            infos.add(fkin);
-                            float energy = c.getFloat(c.getColumnIndex("energy"));
-                            infos.add(energy);
+                            float force = c.getFloat(c.getColumnIndex("force"));
+                            infos.add(force);
+                            float dis = c.getFloat(c.getColumnIndex("dis"));
+                            infos.add(dis);
+                            int isQualified = c.getInt(c.getColumnIndex("isQualified"));
+                            infos.add((float) isQualified);
+                        }
 
-                        }
-                    } else if (tableName.equals(MyApplication.SPEED)) {
-                        String name2 = c.getString(c.getColumnIndex("name"));
-                        if (name2.equals(name)) {
-                            float speedAve = c.getFloat(c.getColumnIndex("speedAve"));
-                            infos.add(speedAve);
-                            float speedMax = c.getFloat(c.getColumnIndex("speedMax"));
-                            infos.add(speedMax);
-                            float PspeedAcc = c.getFloat(c.getColumnIndex("PspeedAcc"));
-                            infos.add(PspeedAcc);
-                            float NspeedAcc = c.getFloat(c.getColumnIndex("NspeedAcc"));
-                            infos.add(NspeedAcc);
-                            float closeTime = c.getFloat(c.getColumnIndex("closeTime"));
-                            infos.add(closeTime);
-                        }
                     }
                 } while (c.moveToNext());
             }
@@ -393,31 +314,13 @@ public class PictureDatabase extends SQLiteOpenHelper {
         Cursor c = sd.query(tableName, null, null, null, null, null, null);
         if (c != null && c.getCount() != 0) {
             c.moveToLast();
-            if (tableName.equals(MyApplication.FORCE)) {
-                float fmax = c.getFloat(c.getColumnIndex("fmax"));
-                infos.add(fmax+"");
-                float fkin = c.getFloat(c.getColumnIndex("fkin"));
-                infos.add(fkin+"");
-                float energy = c.getFloat(c.getColumnIndex("energy"));
-                infos.add(energy+"");
-                String liftid = c.getString(c.getColumnIndex("liftid"));
-                infos.add(liftid);
-                String operator = c.getString(c.getColumnIndex("operator"));
-                infos.add(operator);
-                String location = c.getString(c.getColumnIndex("location"));
-                infos.add(location);
-
-            } else if (tableName.equals(MyApplication.SPEED)) {
-                float speedAve = c.getFloat(c.getColumnIndex("speedAve"));
-                infos.add(speedAve+"");
-                float speedMax = c.getFloat(c.getColumnIndex("speedMax"));
-                infos.add(speedMax+"");
-                float PspeedAcc = c.getFloat(c.getColumnIndex("PspeedAcc"));
-                infos.add(PspeedAcc+"");
-                float NspeedAcc = c.getFloat(c.getColumnIndex("NspeedAcc"));
-                infos.add(NspeedAcc+"");
-                float closeTime = c.getFloat(c.getColumnIndex("closeTime"));
-                infos.add(closeTime+"");
+            if (tableName.equals(MyApplication.FORCEDIS)) {
+                float force = c.getFloat(c.getColumnIndex("force"));
+                infos.add(force+"");
+                float dis = c.getFloat(c.getColumnIndex("dis"));
+                infos.add(dis+"");
+                int isQualified = c.getInt(c.getColumnIndex("isQualified"));
+                infos.add(isQualified+"");
                 String liftid = c.getString(c.getColumnIndex("liftid"));
                 infos.add(liftid);
                 String operator = c.getString(c.getColumnIndex("operator"));

@@ -122,35 +122,19 @@ public class DataFragment extends Fragment{
         }
         if(strExt.equals("ds")) {
             // bitmap = getBitmap(pictureDB.getBitmap(db, MyApplication.FORCE,name));
-            Bitmap bitmap = pictureDB.getBitmap(db, MyApplication.FORCE, name);
+            Bitmap bitmap = pictureDB.getBitmap(db, MyApplication.FORCEDIS, name);
             if (bitmap != null){
                 imageView.setImageBitmap(bitmap);
             }else{
                 imageView.setImageResource(R.mipmap.ic_launcher);
             }
 
-            datalist=pictureDB.getDatas(db, MyApplication.FORCE, name);
-            infolist = pictureDB.getInfos(db, MyApplication.FORCE, name);
+            datalist=pictureDB.getDatas(db, MyApplication.FORCEDIS, name);
+            infolist = pictureDB.getInfos(db, MyApplication.FORCEDIS, name);
             if (datalist != null && datalist.size() > 0 ) {
                 textFmax.setText("Fmax = " + datalist.get(0) + " N");
                 textFkin.setText("Fkin = " + datalist.get(1) + " N");
                 textEnergy.setText("Energy = " + datalist.get(2) + " J");
-            }
-        }else if (strExt.equals("dv")){
-            Bitmap bitmap1 = pictureDB.getBitmap(db,MyApplication.SPEED,name);
-            if (bitmap1 != null){
-                imageView.setImageBitmap(bitmap1);
-            }else{
-                imageView.setImageResource(R.mipmap.ic_launcher);
-            }
-
-            datalist=pictureDB.getDatas(db, MyApplication.SPEED, name);
-            infolist=pictureDB.getInfos(db, MyApplication.SPEED, name);
-            if (datalist != null && datalist.size() > 0 ) {
-                textFmax.setText("Vave = " + datalist.get(0) + " m/s");
-                textFkin.setText("Vmax = " + datalist.get(1) + " m/s");
-                textEnergy.setText("+Vacc = " + datalist.get(2) + " m²/s");
-                textMinAcc.setText("-Vacc = " + datalist.get(3) + " m²/s");
             }
         }
         return view;
@@ -188,7 +172,7 @@ public class DataFragment extends Fragment{
                 ArrayList<String> list=new ArrayList<String>();
                 String strExt = name.substring(name.length() - 2);
                 if(strExt.equals("ds")) {
-                    list = pictureDB.getInfos(db, MyApplication.FORCE,titleText.getText().toString());
+                    list = pictureDB.getInfos(db, MyApplication.FORCEDIS,titleText.getText().toString());
 
                 }
                 Intent intent=new  Intent(getActivity(), MoreMessageActivity.class);

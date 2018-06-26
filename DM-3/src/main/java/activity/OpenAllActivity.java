@@ -400,7 +400,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                         dirfile.delete();
                                         dataList.remove(j);
                                         if (str.equals("ds")) {
-                                            pictureDB.delete(db, MyApplication.FORCE, filename);
+                                            pictureDB.delete(db, MyApplication.FORCEDIS, filename);
                                         }
 
                                     }

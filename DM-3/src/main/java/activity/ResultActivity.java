@@ -24,7 +24,7 @@ import controller.PictureDatabase;
  */
 public class ResultActivity extends BaseActivity {
     private Button btn_look,btn_back;
-    private TextView forceMax,forceKin,forceEnergy,MinAcc;
+    private TextView forceValue,disValue;
     ImageView imageView;
     private float scaleWidth=1,scaleHeight=1;
     ArrayList<String> list=new ArrayList<>();
@@ -38,10 +38,9 @@ public class ResultActivity extends BaseActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
         setContentView(R.layout.activity_result);
 
-        forceMax=getView(R.id.forceMax);
-        forceKin=getView(R.id.forceKin);
-        forceEnergy=getView(R.id.energy);
-        MinAcc=getView(R.id.MinAcc);
+        forceValue=getView(R.id.forcevalue);
+        disValue=getView(R.id.disvalue);
+
 
         btn_back=getView(R.id.btn_back);
         btn_look=getView(R.id.btn_look);
@@ -49,39 +48,29 @@ public class ResultActivity extends BaseActivity {
 
         pd=new PictureDatabase(this);
         sd = pd.getWritableDatabase();
-        Intent intent=getIntent();
-        String data=intent.getStringExtra("extra_data");
 
-        Log.i("wp123","data = " + data);
-
-        if(data.equals(MyApplication.FORCE)) {
                 strExt="ds";
-            if (pd.getLastBitmap(sd, MyApplication.FORCE) != null) {
-                imageView.setImageBitmap(pd.getLastBitmap(sd, MyApplication.FORCE));
+            if (pd.getLastBitmap(sd, MyApplication.FORCEDIS) != null) {
+                imageView.setImageBitmap(pd.getLastBitmap(sd, MyApplication.FORCEDIS));
             }
-            if (pd.getLastDatas(sd,MyApplication.FORCE) != null){
-                list=pd.getLastDatas(sd,MyApplication.FORCE);
-                forceMax.setText("Fmax = "+list.get(0)+" N");
-                forceKin.setText("Fkin = "+list.get(1)+" N");
-                forceEnergy.setText("Energy = "+list.get(2)+" J");
+            if (pd.getLastDatas(sd,MyApplication.FORCEDIS) != null){
+                list=pd.getLastDatas(sd,MyApplication.FORCEDIS);
+                Log.i("2018-06-26 ", "isQualified list.get(2) = " + list.get(2));
+                if (Integer.parseInt(list.get(2))== 1){
+                    forceValue.setText("数据不达标,压力未达到300N");
+                    disValue.setText("");
+                }else{
+                    forceValue.setText("压力值 = "+list.get(0)+" N");
+                    disValue.setText("位移量 = " + list.get(1)+" mm");
+                }
+
 
             }
-        }else if(data.equals(MyApplication.SPEED)){
-             strExt="dv";
-            if (pd.getLastBitmap(sd, MyApplication.SPEED) != null) {
-                imageView.setImageBitmap(pd.getLastBitmap(sd, MyApplication.SPEED));
-            }
-            if (pd.getLastBitmap(sd, MyApplication.SPEED) != null) {
-                list=pd.getLastDatas(sd,MyApplication.SPEED);
-                forceMax.setText("Vave = "+list.get(0)+" m/s");
-                forceKin.setText("Vmax = "+list.get(1)+" m/s");
-                forceEnergy.setText("+Vacc = "+list.get(2)+" m²/s");
-                MinAcc.setText("-Vacc = "+list.get(3)+" m²/s");
-            }
-        }
+
+
 
         clickListener();
-       // pd.delete(sd);
+
 
     }
 
