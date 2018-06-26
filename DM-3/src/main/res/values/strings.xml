@@ -44,5 +44,9 @@
     <string name="kongzai">空载标定:</string>
     <string name="fuzai50N">50N负载标定:</string>
     <string name="fuzai100N">100N负载标定:</string>
+    <string name="lingdian">零点标定:</string>
+    <string name="weiyifuzai">位移负载标定:</string>
+    <string name="nextstep">下一步</string>
+    <string name="move1mm">点击并手动增加1mm位移</string>
 
 </resources>

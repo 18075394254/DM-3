@@ -1,5 +1,6 @@
 package activity;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -240,6 +241,12 @@ public class ImportAllActivity extends BaseActivity{
         progressBar = (ProgressBar)findViewById(R.id.progressBar);
         biaoti=getView(R.id.biaoti);
 
+
+        IntentFilter filter1=new IntentFilter();
+        filter1.addAction("android.bluetooth.device.action.ACL_CONNECTED");
+        filter1.addAction("android.bluetooth.device.action.ACL_DISCONNECTED");
+        ImportAllActivity.this.registerReceiver(mReceiver, filter1);
+
        // progressValue = (TextView) findViewById(R.id.progressValue);
         progressBar.setMax(100);
         progressBar.setProgress(0);
@@ -279,6 +286,7 @@ public class ImportAllActivity extends BaseActivity{
     public void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+        unregisterReceiver(mReceiver);
         unbindService(connection);
     }
     public void onStart() {
@@ -307,6 +315,22 @@ public class ImportAllActivity extends BaseActivity{
             }
         }
     }
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive (Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Log.d("aaa", device.getName() + " ACTION_ACL_CONNECTED");
+            } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
+                Log.d("aaa", " ACTION_ACL_DISCONNECTED");
+                //String message1="蓝牙断开连接";
+                //handler.obtainMessage(2, 1, -1, message1).sendToTarget();
+                ImportAllActivity.this.finish();
+            }
+        }
+
+    };
     private void onSave(String i) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date curDate = new Date(System.currentTimeMillis());//获取当前时间

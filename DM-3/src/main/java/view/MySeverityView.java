@@ -241,7 +241,7 @@ public class MySeverityView extends View {
 
             }else{
                 canvas.drawText("Force/N", 0, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
-                canvas.drawText("S/mm", width * 7 / 8 + 50 + 10 - 25, height / 32 + 10, paint);
+                canvas.drawText("S/mm", width * 7 / 8 - 20, height / 32 + 10, paint);
                 canvas.drawText("Time/S", width * 7 / 8 - 15, height * 9 / 16 + 30, paint);
             }
         }

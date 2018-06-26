@@ -1,5 +1,6 @@
 package activity;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -35,7 +36,7 @@ import utils.MyService;
  * Created by Administrator on 16-10-27.
  */
 public class DecForceActivity extends BaseActivity {
-    private Button btn_startDec,btn_next;
+    private Button btn_startDec,btn_next,btn_reset;
     private TextView text_tishi;
     private EditText et_tishi;
     private ImageView backimage;
@@ -45,6 +46,7 @@ public class DecForceActivity extends BaseActivity {
             String message = (String) msg.obj;
             Log.i("mtag", "handler接收的数据为 ：" + message);
             if (message.equals("E1")) {
+                btn_startDec.setClickable(true);
                 if (text_tishi.getText().equals(getResources().getString(R.string.kongzai))) {
                     et_tishi.setText("点击下一步进行50N负载标定！");
                     Toast.makeText(DecForceActivity.this, "空载标定成功", Toast.LENGTH_SHORT).show();
@@ -65,6 +67,18 @@ public class DecForceActivity extends BaseActivity {
                     btn_startDec.setText("标定完成，返回上一界面");
                     btn_startDec.setTextColor(Color.BLACK);
                 }
+            }else if (message.equals("E2")){
+                btn_startDec.setClickable(true);
+                btn_reset.setClickable(true);
+                text_tishi.setText(R.string.kongzai);
+                et_tishi.setText("点击按钮开始空载标定");
+                btn_reset.setTextColor(Color.BLACK);
+                btn_startDec.setText("开始标定");
+                btn_startDec.setTextColor(Color.BLACK);
+
+            }else{
+                Toast.makeText(DecForceActivity.this, "标定异常，非标定指令！", Toast.LENGTH_SHORT).show();
+
             }
         }
     };
@@ -103,6 +117,14 @@ public class DecForceActivity extends BaseActivity {
         IntentFilter filter=new IntentFilter();
         filter.addAction("android.intent.action.decForceActivity");
         DecForceActivity.this.registerReceiver(receiver, filter);
+
+        IntentFilter filter1=new IntentFilter();
+        filter1.addAction("android.bluetooth.device.action.ACL_CONNECTED");
+        filter1.addAction("android.bluetooth.device.action.ACL_DISCONNECTED");
+        DecForceActivity.this.registerReceiver(mReceiver, filter1);
+
+
+
         initView();
     }
 
@@ -119,6 +141,7 @@ public class DecForceActivity extends BaseActivity {
                 }else {
                     mBinder.sendMessage("E1", BluetoothState.DECFORCEACTIVITY);
                     btn_startDec.setTextColor(Color.RED);
+                    btn_startDec.setClickable(false);
                 }
             }
         });
@@ -143,6 +166,17 @@ public class DecForceActivity extends BaseActivity {
                 }
             }
         });
+
+        btn_reset = getView(R.id.btn_reset);
+        btn_reset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                btn_reset.setTextColor(Color.RED);
+                btn_reset.setClickable(false);
+            }
+        });
+
         backimage= (ImageView) findViewById(R.id.back);
         backimage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,6 +193,7 @@ public class DecForceActivity extends BaseActivity {
         super.onDestroy();
         unregisterReceiver(receiver);
         unbindService(connection);
+        unregisterReceiver(mReceiver);
     }
 
     public class MyReceiver extends BroadcastReceiver {
@@ -176,4 +211,20 @@ public class DecForceActivity extends BaseActivity {
             }
         }
     }
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive (Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (action.equals(BluetoothDevice.ACTION_ACL_CONNECTED)) {
+                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Log.d("aaa", device.getName() + " ACTION_ACL_CONNECTED");
+            } else if (action.equals(BluetoothDevice.ACTION_ACL_DISCONNECTED)) {
+                Log.d("aaa", " ACTION_ACL_DISCONNECTED");
+                //String message1="蓝牙断开连接";
+                //handler.obtainMessage(2, 1, -1, message1).sendToTarget();
+                DecForceActivity.this.finish();
+            }
+        }
+
+    };
 }
