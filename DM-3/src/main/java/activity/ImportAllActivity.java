@@ -75,24 +75,23 @@ public class ImportAllActivity extends BaseActivity{
         public void handleMessage(Message msg) {
              message = (String) msg.obj;
             if (message.equals("D")){
-                message=MyApplication.getString();
+                message=MyApplication.getString().replace(" ", "");
                 new Thread(
                         new Runnable() {
                             @Override
                             public void run() {
 
-                                if (message.getBytes().length > 23) {
                                     m_ForceData.clear();
                                     m_DisData.clear();
                                     String[] s = message.split(",");
-                                    Log.i("cyy123", "s.length=" + s.length);
+                                    Log.i("importallActivity", "s.length=" + s.length);
                                     // Toast.makeText(MyApplication.getContext(), "解析的字符串的长度为" + s.length, Toast.LENGTH_SHORT).show();
                                    //21332是ST转为的数字，以这个数字为分隔符分隔数据
                                     for (int i = 0; i < s.length; i++) {
-                                        if (s[i].contains("21332")) {
+                                        if (s[i].equals("21332")) {
                                             list.add(i);
                                             filsNum++;
-                                            Log.i("Tag", "i = " + i);
+                                            Log.i("importallActivity", "i = " + i);
                                         }
                                     }
                                     if (list.size() != 0) {
@@ -101,12 +100,14 @@ public class ImportAllActivity extends BaseActivity{
                                             for (int j = list.get(0) + 2; j < s.length; j++) {
                                                 value = ((Float.parseFloat(s[j]) / 100));
 
-                                                if (i%2 == 0) {
+                                                if (j%2 == 0) {
                                                     m_ForceData.add(value);
                                                 }else{
                                                     m_DisData.add(value);
                                                 }
                                             }
+
+
                                             onSave(s[1]);
                                             // bnp.incrementProgressBy(100);
                                             handler1.obtainMessage(0, 100, -1, message).sendToTarget();
@@ -114,32 +115,37 @@ public class ImportAllActivity extends BaseActivity{
                                         } else {
                                             for (int k = 0; k < list.size(); k++) {
                                                 if (k < list.size() - 1) {
+                                                    //list.get(k) + 2 + 2 去掉“ST”和文件编号 list.get(k) + 2 到 list.get(k + 1) 表示两个i之间的数
                                                     for (int j = list.get(k) + 2; j < list.get(k + 1); j++) {
                                                         value = ((Float.parseFloat(s[j]) / 100));
 
-                                                        if (i%2 == 0) {
+                                                        if (j%2 == 0) {
                                                             m_ForceData.add(value);
                                                         }else{
                                                             m_DisData.add(value);
                                                         }
                                                     }
+
+
                                                     onSave(s[list.get(k) + 1]);
                                                     progress=(k+1) * 100 / filsNum;
                                                     // bnp.incrementProgressBy(progress);
                                                     handler1.obtainMessage(0, progress, -1, message).sendToTarget();
                                                     // Log.i("mtag", "progressValue = " + progressValue.getText().toString());
-                                                    Log.i("mtag", "解析数据并绘图时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()))+"progress"+k * 100 / filsNum);
+                                                    Log.i("importallActivity", "解析数据并绘图时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()))+"progress"+k * 100 / filsNum);
                                                 } else {
                                                     //去掉后面的End*造成的不正常数据
                                                     for (int j = list.get(list.size() - 1) + 2; j < s.length-2; j++) {
                                                         value = ((Float.parseFloat(s[j]) / 100));
 
-                                                        if (i%2 == 0) {
+                                                        if (j%2 == 0) {
                                                             m_ForceData.add(value);
                                                         }else{
                                                             m_DisData.add(value);
                                                         }
                                                     }
+
+
                                                     onSave(s[list.get(k)+1]);
                                                     handler1.obtainMessage(0, 100, -1, message).sendToTarget();
                                                 }
@@ -148,10 +154,6 @@ public class ImportAllActivity extends BaseActivity{
 
                                     }
 
-                                } else {
-                                    Toast.makeText(ImportAllActivity.this, "仪器没有文件可以导入", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                }
                             }
                         }
                 ).start();
@@ -177,7 +179,7 @@ public class ImportAllActivity extends BaseActivity{
                         progressValue.setText(progress + " % ");
                         Toast.makeText(ImportAllActivity.this, "数据导入完成", Toast.LENGTH_SHORT).show();
                         MyApplication.setString("");
-                        Log.i("mtag", "数据导入完成时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
+                        Log.i("importallActivity", "数据导入完成时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -251,13 +253,13 @@ public class ImportAllActivity extends BaseActivity{
 
         bindIntent = new Intent(this, MyService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
+
         Intent intent=getIntent();
         savepath=intent.getStringExtra("path");
-        name=intent.getStringExtra("name");
 
         receiver = new MyReceiver();
         IntentFilter filter=new IntentFilter();
-        filter.addAction("android.intent.action.ceshiActivity");
+        filter.addAction("android.intent.action.importallActivity");
         ImportAllActivity.this.registerReceiver(receiver, filter);
 
         daoru.setOnClickListener(new View.OnClickListener() {
@@ -265,7 +267,7 @@ public class ImportAllActivity extends BaseActivity{
             public void onClick(View v) {
                     daoru.setTextColor(Color.RED);
                     mBinder.sendMessage("D1", BluetoothState.IMPORTALLACTIVITY);
-                    Log.i("mtag", "发送D1的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
+                    Log.i("importallActivity", "发送D1的时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                     biaoti.setText("正在导入，请稍等...");
                     progressValue.setText("正在接收数据...");
 
@@ -298,10 +300,9 @@ public class ImportAllActivity extends BaseActivity{
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            if (intent.getAction().equals("android.intent.action.ceshiActivity")) {
+            if (intent.getAction().equals("android.intent.action.importallActivity")) {
                 Bundle bundle = intent.getExtras();
                 String message1 = bundle.getString("msg");
-                Log.i("mtag","广播接受到数据时间"+new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                 handler.obtainMessage(0, 1, -1, message1).sendToTarget();
             }
         }
@@ -330,7 +331,14 @@ public class ImportAllActivity extends BaseActivity{
             String path = savepath + "/" + name;
             newfile = new File(path);
 
-            MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
+        map =  calculate.getDisValue(m_DisData, m_ForceData, 300);
+        force = (float) map.get("forceValue");
+        dis = (float) map.get("disValue");
+        isQualified = (int) map.get("isQualified");
+        Log.i("importallActivity", " m_DisData。size = " + m_DisData.size() + "m_ForceData.size = " + m_ForceData.size());
+        Log.i("importallActivity", " path = " + path);
+
+        MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
         bitmap = createViewBitmap(forceView);
         pictureDB.initDataBase(db, bitmap, MyApplication.FORCEDIS, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, force, dis,isQualified);
             map.clear();

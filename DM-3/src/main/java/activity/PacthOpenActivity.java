@@ -15,13 +15,13 @@ import android.widget.GridView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-
 import com.example.user.dm_3.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import controller.BaseActivity;
+import controller.MyApplication;
 import controller.PictureDatabase;
 
 /**
@@ -37,11 +37,9 @@ public class PacthOpenActivity extends BaseActivity {
 
     ArrayList<String> listInfo=new ArrayList<>();
     ArrayList<Float> listData=new ArrayList<>();
-    ArrayList<String> listDf=new ArrayList<>();
-    ArrayList<String> listDv=new ArrayList<>();
+    ArrayList<String> listDs=new ArrayList<>();
     private Handler handler;
-    private int sizeDf;
-    private int sizeDv;
+    private int sizeDs;
     String[] items;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -50,22 +48,16 @@ public class PacthOpenActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patchopen);
 
-        listDf.clear();
-        listDv.clear();
+        listDs.clear();
         gridview = (GridView) findViewById(R.id.gridview);
         pd=new PictureDatabase(this);
         sd=pd.getWritableDatabase();
 
         Intent intent=this.getIntent();
         Bundle bundle=intent.getExtras();
-        listDf=bundle.getStringArrayList("listDf");
-        listDv=bundle.getStringArrayList("listDv");
-        sizeDf=bundle.getInt("listDf.size()");
-        sizeDv=bundle.getInt("listDv.size()");
-        Log.i("cyy123","sizeDf="+sizeDf);
-        Log.i("cyy123","sizeDv="+sizeDv);
-        Log.i("cyy123","listDf="+listDf.size());
-        Log.i("cyy123","listDv="+listDv.size());
+        listDs=bundle.getStringArrayList("listDs");
+        sizeDs=bundle.getInt("listDs.size()");
+
 
         srcTable = new ArrayList<HashMap<String, String>>();
         saTable = new SimpleAdapter(this,
@@ -83,7 +75,7 @@ public class PacthOpenActivity extends BaseActivity {
 
         //添加数据测试
         //addData();
-        if(listDf != null && listDf.size()==sizeDf || listDv != null && listDv.size() == sizeDv){
+        if(listDs != null && listDs.size()== sizeDs ){
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -116,36 +108,28 @@ public class PacthOpenActivity extends BaseActivity {
     }
 
     public void addHeader(String name){
-        if (name.equals("Force")) {
-            String items[] = {name, "Fmax", "Fkin", "Energy", "操作员", "地点", "设备"};
+
+            String items[] = {name, "Force", "Displacement", "是否达标", "操作员", "地点", "设备"};
             for (String strText:items) {
                 HashMap<String, String> map = new HashMap<String, String>();
                 map.put("ItemText",strText);
                 srcTable.add(map);
             }
-        }else{
-            String items[] = {name, "speedAve", "speedMax", "speedAcc", "操作员", "地点", "设备"};
-            for (String strText:items) {
-                HashMap<String, String> map = new HashMap<String, String>();
-                map.put("ItemText",strText);
-                srcTable.add(map);
-            }
-        }
 
 
     }
 
     public void addData(){
-        if (listDf.size() > 0){
+        if (listDs.size() > 0){
 
             //添加表头
-            addHeader("Force");
-    if (listDf != null && listDf.size() ==sizeDf && listDf.size() > 0 ) {
-        for (int i = 0; i < listDf.size(); i++) {
-            String name = listDf.get(i);
+            addHeader("FileName");
+    if (listDs != null && listDs.size() ==sizeDs && listDs.size() > 0 ) {
+        for (int i = 0; i < listDs.size(); i++) {
+            String name = listDs.get(i);
             Log.i("ggg","name = "+name);
             //listData = pd.getDatas(sd, "Force", name);
-            listInfo = pd.getInfos(sd, "Force", name);
+            listInfo = pd.getInfos(sd, MyApplication.FORCEDIS, name);
             items = new String[]{name, listInfo.get(0) + "", listInfo.get(1) + "", listInfo.get(2) + "", listInfo.get(3) + "", listInfo.get(4) + "", listInfo.get(5) + ""};
 
            // Log.i("ggg", " " + listData.get(0) + " " + listData.get(1) + " " + listData.get(2));
@@ -160,46 +144,13 @@ public class PacthOpenActivity extends BaseActivity {
     }
         handler.sendEmptyMessage(0);
 }
-            if(listDv.size() >0){
-                for (int i=0; i<2;i++){
-                    String items[]={ "", "","","","","",""};
-                    for (String strText:items) {
-                        HashMap<String, String> map = new HashMap<String, String>();
-                        map.put("ItemText", strText);
-                        srcTable.add(map);
-                    }
-                }
-                handler.sendEmptyMessage(0);
-            }
         }
-        if(listDv != null && listDv.size() == sizeDv && listDv.size() > 0){
-          addHeader("Speed");
-
-            for(int i=0;i<listDv.size();i++){
-                String name=listDv.get(i);
-               // listData=pd.getDatas(sd,"Speed",listDv.get(i));
-                listInfo=pd.getInfos(sd,"Speed",name);
-                String items[]={ name, listInfo.get(0)+"",listInfo.get(1)+"",listInfo.get(2)+"",listInfo.get(5)+"",listInfo.get(6)+"",listInfo.get(7)+""};
-                for (String strText:items) {
-                    HashMap<String, String> map = new HashMap<String, String>();
-                    map.put("ItemText", strText);
-                    srcTable.add(map);
-                }
-            }
-            handler.sendEmptyMessage(0);
-        }else{
-
-        }
-
-
-
     }
 
     //清空列表
     public void RemoveAll()
     {
-        listDv.clear();
-        listDf.clear();
+        listDs.clear();
         listInfo.clear();
         listData.clear();
         srcTable.clear();

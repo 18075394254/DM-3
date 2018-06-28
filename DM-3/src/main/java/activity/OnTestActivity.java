@@ -322,7 +322,7 @@ public class OnTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
 
-               // startActivity(new Intent(OnTestActivity.this, SendReceiveActivity.class));
+                startActivity(new Intent(OnTestActivity.this, SendReceiveActivity.class));
 
 
             }
@@ -390,8 +390,7 @@ public class OnTestActivity extends BaseActivity {
 
     public void onStart() {
         super.onStart();
-       /* dataResult.setVisibility(View.INVISIBLE);
-        dataResult.setClickable(false);*/
+
     }
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -418,18 +417,13 @@ public class OnTestActivity extends BaseActivity {
             if (intent.getAction().equals("android.intent.action.ontestActivity")) {
                 Bundle bundle = intent.getExtras();
                 String message = bundle.getString("msg");
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-                String dateStr = formatter.format(curDate);
                 handler.obtainMessage(0, 1, -1, message).sendToTarget();
             }else if(intent.getAction().equals("android.intent.action.connect")){
                 Bundle bundle = intent.getExtras();
                 String message=bundle.getString("msg");
                 handler.obtainMessage(1, 1, -1, message).sendToTarget();
             }else if(intent.getAction().equals("android.intent.action.disconnect")){
-                /*Bundle bundle = intent.getExtras();
-                String message=bundle.getString("msg");
-                handler.obtainMessage(2, 1, -1, message).sendToTarget();*/
+
             }else if(intent.getAction().equals("android.intent.action.connectfailed")){
                 Bundle bundle = intent.getExtras();
                 String message=bundle.getString("msg");

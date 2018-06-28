@@ -84,7 +84,7 @@ public class MyService extends Service {
                     case BluetoothState.IMPORTALLACTIVITY:
                         intent = new Intent();
                         intent.putExtra("msg", message);
-                        intent.setAction("android.intent.action.ceshiActivity");
+                        intent.setAction("android.intent.action.importallActivity");
                         sendBroadcast(intent);
                         break;
                 }

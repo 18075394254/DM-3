@@ -97,11 +97,12 @@ public class Calculate {
     //计算最小值
     public float getMin(ArrayList<Float> array) {
 
+        float Min = 0;
 
-        float Min=0;
 
-        //求出最大值，以及测试数据的合格情况
+        //求出最小值，以及测试数据的合格情况
         if (array != null){
+            Min = array.get(0).floatValue();
             for (int i=0;i<array.size();i++){
                 float value = array.get(i).floatValue();
                 if (value < Min){
@@ -152,19 +153,26 @@ public class Calculate {
 
                         //将压力值等于300N时对应的位移值添加到数组
                         disValueArr.add(m_DisData.get(i));
+                        Log.i("2018-06-26 ", "m_DisData.get(i) = " + m_DisData.get(i));
                     }
                 }
-                isQualified = 0;
-                //大于299表示测试有数据达到300N，本次数据合格
-                map.put("isQualified",isQualified);
 
+                Log.i("2018-06-26 ", "disValueArr.size = " + disValueArr.size());
                 //只有一个等于300N,找到对应的值
                 if (disValueArr.size() == 1){
+                    //本次数据合格
+                    isQualified = 0;
+                    map.put("isQualified",isQualified);
+
                     disValue = disValueArr.get(0);
                     map.put("disValue",disValue);
 
                     //有多个压力值等于300N时，取对应的最大的位移值
                 }else if (disValueArr.size() > 1){
+                    //本次数据合格
+                    isQualified = 0;
+                    map.put("isQualified",isQualified);
+
                     disValue = getMax(disValueArr);
                     map.put("disValue",disValue);
 
@@ -175,18 +183,37 @@ public class Calculate {
                         float value = forceValues.get(i)-300;
                         forceValueArr.add(Math.abs(value));
                     }
+
                     //计算出绝对值中最小的值
                     float forceValueAbs = getMin(forceValueArr);
-                    //如果有多个最小绝对值，就将这几个值的位移值保存到数组中
-                    for (int i = 0; i< forceValueArr.size();i++){
-                        if (forceValueAbs == forceValueArr.get(i)){
-                            disValueArray.add(m_DisData.get(i));
+                    Log.i("2018-06-26 ", "forceValueAbs = " + forceValueAbs);
+
+                    //绝对值小于1表示在299-301之前，超过这个范围就不算300N的位移量了
+                    if (forceValueAbs < 1) {
+                        //如果有多个最小绝对值，就将这几个值的位移值保存到数组中
+                        for (int i = 0; i < forceValueArr.size(); i++) {
+                            if (forceValueAbs == forceValueArr.get(i)) {
+                                disValueArray.add(m_DisData.get(i));
+                                Log.i("2018-06-26 ", "m_DisData.get(i) = " + m_DisData.get(i));
+                            }
                         }
+
+                        //本次数据合格
+                        isQualified = 0;
+                        map.put("isQualified",isQualified);
+
+                        disValue = getAverage(disValueArray);
+                        map.put("disValue", disValue);
+                    }else{
+                        //表示没有找到299-301之内的压力值，本次数据作废
+                        isQualified = 2;
+                        map.put("isQualified",isQualified);
+
+                        map.put("disValue",disValue);
                     }
-                    disValue = getAverage(disValueArray);
-                    map.put("disValue",disValue);
                 }
-                map.put("forceValue","300");
+                float force = (float) 300.0;
+                map.put("forceValue",force);
             }else{
                 isQualified = 1;
                 //小于299表示测试的所有数据都不到300N，本次数据不合格

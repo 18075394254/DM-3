@@ -3,6 +3,7 @@ package activity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 
 import controller.BaseActivity;
 import controller.MyApplication;
+import controller.PictureDatabase;
 import utils.BluetoothState;
 import utils.ClsUtils;
 import utils.MyService;
@@ -73,6 +75,13 @@ public class MainActivity extends BaseActivity {
     //侧滑菜单
     private SlidingMenu menu;
 
+    //进度条弹框
+    private ProgressDialog progressDialog;
+    //处理进度条的handle
+    private Handler handler;
+    //进度
+    private int progress=0;
+
     private MyReceiver receiver;
     ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -107,9 +116,14 @@ public class MainActivity extends BaseActivity {
             }else if(msg.what ==3){
                 blueToothMsg.setText((String)msg.obj);
                 isConnect=false;
-            }else{
+            }else if (msg.what == 0){
+                String tag = (String)msg.obj;
+                if (tag.equals("C1")){
+                    Toast.makeText(MainActivity.this, "设备数据已清空!", Toast.LENGTH_SHORT).show();
 
+                }
             }
+
         }
     };
 
@@ -198,7 +212,7 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isConnect) {
                     Intent intent = new Intent(MainActivity.this, ChooseDirActivity.class);
-                    intent.putExtra("name", name);
+
                     startActivity(intent);
                 } else {
                     Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
@@ -218,6 +232,8 @@ public class MainActivity extends BaseActivity {
             public void onClick(View v) {
                 if (isConnect) {
                     mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
+                    Toast.makeText(MainActivity.this, "设备正在清空数据！", Toast.LENGTH_SHORT).show();
+
                 } else {
                     Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
                 }

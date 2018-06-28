@@ -279,7 +279,7 @@ public class DataTrans {
 		}
 		int tmp1 = byte_h & 0xFF;
 		int tmp2 = byte_l & 0xFF;
-		int result = tmp1 * 256 + tmp2 + composite_value;
+		int result = tmp1 * 256 + tmp2;
 		return result;
 	}
 	

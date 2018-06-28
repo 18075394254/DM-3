@@ -171,10 +171,14 @@ public class MySeverityView extends View {
         if(i==7){
                 //绘制标准线
                 int Y=(height/32  + viewHeigth/10 * i);
-                canvas.drawLine(width /8 - 15, Y, width * 7 / 8 + 50, Y, paint4);
+                canvas.drawLine(width /8 - 15, Y, width * 7 / 8 + 50-15, Y, paint4);
                 paint4.setTextSize(40);
                 canvas.drawText("300/N",width/8+10,Y-5,paint4);
 
+            float Y2= (float) (height/32  + viewHeigth/10 * 8.5);
+            canvas.drawLine(width /8 - 15, Y2, width * 7 / 8 + 50 - 15, Y2, paint4);
+            paint4.setTextSize(40);
+            canvas.drawText("15/mm",width * 6 / 8 ,Y2-5,paint4);
             }
         }
 

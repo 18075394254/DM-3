@@ -59,9 +59,12 @@ public class ResultActivity extends BaseActivity {
                 if (Integer.parseInt(list.get(2))== 1){
                     forceValue.setText("数据不达标,压力未达到300N");
                     disValue.setText("");
+                }else if(Integer.parseInt(list.get(2))== 2){
+                    forceValue.setText("数据不达标,未找到接近300N的压力");
+                    disValue.setText("");
                 }else{
-                    forceValue.setText("压力值 = "+list.get(0)+" N");
-                    disValue.setText("位移量 = " + list.get(1)+" mm");
+                    forceValue.setText("压力 = "+list.get(0)+" N");
+                    disValue.setText("位移 = " + list.get(1)+" mm");
                 }
 
 
@@ -82,7 +85,7 @@ public class ResultActivity extends BaseActivity {
             }
         });
 
-       /* btn_look.setOnClickListener(new View.OnClickListener() {
+        btn_look.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new  Intent(ResultActivity.this,MoreMessageActivity.class);
@@ -90,7 +93,7 @@ public class ResultActivity extends BaseActivity {
                 intent.putExtra("strExt",strExt);
                 startActivity(intent);
             }
-        });*/
+        });
     }
 
 

@@ -275,9 +275,9 @@ public class PictureDatabase extends SQLiteOpenHelper {
     }
 
     //查询名字对应的数据
-    public ArrayList<Float> getDatas(SQLiteDatabase sd, String tableName, String name) {
+    public ArrayList<String> getDatas(SQLiteDatabase sd, String tableName, String name) {
 
-        ArrayList<Float> infos = new ArrayList<Float>();
+        ArrayList<String> infos = new ArrayList<String>();
 
         //查询数据库
         Cursor c = sd.query(tableName, null, null, null, null, null, null);
@@ -288,11 +288,11 @@ public class PictureDatabase extends SQLiteOpenHelper {
                         String name2 = c.getString(c.getColumnIndex("name"));
                         if (name2.equals(name)) {
                             float force = c.getFloat(c.getColumnIndex("force"));
-                            infos.add(force);
+                            infos.add(force+"");
                             float dis = c.getFloat(c.getColumnIndex("dis"));
-                            infos.add(dis);
+                            infos.add(dis+"");
                             int isQualified = c.getInt(c.getColumnIndex("isQualified"));
-                            infos.add((float) isQualified);
+                            infos.add(isQualified+"");
                         }
 
                     }

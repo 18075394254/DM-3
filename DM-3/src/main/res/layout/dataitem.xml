@@ -41,20 +41,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="15dp"
         android:paddingLeft="20dp"
         android:layout_below="@+id/lin1"
         >
 
             <TextView
-                android:id="@+id/open_forceMax"
+                android:id="@+id/open_force"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#df131d"
                 android:textSize="20sp"
                 />
             <TextView
-                android:id="@+id/open_forceKin"
+                android:id="@+id/open_dis"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#df131d"
@@ -63,37 +63,7 @@
                 />
 
     </LinearLayout>
-    <HorizontalScrollView
-        android:id="@+id/lin3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/lin2">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
-        android:paddingLeft="20dp"
 
-        >
-        <TextView
-            android:id="@+id/open_energy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#df131d"
-            android:textSize="20sp"
-            />
-        <TextView
-            android:id="@+id/open_MinAcc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#df131d"
-            android:textSize="20sp"
-            android:paddingLeft="20dp"
-            />
-
-    </LinearLayout>
-    </HorizontalScrollView>
     <LinearLayout
         android:id="@+id/lin4"
         android:layout_width="match_parent"
@@ -102,7 +72,7 @@
         android:paddingLeft="10dp"
         android:layout_marginTop="5dp"
         android:weightSum="3"
-        android:layout_below="@+id/lin3"
+        android:layout_below="@+id/lin2"
         >
         <Button
             android:id="@+id/previous"

@@ -270,14 +270,14 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                     }
                     if (listDs.size() == 0) {
                         batchOpen.setTextColor(Color.BLACK);
-                        Toast.makeText(OpenAllActivity.this, "该文件夹下没有电梯门综合检测系统文件", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OpenAllActivity.this, "该文件夹下没有电梯门刚度检测系统文件", Toast.LENGTH_SHORT).show();
                     } else {
-                        /*Intent intent = new Intent(OpenAllActivity.this, PacthOpenActivity.class);
+                        Intent intent = new Intent(OpenAllActivity.this, PacthOpenActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putStringArrayList("listDs", listDs);
                         bundle.putInt("listDs.size()", listDs.size());
                         intent.putExtras(bundle);
-                        startActivity(intent);*/
+                        startActivity(intent);
                     }
                 }
 

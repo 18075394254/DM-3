@@ -32,11 +32,11 @@ import controller.PictureDatabase;
 public class DataFragment extends Fragment{
     private String name;
     private ImageView imageView,backImage,deleteImage;
-    private TextView textFmax,textFkin,textEnergy,titleText,textMinAcc;
+    private TextView textForce,textDis,titleText;
     private Button moveToPrevious,moveToNext,moreMessage;
     private PictureDatabase pictureDB;
     private SQLiteDatabase db;
-    ArrayList<Float> datalist=new ArrayList<>();
+    ArrayList<String> datalist=new ArrayList<>();
     ArrayList<String>  infolist=new ArrayList<>();
     private View view;
     private onChangeListener mCallback;
@@ -101,11 +101,9 @@ public class DataFragment extends Fragment{
 
         view=inflater.inflate(R.layout.dataitem, container, false);
         imageView=(ImageView)view.findViewById(R.id.pinchImageView);
-        textFmax=(TextView)view.findViewById(R.id.open_forceMax);
-        textFkin=(TextView)view.findViewById(R.id.open_forceKin);
-        textEnergy=(TextView)view.findViewById(R.id.open_energy);
+        textForce=(TextView)view.findViewById(R.id.open_force);
+        textDis=(TextView)view.findViewById(R.id.open_dis);
         titleText=(TextView)view.findViewById(R.id.titleText);
-        textMinAcc= (TextView) view.findViewById(R.id.open_MinAcc);
         backImage=(ImageView)view.findViewById(R.id.backBtn);
         //deleteImage=(ImageView)view.findViewById(R.id.deleteBtn);
         moveToNext=(Button)view.findViewById(R.id.next);
@@ -132,9 +130,15 @@ public class DataFragment extends Fragment{
             datalist=pictureDB.getDatas(db, MyApplication.FORCEDIS, name);
             infolist = pictureDB.getInfos(db, MyApplication.FORCEDIS, name);
             if (datalist != null && datalist.size() > 0 ) {
-                textFmax.setText("Fmax = " + datalist.get(0) + " N");
-                textFkin.setText("Fkin = " + datalist.get(1) + " N");
-                textEnergy.setText("Energy = " + datalist.get(2) + " J");
+                if (Integer.parseInt(datalist.get(2)) == 0) {
+
+                    textForce.setText("压力值 = "+datalist.get(0)+" N");
+                    textDis.setText("位移量 = " + datalist.get(1)+" mm");
+                }else {
+                    textForce.setText("数据不达标,压力未达到300N");
+                    textDis.setText("");
+                }
+
             }
         }
         return view;

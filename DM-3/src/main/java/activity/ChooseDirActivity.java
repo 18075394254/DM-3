@@ -39,7 +39,7 @@ public class ChooseDirActivity extends BaseActivity {
 	File[] currentFiles;
 	FileFilter filter;
 	static String m_savaPath=null;
-	String name=null;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -54,8 +54,6 @@ public class ChooseDirActivity extends BaseActivity {
 		cancelView= (ImageView) findViewById(R.id.canceldlView);
 		startView= (ImageView) findViewById(R.id.startView);
 
-		Intent intent=getIntent();
-		name=intent.getStringExtra("name");
 
 		filter = new FileFilter() {
 			@Override
@@ -94,9 +92,7 @@ public class ChooseDirActivity extends BaseActivity {
 			public void onClick(View v) {
 				m_savaPath = pathText.getText().toString();
 				Intent intent = new Intent(ChooseDirActivity.this,ImportAllActivity.class);
-				//Bundle newbundle = new Bundle();
 				intent.putExtra("path", m_savaPath);
-				intent.putExtra("name", name);
 				startActivity(intent);
 				m_savaPath=null;
 

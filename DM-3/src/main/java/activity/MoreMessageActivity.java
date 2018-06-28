@@ -39,23 +39,12 @@ public class MoreMessageActivity extends BaseActivity {
         strExt=intent.getStringExtra("strExt");
         if(list1 != null && list1.size()>0) {
             if (strExt.equals("ds")) {
-                list.add("最大压力值： " + list1.get(0) +" N");
-                list.add("平均持续力： " + list1.get(1)+" N");
-                list.add("撞击能量：  " + list1.get(2)+" J");
+                list.add("压力值： " + list1.get(0) +" N");
+                list.add("位移值： " + list1.get(1)+" mm");
                 list.add("设备编号：  " + list1.get(3));
                 list.add(" 操作员：   " + list1.get(4));
                 list.add(" 地点：     " + list1.get(5));
 
-
-            } else if (strExt.equals("dv")) {
-                list.add("平均速度 ：" + list1.get(0)+" m/s");
-                list.add("最大速度 ：" + list1.get(1)+" m/s");
-                list.add("最大正加速度 ：" + list1.get(2)+" m²/s");
-                list.add("最大负加速度 ：" + list1.get(3)+" m²/s");
-                list.add("测试时间 ：" + list1.get(4)+ " s");
-                list.add("设备编号：  " + list1.get(5));
-                list.add(" 操作员：   " + list1.get(6));
-                list.add(" 地点：     " + list1.get(7));
 
             }
         }
