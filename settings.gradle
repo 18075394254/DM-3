@@ -1,1 +1,1 @@
-include ':slidelibrary', ':DM-3'
+include ':slidelibrary', ':DM-3', ':android-pdf-viewer', ':sample'

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/ceshi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="15dp"
+        android:text="测试发送byte数组"
+        />
+    <TextView
+        android:id="@+id/text123"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="接收到的信息为："
+        android:layout_below="@+id/ceshi"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        />
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/text123"
+    android:layout_above="@+id/lin"
+    >
+    <TextView
+        android:id="@+id/receiveText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="王下七武海"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        />
+</ScrollView>
+    <LinearLayout
+        android:id="@+id/lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <EditText
+            android:id="@+id/sendEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            />
+        <Button
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="发送"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="蓝牙"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

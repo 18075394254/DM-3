@@ -306,17 +306,14 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case 2:
-                       // startActivity(new Intent(MainActivity.this,UseExplainActivity.class));
+                        startActivity(new Intent(MainActivity.this,UseExplainActivity.class));
                         break;
                     case 3:
-                        //startActivity(new Intent(MainActivity.this,DeviceDetailsActivity.class));
+                        startActivity(new Intent(MainActivity.this,DeviceDetailsActivity.class));
                         break;
                     case 4:
                         if (isConnect) {
-
-                                    mBinder.sendMessage("C1",BluetoothState.MAINACTIVITY);
-
-
+                             mBinder.sendMessage("C1",BluetoothState.MAINACTIVITY);
                         } else {
                             Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
                         }
