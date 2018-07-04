@@ -2,6 +2,8 @@ package utils;
 
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -188,8 +190,8 @@ public class Calculate {
                     float forceValueAbs = getMin(forceValueArr);
                     Log.i("2018-06-26 ", "forceValueAbs = " + forceValueAbs);
 
-                    //绝对值小于1表示在299-301之前，超过这个范围就不算300N的位移量了
-                    if (forceValueAbs < 1) {
+                    //绝对值小于1表示在295-305之前，超过这个范围就不算300N的位移量了
+                    if (forceValueAbs < 5) {
                         //如果有多个最小绝对值，就将这几个值的位移值保存到数组中
                         for (int i = 0; i < forceValueArr.size(); i++) {
                             if (forceValueAbs == forceValueArr.get(i)) {
@@ -205,7 +207,7 @@ public class Calculate {
                         disValue = getAverage(disValueArray);
                         map.put("disValue", disValue);
                     }else{
-                        //表示没有找到299-301之内的压力值，本次数据作废
+                        //表示没有找到295-305之内的压力值，本次数据作废
                         isQualified = 2;
                         map.put("isQualified",isQualified);
 
@@ -228,5 +230,29 @@ public class Calculate {
             return map;
 
     }
+    /**
+     * 获取目标文件的里面的String
+     *
+     * @param file
+     *            目标文件
+     * @param content
+     *            写入的内容
+     * @return
+     */
+    public static void writeSetingsToFile(File file, String content) {
 
+
+        FileOutputStream fos = null;
+
+        try {
+            fos = new FileOutputStream(file);
+            fos.write(content.getBytes("utf-8"));
+            fos.flush();
+            fos.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
 }

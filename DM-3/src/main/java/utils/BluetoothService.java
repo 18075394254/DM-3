@@ -407,7 +407,7 @@ public class BluetoothService {
                                         if(index>1) {
                                             msg = new String(all, 0, index);
                                             Log.i("wpcyy628254", "msg = " + msg);
-                                            //如果接收的命令是A1，就开启接收三组数据的模式
+
                                             if (msg.contains("B1")){
                                                 mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "B1").sendToTarget();
 

@@ -70,6 +70,8 @@ public class ImportAllActivity extends BaseActivity{
     private int progress=0;
     private String message;
     private float value = 0;
+    //每条数据的内容，用于写入文件中
+    private String dataString ="";
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -99,17 +101,17 @@ public class ImportAllActivity extends BaseActivity{
                                             //list.get(0) + 2 去掉“ST”和文件编号
                                             for (int j = list.get(0) + 2; j < s.length; j++) {
                                                 value = ((Float.parseFloat(s[j]) / 100));
-
+                                                dataString = dataString+value+",";
                                                 if (j%2 == 0) {
                                                     m_ForceData.add(value);
+                                                    Log.i("importallActivity", "value = " + value);
                                                 }else{
                                                     m_DisData.add(value);
                                                 }
                                             }
-
-
                                             onSave(s[1]);
-                                            // bnp.incrementProgressBy(100);
+                                            dataString ="";
+
                                             handler1.obtainMessage(0, 100, -1, message).sendToTarget();
 
                                         } else {
@@ -118,7 +120,7 @@ public class ImportAllActivity extends BaseActivity{
                                                     //list.get(k) + 2 + 2 去掉“ST”和文件编号 list.get(k) + 2 到 list.get(k + 1) 表示两个i之间的数
                                                     for (int j = list.get(k) + 2; j < list.get(k + 1); j++) {
                                                         value = ((Float.parseFloat(s[j]) / 100));
-
+                                                        dataString = dataString+value+",";
                                                         if (j%2 == 0) {
                                                             m_ForceData.add(value);
                                                         }else{
@@ -126,27 +128,25 @@ public class ImportAllActivity extends BaseActivity{
                                                         }
                                                     }
 
-
                                                     onSave(s[list.get(k) + 1]);
+                                                    dataString ="";
                                                     progress=(k+1) * 100 / filsNum;
                                                     // bnp.incrementProgressBy(progress);
                                                     handler1.obtainMessage(0, progress, -1, message).sendToTarget();
                                                     // Log.i("mtag", "progressValue = " + progressValue.getText().toString());
-                                                    Log.i("importallActivity", "解析数据并绘图时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()))+"progress"+k * 100 / filsNum);
                                                 } else {
                                                     //去掉后面的End*造成的不正常数据
                                                     for (int j = list.get(list.size() - 1) + 2; j < s.length-2; j++) {
                                                         value = ((Float.parseFloat(s[j]) / 100));
-
+                                                        dataString = dataString+value+",";
                                                         if (j%2 == 0) {
                                                             m_ForceData.add(value);
                                                         }else{
                                                             m_DisData.add(value);
                                                         }
                                                     }
-
-
                                                     onSave(s[list.get(k)+1]);
+                                                    dataString ="";
                                                     handler1.obtainMessage(0, 100, -1, message).sendToTarget();
                                                 }
                                             }
@@ -348,6 +348,7 @@ public class ImportAllActivity extends BaseActivity{
         try {
             if (newfile != null){
                 newfile.createNewFile();
+                calculate.writeSetingsToFile(newfile,dataString);
             }
 
         } catch (IOException e) {

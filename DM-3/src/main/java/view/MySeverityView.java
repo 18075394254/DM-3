@@ -55,8 +55,11 @@ public class MySeverityView extends View {
     public MySeverityView(Context context, ArrayList<Float> forceData,ArrayList<Float> disData) {
         super(context);
 
-        m_ForceData = new Calculate().lvbo40(forceData,m_ForceData,40,40);
-        m_DisData = new Calculate().lvbo40(disData,m_DisData,40,40);
+        /*m_ForceData = new Calculate().lvbo40(forceData,m_ForceData,40,40);
+        m_DisData = new Calculate().lvbo40(disData,m_DisData,40,40);*/
+        m_ForceData = forceData;
+        m_DisData = disData;
+
         //将时间轴与压力轴的数据绑定在一起
         if (m_ForceData != null) {
             //根据压力数据的个数调整时间轴的长度
@@ -77,7 +80,7 @@ public class MySeverityView extends View {
             Log.i("2018-06-26","m_ForceData.size() = "+m_ForceData.size());
             for (int i = 0; i < m_ForceData.size(); i++) {
                 points.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_ForceData.get(i)));
-                forceData.add(m_ForceData.get(i));
+              //  forceData.add(m_ForceData.get(i));
             }
             //max1 = CalcMax(forceData);
     }
@@ -86,8 +89,7 @@ public class MySeverityView extends View {
             for (int i = 0; i < m_DisData.size(); i++) {
                 points2.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_DisData.get(i)));
 
-
-                disData.add(m_DisData.get(i));
+               // disData.add(m_DisData.get(i));
             }
            // max1 = CalcMax(disData);
         }

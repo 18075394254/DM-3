@@ -92,7 +92,8 @@ public class OnTestActivity extends BaseActivity {
     private TextView textForce;
     private TextView textDis;
 
-
+    //每条数据的内容，用于写入文件中
+    private String dataString ="";
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -146,7 +147,7 @@ public class OnTestActivity extends BaseActivity {
                          for (int i = 0; i < s.length -1; i++) {
 
                                  value = ((Float.parseFloat(s[i]) / 100));
-
+                             dataString = dataString+value+",";
                              if (i%2 == 0) {
                                  m_ForceData.add(value);
                              }else{
@@ -163,6 +164,7 @@ public class OnTestActivity extends BaseActivity {
                         Log.i("2018-06-26 ", "isQualified = " + isQualified);
                         onSave();
                         totalData = "";
+                        dataString ="";
                         map.clear();
                         tv_testStatus.setText("测试完成");
                         dataResult.setVisibility(View.VISIBLE);
@@ -361,6 +363,7 @@ public class OnTestActivity extends BaseActivity {
             File newfile = new File(path);
             try {
                 newfile.createNewFile();
+                calculate.writeSetingsToFile(newfile, totalData);
             } catch (IOException e) {
                 e.printStackTrace();
             }

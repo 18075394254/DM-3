@@ -33,8 +33,8 @@ public class DeviceDetailsActivity extends BaseActivity {
 
         listView=getView(R.id.id_listview);
         backimage=getView(R.id.back);
-        list.add("设备名称 ：电梯门综合检测系统（DM-3）");
-        list.add("用途 ：用于电梯门刚度测试");
+        list.add("设备名称 ：电梯门刚度测试仪（DM-3）");
+        list.add("用途 ：用于测试电梯门的刚度");
         list.add("版本号 ：1.0");
         list.add("生产公司 ：安徽中科智能高技术有限责任公司");
         list.add("地址 ：合肥市高新区科学大道100号");

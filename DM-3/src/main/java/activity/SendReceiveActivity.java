@@ -43,11 +43,14 @@ public class SendReceiveActivity extends BaseActivity {
     ArrayList<Integer> list=new ArrayList<>();
     private ArrayList<Float> m_filterData = new ArrayList<Float>();
     private ArrayList<Float> m_cutData = new ArrayList<Float>();
+    private String dataString ="";
     private Handler handler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             String message = (String) msg.obj;
             if (message.equals("D")){
+               /* sb.append(MyApplication.getString());
+                receiveText.setText(sb.toString());*/
                 final String[] s = MyApplication.getString().replace(" ", "").split(",");
                 Log.i("cyy123", "s.length=" + s.length);
                 // Toast.makeText(MyApplication.getContext(), "解析的字符串的长度为" + s.length, Toast.LENGTH_SHORT).show();
@@ -55,7 +58,7 @@ public class SendReceiveActivity extends BaseActivity {
                     //Log.i("Tag", "s[i] = " + s[i]);
                     sb.append(s[i]+" , ");
                     if (s[i].contains("21332")) {
-                        // list.add(i);
+                         list.add(i);
                         // filsNum++;
                         Log.i("Tag", "i = " + i);
                     }
@@ -74,15 +77,21 @@ public class SendReceiveActivity extends BaseActivity {
                     } else {
                         for (int k = 0; k < list.size(); k++) {
                             if (k < list.size() - 1) {
-                                for (int j = list.get(k) + 2; j < list.get(k + 1); j++) {
-                                    m_cutData.add(Float.parseFloat(s[j]));
+                                for (int j = list.get(k); j < list.get(k + 1); j++) {
+                                    //value = ((Float.parseFloat(s[j]) / 100));
+                                    dataString = dataString+Float.parseFloat(s[j])+",";
+
                                 }
+                              dataString = dataString+"      一二三四五六七八九         ";
                                 // onSave(s[list.get(k) + 1]);
 
                             } else {
-                                for (int j = list.get(list.size() - 1) + 2; j < s.length; j++) {
-                                    m_cutData.add(Float.parseFloat(s[j]));
+                                for (int j = list.get(list.size() - 1); j < s.length; j++) {
+                                    dataString = dataString+Float.parseFloat(s[j])+",";
+
                                 }
+                                receiveText.setText(dataString+"               ");
+                                dataString="";
                                 // onSave(s[list.get(k) + 1]);
                             }
                         }
@@ -90,7 +99,7 @@ public class SendReceiveActivity extends BaseActivity {
                 }
 
             }else if (message.equals("A2")){
-                //MyApplication.setString("");
+
                 sb.append(MyApplication.getString());
                 receiveText.setText(sb.toString());
             }
