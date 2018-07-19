@@ -100,7 +100,7 @@ public class ImportAllActivity extends BaseActivity{
                                         if (list.size() == 1) {
                                             //list.get(0) + 2 去掉“ST”和文件编号
                                             for (int j = list.get(0) + 2; j < s.length; j++) {
-                                                value = ((Float.parseFloat(s[j]) / 100));
+                                                value = ((Float.parseFloat(s[j]) / 10));
                                                 dataString = dataString+value+",";
                                                 if (j%2 == 0) {
                                                     m_ForceData.add(value);
@@ -119,7 +119,7 @@ public class ImportAllActivity extends BaseActivity{
                                                 if (k < list.size() - 1) {
                                                     //list.get(k) + 2 + 2 去掉“ST”和文件编号 list.get(k) + 2 到 list.get(k + 1) 表示两个i之间的数
                                                     for (int j = list.get(k) + 2; j < list.get(k + 1); j++) {
-                                                        value = ((Float.parseFloat(s[j]) / 100));
+                                                        value = ((Float.parseFloat(s[j]) / 10));
                                                         dataString = dataString+value+",";
                                                         if (j%2 == 0) {
                                                             m_ForceData.add(value);
@@ -137,7 +137,7 @@ public class ImportAllActivity extends BaseActivity{
                                                 } else {
                                                     //去掉后面的End*造成的不正常数据
                                                     for (int j = list.get(list.size() - 1) + 2; j < s.length-2; j++) {
-                                                        value = ((Float.parseFloat(s[j]) / 100));
+                                                        value = ((Float.parseFloat(s[j]) / 10));
                                                         dataString = dataString+value+",";
                                                         if (j%2 == 0) {
                                                             m_ForceData.add(value);

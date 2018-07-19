@@ -71,13 +71,16 @@ public class ChooseDirActivity extends BaseActivity {
 		{
 			curdir = root;
 			currentFiles = root.listFiles(filter);
-			for (int i=0;i<currentFiles.length;i++){
-				Log.i("===y123", " currentFiles[i] " + currentFiles[i]);
+			if(currentFiles != null) {
 
+				for (int i = 0; i < currentFiles.length; i++) {
+					Log.i("===y123", " currentFiles[i] " + currentFiles[i]);
+
+				}
+				// 使用当前目录下的全部文件、文件夹来填充ListView
+				inflateListView(currentFiles);
+				pathText.setText(curdir.getAbsolutePath());
 			}
-			// 使用当前目录下的全部文件、文件夹来填充ListView 
-			inflateListView(currentFiles);
-			pathText.setText(curdir.getAbsolutePath());
 		}
 
 		cancelView.setOnClickListener(new View.OnClickListener() {

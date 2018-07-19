@@ -230,9 +230,27 @@ public class MainActivity extends BaseActivity {
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (isConnect) {
-                    mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
-                    Toast.makeText(MainActivity.this, "设备正在清空数据！", Toast.LENGTH_SHORT).show();
+                    Dialog alertDialog = new AlertDialog.Builder(MainActivity.this).
+                            setTitle("确定要清空数据吗？").
+                            setIcon(R.mipmap.launcher).
+                            setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
+                                    Toast.makeText(MainActivity.this, "设备正在清空数据！", Toast.LENGTH_SHORT).show();
+                                }
+                            }).
+                            setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                }
+                            }).
+                            create();
+                    alertDialog.show();
 
                 } else {
                     Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
@@ -313,7 +331,27 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 4:
                         if (isConnect) {
-                             mBinder.sendMessage("C1",BluetoothState.MAINACTIVITY);
+                            Dialog alertDialog = new AlertDialog.Builder(MainActivity.this).
+                                    setTitle("确定要清空数据吗？").
+                                    setIcon(R.mipmap.launcher).
+                                    setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
+                                            Toast.makeText(MainActivity.this, "设备正在清空数据！", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }).
+                                    setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            // TODO Auto-generated method stub
+                                        }
+                                    }).
+                                    create();
+                            alertDialog.show();
+
                         } else {
                             Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
                         }

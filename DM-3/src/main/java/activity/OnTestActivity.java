@@ -116,12 +116,12 @@ public class OnTestActivity extends BaseActivity {
                     //分隔字符串
                     String[] s = msgdata.split(",");
                     //三组数据(压力，位移，压力，位移，压力，位移)
-                    float a = Float.parseFloat(s[0]) / 100;
-                    float b = Float.parseFloat(s[2]) / 100;
-                    float c = Float.parseFloat(s[4]) / 100;
-                    float d= Float.parseFloat(s[1]) / 100;
-                    float e = Float.parseFloat(s[3]) / 100;
-                    float f = Float.parseFloat(s[5]) / 100;
+                    float a = Float.parseFloat(s[0]) / 10;
+                    float b = Float.parseFloat(s[2]) / 10;
+                    float c = Float.parseFloat(s[4]) / 10;
+                    float d= Float.parseFloat(s[1]) / 10;
+                    float e = Float.parseFloat(s[3]) / 10;
+                    float f = Float.parseFloat(s[5]) / 10;
 
                     float forceValue =  (a+b+c)/3;
                     BigDecimal forceValue2 = new BigDecimal(forceValue);
@@ -146,7 +146,7 @@ public class OnTestActivity extends BaseActivity {
                     //s.length - 1是为了防止最后一个""信息影响数据解析
                          for (int i = 0; i < s.length -1; i++) {
 
-                                 value = ((Float.parseFloat(s[i]) / 100));
+                                 value = ((Float.parseFloat(s[i]) / 10));
                              dataString = dataString+value+",";
                              if (i%2 == 0) {
                                  m_ForceData.add(value);
