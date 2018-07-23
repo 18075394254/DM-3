@@ -23,6 +23,7 @@ import com.example.user.dm_3.R;
 import java.util.ArrayList;
 
 import activity.MoreMessageActivity;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import controller.MyApplication;
 import controller.PictureDatabase;
 
@@ -31,7 +32,7 @@ import controller.PictureDatabase;
  */
 public class DataFragment extends Fragment{
     private String name;
-    private ImageView imageView,backImage,deleteImage;
+    private ImageView imageView,backImage,shareBtn;
     private TextView textForce,textDis,titleText;
     private Button moveToPrevious,moveToNext,moreMessage;
     private PictureDatabase pictureDB;
@@ -105,7 +106,7 @@ public class DataFragment extends Fragment{
         textDis=(TextView)view.findViewById(R.id.open_dis);
         titleText=(TextView)view.findViewById(R.id.titleText);
         backImage=(ImageView)view.findViewById(R.id.backBtn);
-        //deleteImage=(ImageView)view.findViewById(R.id.deleteBtn);
+        shareBtn=(ImageView)view.findViewById(R.id.shareBtn);
         moveToNext=(Button)view.findViewById(R.id.next);
         moveToPrevious=(Button)view.findViewById(R.id.previous);
         moreMessage=(Button)view.findViewById(R.id.allmessage);
@@ -169,19 +170,24 @@ public class DataFragment extends Fragment{
 
             }
         });*/
-
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showShare();
+            }
+        });
         moreMessage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<String> list=new ArrayList<String>();
+                ArrayList<String> list = new ArrayList<String>();
                 String strExt = name.substring(name.length() - 2);
-                if(strExt.equals("ds")) {
-                    list = pictureDB.getInfos(db, MyApplication.FORCEDIS,titleText.getText().toString());
+                if (strExt.equals("ds")) {
+                    list = pictureDB.getInfos(db, MyApplication.FORCEDIS, titleText.getText().toString());
 
                 }
-                Intent intent=new  Intent(getActivity(), MoreMessageActivity.class);
+                Intent intent = new Intent(getActivity(), MoreMessageActivity.class);
                 intent.putStringArrayListExtra("list", list);
-                intent.putExtra("strExt",strExt);
+                intent.putExtra("strExt", strExt);
                 startActivity(intent);
             }
         });
@@ -219,7 +225,33 @@ public class DataFragment extends Fragment{
 
         }
     };
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
 
+        // 分享时Notification的图标和文字  2.5.9以后的版本不     调用此方法
+        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+        oks.setTitle("标题");
+        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("测试文件分享");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        //  oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+
+        // 启动分享GUI
+        oks.show(getContext());
+    }
     public interface onChangeListener
     {
         public void onChange(int position, int what);

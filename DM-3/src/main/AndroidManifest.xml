@@ -54,6 +54,47 @@
         <activity android:name="activity.SendReceiveActivity"/>
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
-    </application>
+
+        <!--微信分享回调 -->
+        <activity
+            android:name="mob.wxapi.WXEntryActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+
+            <intent-filter>
+                <data android:scheme="1106985737" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <!--集成line客户端登录授权，需要添如下格式的过滤器-->
+            <intent-filter>
+                <data android:scheme="line.1477692153" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
+            <meta-data android:name="Mob-AppKey" android:value="26f376f759456"/>
+            <meta-data android:name="Mob-AppSecret" android:value="10e016b736b32f8d247e75f4948d099b"/>
+        </activity>
+
+
+
+           </application>
 
 </manifest>

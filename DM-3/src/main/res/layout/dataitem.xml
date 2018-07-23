@@ -27,12 +27,14 @@
             android:gravity="center"
             android:paddingLeft="10dp"
             android:textSize="25sp" />
-        <!--<ImageView
-            android:id="@+id/deleteBtn"
+
+
+        <ImageView
+            android:id="@+id/shareBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@mipmap/delete"/>-->
+            android:src="@mipmap/share"/>
 
     </LinearLayout>
 

@@ -9,8 +9,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.example.user.dm_3.R;
+
 import java.util.ArrayList;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import model.User;
 import utils.MyService;
 
@@ -40,8 +44,6 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         context=getApplicationContext();
-
-
         helper=new UserDatabase(this);
         pdb=new PictureDatabase(this);
         db = pdb.getWritableDatabase();
@@ -98,4 +100,6 @@ public class MyApplication extends Application{
         // 大于6尺寸则为Pad
         return screenInches >= 6.0;
     }
+
+
 }
