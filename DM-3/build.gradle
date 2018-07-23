@@ -1,13 +1,37 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.mob.sdk'
 
+MobSDK {
+    appKey "26f376f759456"
+    appSecret "10e016b736b32f8d247e75f4948d099b"
+    ShareSDK {
+        devInfo {
+            Wechat {
+                appId "wx4868b35061f87885"
+                appSecret "64020361b8ec4c99936c0e3999a9f249"
+                userName "gh_afb25ac019c9"
+                path "pages/index/index.html?id=1"
+                withShareTicket true
+                miniprogramType 2
+                bypassApproval false
+            }
+            QQ {
+                appId "1106985737"
+                appKey "XBRxwYy0dysZeljI"
+                shareByAppClient true
+                bypassApproval false
+            }
+        }
+    }
+}
 android {
     compileSdkVersion 23
     buildToolsVersion '23.0.3'
 
     defaultConfig {
         applicationId "com.example.user.dm_3"
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion 16
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -17,18 +41,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile project(':slidelibrary')
     compile project(':android-pdf-viewer')
-    compile files('src/main/libs/MobCommons-2018.0704.1311.jar')
-    compile files('src/main/libs/MobTools-2018.0704.1157.jar')
-    compile files('src/main/libs/ShareSDK-Core-3.2.0.jar')
-    compile files('src/main/libs/ShareSDK-QQ-3.2.0.jar')
-    compile files('src/main/libs/ShareSDK-Wechat-3.2.0.jar')
-    compile files('src/main/libs/ShareSDK-Wechat-Core-3.2.0.jar')
 }

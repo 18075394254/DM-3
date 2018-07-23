@@ -18,8 +18,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -30,7 +28,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
 
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import controller.PictureDatabase;
 import fragment.DataFragment;
 
@@ -39,7 +36,6 @@ import fragment.DataFragment;
  */
 public class DataLookActivity extends FragmentActivity implements DataFragment.onChangeListener {
     private ViewPager viewPager;
-
     private ArrayList<Fragment> fragmentList;
     private DataFragment itemFragment;
     private FragmentManager manager;
@@ -68,7 +64,6 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
         setContentView(R.layout.datashow);
         viewPager= (ViewPager) findViewById(R.id.viewPager);
@@ -111,11 +106,8 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         //将当前点击的位置去掉不是需要文件的数量得到所需文件的位置
         int curposition = position - (dirCount - fileCount);
         Log.i("lll", "curposition = " + curposition);
-        viewPager.setCurrentItem(curposition);
-
-
+        viewPager.setCurrentItem(curposition );
     }
-
     //查看是不是需要的测试门夹力的条件
     FileFilter filter = new FileFilter()
     {

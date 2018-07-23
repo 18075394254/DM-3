@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.user.dm_3" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.user.dm_3">
     //操作蓝牙的权限
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -18,18 +19,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
-    <!-- 添加三方分享必要的权限 -->
-
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-
-
-
     <application
         android:name="controller.MyApplication"
+        tools:replace="android:name"
         android:allowBackup="true"
         android:icon="@mipmap/launcher"
         android:label="@string/app_name"
@@ -64,62 +56,6 @@
         <activity android:name="activity.SendReceiveActivity"/>
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
-
-        <!-- （3.1.0版本之后（包含3.1.0）才需要注册此Activity）如果集成QQ分享，或者使用QQ客户端来进行QQ空间的分享，
-         须要在此处添加一个回调activity，对ACTION_VIEW事件的过滤器，其中的scheme是“tencent”前缀再开发者
-         应用的加上appId。如果此Activity和过滤器不设置，则分享结束以后不能得到正确的回调。-->
-         <activity
-             android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
-             android:launchMode="singleTask"
-             android:noHistory="true">
-             <intent-filter>
-                 <action android:name="android.intent.action.VIEW" />
-                 <category android:name="android.intent.category.DEFAULT" />
-                 <category android:name="android.intent.category.BROWSABLE" />
-                 <data android:scheme="tencent100371282" />
-             </intent-filter>
-         </activity>
-        
-         <!--微信分享回调 -->
-        <activity
-            android:name="mob.wxapi.WXEntryActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
-
-            <intent-filter>
-                <data android:scheme="1106985737" />
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <!-- 调用新浪原生SDK，需要注册的回调activity -->
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <!--集成line客户端登录授权，需要添如下格式的过滤器-->
-            <intent-filter>
-                <data android:scheme="line.1477692153" />
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-            <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
-            <meta-data android:name="Mob-AppKey" android:value="26f376f759456"/>
-            <meta-data android:name="Mob-AppSecret" android:value="10e016b736b32f8d247e75f4948d099b"/>
-        </activity>
-
-
-
-           </application>
+    </application>
 
 </manifest>

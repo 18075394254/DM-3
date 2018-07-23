@@ -3,13 +3,12 @@
 buildscript {
     repositories {
         jcenter()
-        jcenter{
-            url 'http://jcenter.bintray.com'
-        }
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.mob.sdk:MobSDK:+'
+        // 注册MobSDK
+        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
     }
 }
 

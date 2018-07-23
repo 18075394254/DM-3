@@ -9,13 +9,10 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.example.user.dm_3.R;
 import com.mob.MobSDK;
 
 import java.util.ArrayList;
 
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 import model.User;
 import utils.MyService;
 
@@ -45,6 +42,8 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         context=getApplicationContext();
+
+
         helper=new UserDatabase(this);
         pdb=new PictureDatabase(this);
         db = pdb.getWritableDatabase();
@@ -54,7 +53,7 @@ public class MyApplication extends Application{
             helper.add("Administrator", "123456");
         }
         startService(new Intent(this, MyService.class));
-        MobSDK.init(this, "26f376f759456", "10e016b736b32f8d247e75f4948d099b");
+        MobSDK.init(this);
     }
     public static Context getContext(){
         return context;
@@ -101,6 +100,4 @@ public class MyApplication extends Application{
         // 大于6尺寸则为Pad
         return screenInches >= 6.0;
     }
-
-
 }
