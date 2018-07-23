@@ -18,6 +18,16 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
+    <!-- 添加三方分享必要的权限 -->
+
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+
+
     <application
         android:name="controller.MyApplication"
         android:allowBackup="true"
@@ -55,7 +65,22 @@
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
 
-        <!--微信分享回调 -->
+        <!-- （3.1.0版本之后（包含3.1.0）才需要注册此Activity）如果集成QQ分享，或者使用QQ客户端来进行QQ空间的分享，
+         须要在此处添加一个回调activity，对ACTION_VIEW事件的过滤器，其中的scheme是“tencent”前缀再开发者
+         应用的加上appId。如果此Activity和过滤器不设置，则分享结束以后不能得到正确的回调。-->
+         <activity
+             android:name="cn.sharesdk.tencent.qq.ReceiveActivity"
+             android:launchMode="singleTask"
+             android:noHistory="true">
+             <intent-filter>
+                 <action android:name="android.intent.action.VIEW" />
+                 <category android:name="android.intent.category.DEFAULT" />
+                 <category android:name="android.intent.category.BROWSABLE" />
+                 <data android:scheme="tencent100371282" />
+             </intent-filter>
+         </activity>
+        
+         <!--微信分享回调 -->
         <activity
             android:name="mob.wxapi.WXEntryActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"

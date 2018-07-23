@@ -10,6 +10,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.example.user.dm_3.R;
+import com.mob.MobSDK;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,7 @@ public class MyApplication extends Application{
             helper.add("Administrator", "123456");
         }
         startService(new Intent(this, MyService.class));
-
+        MobSDK.init(this, "26f376f759456", "10e016b736b32f8d247e75f4948d099b");
     }
     public static Context getContext(){
         return context;
