@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -27,20 +28,23 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import adapter.Adapter;
 import controller.MyApplication;
 import controller.PictureDatabase;
 import fragment.DataFragment;
+import model.DataBean;
 import model.ItemBean;
+import utils.ExcelUtil;
 
 
 public class OpenAllActivity extends Activity implements Adapter.OnShowItemClickListener {
 
     private TextView pathText;
     private ListView fileslist;
-    private Button backView, batchOpen;
+    private Button backView, batchOpen,createExcel;
     private List<ItemBean> dataList;
     private List<ItemBean> selectList;
     private static boolean isShow=false; // 是否显示CheckBox标识
@@ -65,9 +69,12 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
     private File[] dirfiles;
     private int count1=1;
     private int count2=1;
+    private int count3=1;
     private String name=null;
     PictureDatabase pictureDB;
     SQLiteDatabase db;
+
+    String xlsName = "DM-3数据表格.xls";
 
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -90,6 +97,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
         backView = (Button) findViewById(R.id.backView);
         batchOpen = (Button) findViewById(R.id.batchOpen);
+        createExcel = (Button) findViewById(R.id.createExcel);
 
         pictureDB=new PictureDatabase(this);
         db=pictureDB.getWritableDatabase();
@@ -192,30 +200,47 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                         if (currentFiles[position - 1].isFile()) {
                             //取得文件名
                             String fileName = currentFiles[position - 1].getName();
-                            String strExt =null;
+                            String strExt = null;
                             if (fileName.length() > 2) {
                                 strExt = fileName.substring(fileName.length() - 2);
                             } else {
-                                strExt = fileName+" 1 ";
+                                strExt = fileName + " 1 ";
                             }
-                            if (!strExt.equals("ds")) {
+                            if (strExt.equals("ds")) {
+                                //传递需要打开的文件名给MainActivity;
+                                // Intent intent = new Intent(OpenAllActivity.this, OpenPictureActivity.class);
+                                Intent intent = new Intent(OpenAllActivity.this, DataLookActivity.class);
+                                String mPath = curdir.getAbsolutePath();
+                                m_lastPath = mPath;
+
+                                //mPath += "/" + fileName;
+                                //只传递文件的路径
+                                intent.putExtra("path", mPath);
+                                intent.putExtra("filename", fileName);
+                                intent.putExtra("position", position - 1);
+                                //startActivity(intent);
+                                startActivityForResult(intent, 0x01);
+                            }else if( fileName.equals(xlsName)) {
+                                Intent intent = new Intent("android.intent.action.VIEW");
+
+                                intent.addCategory("android.intent.category.DEFAULT");
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                                String mPath = curdir.getAbsolutePath();
+
+                                mPath += "/" + fileName;
+
+                                Uri uri = Uri.fromFile(new File(mPath));
+
+                                intent.setDataAndType(uri, "application/vnd.ms-excel");
+
+                                startActivity(intent);
+                            }else{
                                 Toast.makeText(OpenAllActivity.this, "不是电梯门刚度测试文件！", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
-                            //传递需要打开的文件名给MainActivity;
-                           // Intent intent = new Intent(OpenAllActivity.this, OpenPictureActivity.class);
-                            Intent intent = new Intent(OpenAllActivity.this, DataLookActivity.class);
-                            String mPath = curdir.getAbsolutePath();
-                            m_lastPath = mPath;
-
-                            //mPath += "/" + fileName;
-                            //只传递文件的路径
-                            intent.putExtra("path", mPath);
-                            intent.putExtra("filename", fileName);
-                            intent.putExtra("position", position - 1);
-                            //startActivity(intent);
-                            startActivityForResult(intent, 0x01);
                         } else {
                             // 获取用户点击的文件夹 下的所有文件
                             File[] tem = currentFiles[position - 1].listFiles();
@@ -230,7 +255,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                 }
             }
 
-    });
+        });
 
         backView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,7 +309,44 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
             }
         });
 
+        createExcel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               ArrayList<DataBean> dataList =  pictureDB.getAllInfos(db, MyApplication.FORCEDIS);
+                //获取sd卡目录
+                String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String appName = getString(R.string.app_name);
 
+                String fileDir = sdpath + "/" + appName;
+                File newfileDir = new File(fileDir);
+                if (!newfileDir.exists()) {
+                    boolean isSuccess = newfileDir.mkdirs();
+                    System.out.println("isSuccess:" + isSuccess);
+                }
+                String path = fileDir + "/" +xlsName;
+                File newfile = new File(path);
+                try {
+                    newfile.createNewFile();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "DM-3" + "/" +"excel_"+new Date().toString();
+                    ExcelUtil.writeExcel(OpenAllActivity.this,
+                            dataList, newfile);
+                    currentFiles = curdir.listFiles(filter);
+
+                    // 使用当前目录下的全部文件、文件夹来填充ListView
+                    inflateListView(currentFiles);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 
     public void onShowItemClick(ItemBean bean) {
@@ -382,6 +444,8 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                     } else {
                                         str = filename + 1;
                                     }
+                                    Log.i("dirName","!str.equals(\"ds\") || !filename.equals(xlsName) = "+(!str.equals("ds") || !filename.equals(xlsName)));
+
                                     if (dirfile == null || !dirfile.exists()) {
                                         return;
                                     } else if (dirfile.isDirectory() || str.equals("..")) {
@@ -390,19 +454,20 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                             count1++;
                                         }
 
-                                    } else if (!str.equals("ds")) {
-                                        if (count2 == 1) {
-                                            Toast.makeText(OpenAllActivity.this, "不能删除DM-3以外的文件", Toast.LENGTH_SHORT).show();
-                                            count2++;
-                                        }
+                                    } else if (str.equals("ds") || filename.equals(xlsName)) {
 
-                                    } else {
                                         dirfile.delete();
                                         dataList.remove(j);
                                         if (str.equals("ds")) {
                                             pictureDB.delete(db, MyApplication.FORCEDIS, filename);
                                         }
 
+                                    } else {
+
+                                        if (count2 == 1) {
+                                            Toast.makeText(OpenAllActivity.this, "不能删除DM-3以外的文件", Toast.LENGTH_SHORT).show();
+                                            count2++;
+                                        }
                                     }
 
                                 }
@@ -431,6 +496,8 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                 } else {
                     Toast.makeText(OpenAllActivity.this, "请选择条目", Toast.LENGTH_SHORT).show();
                 }
+                count1 = 1;
+                count2 = 1;
             }
         });
     }

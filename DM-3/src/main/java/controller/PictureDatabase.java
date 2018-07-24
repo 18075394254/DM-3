@@ -19,6 +19,8 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
+import model.DataBean;
+
 /**
  * Created by Administrator on 16-10-20.
  */
@@ -200,7 +202,44 @@ public class PictureDatabase extends SQLiteOpenHelper {
         }
         return infos;
     }
+    //查询信息
+    public ArrayList<DataBean> getAllInfos(SQLiteDatabase sd,String tableName) {
 
+        ArrayList<DataBean> infos = new ArrayList<DataBean>();
+
+        //查询数据库
+        Cursor c = sd.query(tableName, null, null, null, null, null, null);
+        if (c != null && c.getCount() != 0) {
+            if (c.moveToFirst()) {
+                do {
+                    if (tableName.equals(MyApplication.FORCEDIS)) {
+                            String fileName = c.getString(c.getColumnIndex("name"));
+
+                            float force = c.getFloat(c.getColumnIndex("force"));
+
+                            float dis = c.getFloat(c.getColumnIndex("dis"));
+
+                            int isQualified = c.getInt(c.getColumnIndex("isQualified"));
+
+                            String liftid = c.getString(c.getColumnIndex("liftid"));
+
+                            String operator = c.getString(c.getColumnIndex("operator"));
+
+                            String location = c.getString(c.getColumnIndex("location"));
+
+                        DataBean dataBean = new DataBean(fileName,force,dis,isQualified,liftid,operator,location);
+                            infos.add(dataBean);
+                        }
+
+
+                } while (c.moveToNext());
+            }
+        }
+        if (c != null){
+            c.close();
+        }
+        return infos;
+    }
     //查询名字对应的图片
     public Bitmap getBitmap(SQLiteDatabase sd, String tableName, String name) {
         Bitmap bitmap = null;
