@@ -48,6 +48,7 @@ import model.Point;
 import utils.BluetoothState;
 import utils.Calculate;
 import utils.MyService;
+import view.MySeverityGaiView;
 import view.MySeverityView;
 
 
@@ -351,8 +352,10 @@ public class OnTestActivity extends BaseActivity {
             String name = dateStr + "-" + String.valueOf(indexF) + ".ds";
 
             //保存图片到数据库
-            MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
-            bitmap = createViewBitmap(severityView);
+        //MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
+        MySeverityGaiView severityView = new MySeverityGaiView(OnTestActivity.this, m_ForceData,m_DisData);
+
+        bitmap = createViewBitmap(severityView);
 
             Log.i("cyy628254","bitmap = "+bitmap);
             pictureDB.initDataBase(db, bitmap, MyApplication.FORCEDIS, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, force, dis,isQualified);

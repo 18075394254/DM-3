@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.graphics.Picture;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.user.dm_3.R;
@@ -23,7 +26,11 @@ import com.example.user.dm_3.R;
 import java.util.ArrayList;
 
 import activity.MoreMessageActivity;
+import cn.sharesdk.framework.Platform;
 import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 import controller.MyApplication;
 import controller.PictureDatabase;
 
@@ -42,6 +49,7 @@ public class DataFragment extends Fragment{
     private View view;
     private onChangeListener mCallback;
     private int position;
+    private Bitmap bitmap;
 
     @Override
 
@@ -121,7 +129,7 @@ public class DataFragment extends Fragment{
         }
         if(strExt.equals("ds")) {
             // bitmap = getBitmap(pictureDB.getBitmap(db, MyApplication.FORCE,name));
-            Bitmap bitmap = pictureDB.getBitmap(db, MyApplication.FORCEDIS, name);
+            bitmap = pictureDB.getBitmap(db, MyApplication.FORCEDIS, name);
             if (bitmap != null){
                 imageView.setImageBitmap(bitmap);
             }else{
@@ -240,19 +248,45 @@ public class DataFragment extends Fragment{
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
         oks.setTitle("标题");
         // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-        oks.setTitleUrl("http://sharesdk.cn");
+       // oks.setTitleUrl("http://sharesdk.cn");
         // text是分享文本，所有平台都需要这个字段
         oks.setText("我是分享文本");
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+       // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
+
+        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
+            @Override
+            public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
+                if (platform.getName().equalsIgnoreCase(QQ.NAME)) {
+                    Toast.makeText(getContext(),"QQ分享",Toast.LENGTH_SHORT).show();
+                    paramsToShare.setText("分享文件");
+                    paramsToShare.setTitle("标题");
+                    paramsToShare.setTitleUrl(null);
+                    String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "tencent" + "/" + "QQfile_recv" + "/" + "2016年终奖金发放明细.xls";
+                    paramsToShare.setFilePath(filePath);
+                    paramsToShare.setShareType(Platform.SHARE_FILE);
+                } else if (platform.getName().equalsIgnoreCase(Wechat.NAME)) {
+                    Toast.makeText(getContext(),"微信分享",Toast.LENGTH_SHORT).show();
+                    paramsToShare.setText(null);
+                    paramsToShare.setTitle(null);
+                    paramsToShare.setTitleUrl(null);
+                    paramsToShare.setImageData(bitmap);
+                }
+
+            }
+        });
+
+       /* String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
+        oks.setImagePath(imagePath);*/
+       // oks.setUrl("http://sharesdk.cn");
+        oks.setImageData(bitmap);
         // comment是我对这条分享的评论，仅在人人网和QQ空间使用
         oks.setComment("我是测试评论文本");
         // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
+       // oks.setSite(getString(R.string.app_name));
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
+        //oks.setSiteUrl("http://sharesdk.cn");
 
         // 启动分享GUI
         oks.show(getContext());
