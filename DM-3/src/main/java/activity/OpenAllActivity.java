@@ -444,7 +444,6 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                     } else {
                                         str = filename + 1;
                                     }
-                                    Log.i("dirName","!str.equals(\"ds\") || !filename.equals(xlsName) = "+(!str.equals("ds") || !filename.equals(xlsName)));
 
                                     if (dirfile == null || !dirfile.exists()) {
                                         return;
@@ -463,7 +462,6 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                         }
 
                                     } else {
-
                                         if (count2 == 1) {
                                             Toast.makeText(OpenAllActivity.this, "不能删除DM-3以外的文件", Toast.LENGTH_SHORT).show();
                                             count2++;
