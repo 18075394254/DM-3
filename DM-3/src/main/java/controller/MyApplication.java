@@ -62,10 +62,11 @@ public class MyApplication extends Application{
     @Override
     public void onTerminate() {
         super.onTerminate();
-       // stopService(new Intent(context,MyService.class));
+        stopService(new Intent(context,MyService.class));
     }
     /** 获取屏幕宽度 */
     public static int getWindowWidth() {
+
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             int width=wm.getDefaultDisplay().getWidth();
         Log.i("ooo","width = " + width);
@@ -79,6 +80,9 @@ public class MyApplication extends Application{
         Log.i("ooo","height = " + height);
         return height;
     }
+
+
+
     /**
      * 判断是否为平板
      *

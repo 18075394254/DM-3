@@ -80,7 +80,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         name = data.getStringExtra("filename");
         //获得点击的位置
         position=data.getIntExtra("position", 0);
-        Log.i("ttt", "position = " + position);
+
 
         curDir = new File(strFilePath);
         curfiles = curDir.listFiles(filter);
@@ -97,7 +97,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
                     args.putInt("position", i);
                     itemFragment.setArguments(args);
                     fragmentList.add(itemFragment);
-                    Log.i("Fragment", "addfragmentList = " + fragmentList.size());
+
         }
         manager = getSupportFragmentManager();
         adapter = new MyViewPagerAdapter(manager);
@@ -108,7 +108,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         Log.i("lll", "curposition = " + curposition);
         viewPager.setCurrentItem(curposition );
     }
-    //查看是不是需要的测试门夹力的条件
+    //查看是不是符合门刚度测试的的条件
     FileFilter filter = new FileFilter()
     {
         @Override
@@ -150,7 +150,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
                     if (curFile.exists()) {
                         curFile.delete();
                         if (strExt.equals("ds")) {
-                            pictureDB.delete(db, "Force", filename);
+                            pictureDB.delete(db, "ForceDisDB", filename);
                         }
                     }
                     if (fragmentList.size() == 1){

@@ -7,14 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Picture;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,9 +26,15 @@ import android.widget.Toast;
 
 import com.example.user.dm_3.R;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.UUID;
 
+import activity.DataLookActivity;
 import activity.MoreMessageActivity;
+import activity.OpenAllActivity;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
@@ -50,6 +59,8 @@ public class DataFragment extends Fragment{
     private onChangeListener mCallback;
     private int position;
     private Bitmap bitmap;
+    private Activity activity;
+
 
     @Override
 
@@ -167,7 +178,24 @@ public class DataFragment extends Fragment{
 
             @Override
             public void onClick(View v) {
-                showShare();
+                //获取sd卡目录
+                String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
+                String appName = getString(R.string.app_name);
+
+                String SavePath = sdpath + "/" + appName+ "/data.png";
+                File file = null;
+                try{
+                     file =new File(SavePath);
+                    if (file.exists()){
+                        file.delete();
+                    }
+                    GetandSaveCurrentImage(activity,file);
+                    shareSingleImage(SavePath);
+                }catch (Exception e){
+                    Toast.makeText(getContext(),"图片文件出错",Toast.LENGTH_SHORT).show();
+                }
+
+
 
             }
         });
@@ -199,7 +227,7 @@ public class DataFragment extends Fragment{
         moveToNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("ppp","NextPosition  "+ position);
+                Log.i("ppp", "NextPosition  " + position);
                 mCallback.onChange(position + 1, 0);
             }
         });
@@ -221,6 +249,12 @@ public class DataFragment extends Fragment{
 
         }
     };
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+                 super.onActivityCreated(savedInstanceState);
+                  activity = getActivity();
+
+             }
 
     public interface onChangeListener
     {
@@ -228,67 +262,69 @@ public class DataFragment extends Fragment{
 
     }
 
-    //将bitmap放大8倍
-    public Bitmap getBitmap(Bitmap bitmap){
-        Matrix matrix = new Matrix();
-        matrix.postScale(4.0f,4.0f);
+    /**
+     * 获取和保存当前屏幕的截图
+     */
+    private void GetandSaveCurrentImage(Activity activty,File file)
+    {
+        //1.构建Bitmap
+       //获取屏幕宽高
+        int w = MyApplication.getWindowHeight();
+        int h = MyApplication.getWindowHeight();
 
-        Bitmap resizeBmp = Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),matrix,true);
+        Bitmap bitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888 );
 
-        return resizeBmp;
+        //2.获取屏幕
+        View decorView = activty.getWindow().getDecorView();
+        decorView.setDrawingCacheEnabled(true);
+        bitmap = decorView.getDrawingCache();
+
+        //3.保存Bitmap
+        try {
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(file);
+            if (null != fos) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                fos.flush();
+                fos.close();
+
+               // Toast.makeText(this, "截屏文件已保存至SDCard/AndyDemo/ScreenImage/下", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void showShare() {
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
+    /**
+     * 获取SDCard的文件夹路径功能
+     * @return
+     */
+    private String getSDCardPath(){
+        File sdcardDir = null;
+        //推断SDCard是否存在
+        boolean sdcardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+        if(sdcardExist){
+            sdcardDir = Environment.getExternalStorageDirectory();
+        }
+        return sdcardDir.toString();
+    }
+    //分享单张图片
+    public void shareSingleImage(String imagePath) {
+        String imagePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
+        //由文件得到uri
+        Uri imageUri = Uri.fromFile(new File(imagePath));
+        Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg
 
-// 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
-        //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
-        oks.setTitle("标题");
-        // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-       // oks.setTitleUrl("http://sharesdk.cn");
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-       // oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-
-        oks.setShareContentCustomizeCallback(new ShareContentCustomizeCallback() {
-            @Override
-            public void onShare(Platform platform, Platform.ShareParams paramsToShare) {
-                if (platform.getName().equalsIgnoreCase(QQ.NAME)) {
-                    Toast.makeText(getContext(),"QQ分享",Toast.LENGTH_SHORT).show();
-                    paramsToShare.setText("分享文件");
-                    paramsToShare.setTitle("标题");
-                    paramsToShare.setTitleUrl(null);
-                    String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "tencent" + "/" + "QQfile_recv" + "/" + "2016年终奖金发放明细.xls";
-                    paramsToShare.setFilePath(filePath);
-                    paramsToShare.setShareType(Platform.SHARE_FILE);
-                } else if (platform.getName().equalsIgnoreCase(Wechat.NAME)) {
-                    Toast.makeText(getContext(),"微信分享",Toast.LENGTH_SHORT).show();
-                    paramsToShare.setText(null);
-                    paramsToShare.setTitle(null);
-                    paramsToShare.setTitleUrl(null);
-                    paramsToShare.setImageData(bitmap);
-                }
-
-            }
-        });
-
-       /* String imagePath = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
-        oks.setImagePath(imagePath);*/
-       // oks.setUrl("http://sharesdk.cn");
-        oks.setImageData(bitmap);
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("我是测试评论文本");
-        // site是分享此内容的网站名称，仅在QQ空间使用
-       // oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        //oks.setSiteUrl("http://sharesdk.cn");
-
-        // 启动分享GUI
-        oks.show(getContext());
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent, "分享到"));
     }
 }

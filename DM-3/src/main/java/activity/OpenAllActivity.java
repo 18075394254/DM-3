@@ -1,6 +1,9 @@
 package activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
@@ -32,11 +35,17 @@ import java.util.Date;
 import java.util.List;
 
 import adapter.Adapter;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 import controller.MyApplication;
 import controller.PictureDatabase;
 import fragment.DataFragment;
 import model.DataBean;
 import model.ItemBean;
+import utils.BluetoothState;
 import utils.ExcelUtil;
 
 
@@ -221,7 +230,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                 //startActivity(intent);
                                 startActivityForResult(intent, 0x01);
                             }else if( fileName.equals(xlsName)) {
-                                Intent intent = new Intent("android.intent.action.VIEW");
+                               /* Intent intent = new Intent("android.intent.action.VIEW");
 
                                 intent.addCategory("android.intent.category.DEFAULT");
 
@@ -233,9 +242,13 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
                                 Uri uri = Uri.fromFile(new File(mPath));
 
-                                intent.setDataAndType(uri, "application/vnd.ms-excel");
+                                intent.setDataAndType(uri, "application/msword");
 
-                                startActivity(intent);
+                                startActivity(intent);*/
+                                String mPath = curdir.getAbsolutePath();
+
+                                mPath += "/" + fileName;
+                                shareSingleImage(mPath);
                             }else{
                                 Toast.makeText(OpenAllActivity.this, "不是电梯门刚度测试文件！", Toast.LENGTH_SHORT).show();
                                 return;
@@ -312,7 +325,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
         createExcel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               ArrayList<DataBean> dataList =  pictureDB.getAllInfos(db, MyApplication.FORCEDIS);
+               final ArrayList<DataBean> dataList =  pictureDB.getAllInfos(db, MyApplication.FORCEDIS);
                 //获取sd卡目录
                 String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
                 String appName = getString(R.string.app_name);
@@ -324,30 +337,114 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                     System.out.println("isSuccess:" + isSuccess);
                 }
                 String path = fileDir + "/" +xlsName;
-                File newfile = new File(path);
-                try {
-                    newfile.createNewFile();
+                final File newfile = new File(path);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                if (newfile.exists()){
+                    Dialog alertDialog = new AlertDialog.Builder(OpenAllActivity.this).
+                            setTitle("文件已存在，确认覆盖吗？").
+                            setIcon(R.mipmap.launcher).
+                            setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    newfile.delete();
+                                    Log.i("OpenAllActivity","文件删除之前");
+                                    try {
+                                        newfile.createNewFile();
 
-                try {
-                    //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "DM-3" + "/" +"excel_"+new Date().toString();
-                    ExcelUtil.writeExcel(OpenAllActivity.this,
-                            dataList, newfile);
-                    currentFiles = curdir.listFiles(filter);
+                                        try {
+                                            //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "DM-3" + "/" +"excel_"+new Date().toString();
+                                            ExcelUtil.writeExcel(OpenAllActivity.this,
+                                                    dataList, newfile);
+                                            currentFiles = curdir.listFiles(filter);
+                                            // 使用当前目录下的全部文件、文件夹来填充ListView
+                                            inflateListView(currentFiles);
+                                        } catch (Exception e) {
+                                            // TODO Auto-generated catch block
+                                            e.printStackTrace();
+                                        }
 
-                    // 使用当前目录下的全部文件、文件夹来填充ListView
-                    inflateListView(currentFiles);
-                } catch (Exception e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }).
+                            setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+                                }
+                            }).
+                            create();
+                    alertDialog.show();
+                }else if (!newfile.exists()){
+                    try {
+                        newfile.createNewFile();
+
+                        try {
+                            //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "DM-3" + "/" +"excel_"+new Date().toString();
+                            ExcelUtil.writeExcel(OpenAllActivity.this,
+                                    dataList, newfile);
+                            currentFiles = curdir.listFiles(filter);
+                            // 使用当前目录下的全部文件、文件夹来填充ListView
+                            inflateListView(currentFiles);
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    }
+
+                //shareSingleImage(fileDir);
 
             }
         });
     }
+    //分享文字
+    public void shareText(View view) {
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, "This is my Share text.");
+        shareIntent.setType("text/plain");
+
+        //设置分享列表的标题，并且每次都显示分享列表
+        startActivity(Intent.createChooser(shareIntent, "分享到"));
+    }
+
+    //分享单张图片
+    public void shareSingleImage(String imagePath) {
+        //String imagePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
+        //String imagePath = Environment.getExternalStorageDirectory() + File.separator + "test.jpg";
+        //由文件得到uri
+        Uri imageUri = Uri.fromFile(new File(imagePath));
+        Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        shareIntent.setType("doc/*");
+        startActivity(Intent.createChooser(shareIntent, "分享到"));
+    }
+
+    //分享多张图片
+    public void shareMultipleImage(View view) {
+        ArrayList<Uri> uriList = new ArrayList<>();
+
+        String path = Environment.getExternalStorageDirectory() + File.separator;
+        uriList.add(Uri.fromFile(new File(path+"australia_1.jpg")));
+        uriList.add(Uri.fromFile(new File(path+"australia_2.jpg")));
+        uriList.add(Uri.fromFile(new File(path + "australia_3.jpg")));
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
+        shareIntent.setType("image/*");
+        startActivity(Intent.createChooser(shareIntent, "分享到"));
+    }
+
 
     public void onShowItemClick(ItemBean bean) {
         if (bean.isChecked() && !selectList.contains(bean)) {
@@ -518,6 +615,11 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
     }
 
     @Override
+    protected void onDestroy() {
+        listDs.clear();
+    }
+
+    @Override
     public void onBackPressed() {
         if (isShow) {
             selectList.clear();
@@ -601,4 +703,6 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
             inflateListView(currentFiles);
         }
     }
+
+
 }

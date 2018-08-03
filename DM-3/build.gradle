@@ -7,10 +7,10 @@ MobSDK {
     ShareSDK {
         devInfo {
             Wechat {
-                appId "wx4868b35061f87885"
-                appSecret "64020361b8ec4c99936c0e3999a9f249"
+                appId "wx6db18f4f5e45b174"
+                appSecret "ff44c8173638006c4622cea5c1a3d74d"
 
-                bypassApproval true
+                bypassApproval false
             }
             QQ {
                 appId "1106985737"
