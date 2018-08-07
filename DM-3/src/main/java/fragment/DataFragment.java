@@ -317,6 +317,8 @@ public class DataFragment extends Fragment{
     //分享单张图片
     public void shareSingleImage(String imagePath) {
        // String imagePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
+
+
         //由文件得到uri
         Uri imageUri = Uri.fromFile(new File(imagePath));
         Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg
