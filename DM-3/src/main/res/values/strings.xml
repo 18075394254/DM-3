@@ -29,7 +29,7 @@
     <string name="moremessage">详细信息</string>
     <string name="allmessage">全部信息 ：</string>
     <string name="chooseFile">选择文件夹</string>
-    <string name="backMain">返回主菜单</string>
+    <string name="backMain">返回菜单</string>
     <string name="pacthOpen">批量打开</string>
     <string name="createExcel">生成表格</string>
     <string name="cancel">撤销    |</string>

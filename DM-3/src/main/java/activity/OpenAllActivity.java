@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.hardware.ConsumerIrManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,6 +37,7 @@ import java.util.List;
 
 import adapter.Adapter;
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 import cn.sharesdk.tencent.qq.QQ;
@@ -45,6 +47,7 @@ import controller.PictureDatabase;
 import fragment.DataFragment;
 import model.DataBean;
 import model.ItemBean;
+import model.MimeType;
 import utils.BluetoothState;
 import utils.ExcelUtil;
 
@@ -229,26 +232,15 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
                                 intent.putExtra("position", position - 1);
                                 //startActivity(intent);
                                 startActivityForResult(intent, 0x01);
+
+                                //如果是xls文件，就调用系统分享到微信QQ等
                             }else if( fileName.equals(xlsName)) {
-                               /* Intent intent = new Intent("android.intent.action.VIEW");
-
-                                intent.addCategory("android.intent.category.DEFAULT");
-
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                                 String mPath = curdir.getAbsolutePath();
 
                                 mPath += "/" + fileName;
+                                shareFile(new File(mPath));
 
-                                Uri uri = Uri.fromFile(new File(mPath));
-
-                                intent.setDataAndType(uri, "application/msword");
-
-                                startActivity(intent);*/
-                                String mPath = curdir.getAbsolutePath();
-
-                                mPath += "/" + fileName;
-                                shareSingleImage(mPath);
                             }else{
                                 Toast.makeText(OpenAllActivity.this, "不是电梯门刚度测试文件！", Toast.LENGTH_SHORT).show();
                                 return;
@@ -403,48 +395,44 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
             }
         });
     }
-    //分享文字
-    public void shareText(View view) {
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, "This is my Share text.");
-        shareIntent.setType("text/plain");
 
-        //设置分享列表的标题，并且每次都显示分享列表
-        startActivity(Intent.createChooser(shareIntent, "分享到"));
+
+    private void shareFile(File f)
+    {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        String type = getMIMEType(f);
+        intent.setType(type);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f));
+       /* intent.setAction(android.content.Intent.ACTION_VIEW);
+        String type = getMIMEType(f);
+        intent.setDataAndType(Uri.fromFile(f), type);*/
+        startActivity(intent);
     }
 
-    //分享单张图片
-    public void shareSingleImage(String imagePath) {
-        //String imagePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";
-        //String imagePath = Environment.getExternalStorageDirectory() + File.separator + "test.jpg";
-        //由文件得到uri
-        Uri imageUri = Uri.fromFile(new File(imagePath));
-        Log.d("share", "uri:" + imageUri);  //输出：file:///storage/emulated/0/test.jpg
+    /**
+     * 根据文件后缀名获得对应的MIME类型。
+     * @param file
+     */
+    private String getMIMEType(File file) {
 
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-        shareIntent.setType("doc/*");
-        startActivity(Intent.createChooser(shareIntent, "分享到"));
+        String type="*/*";
+        String fName = file.getName();
+        //获取后缀名前的分隔符"."在fName中的位置。
+        int dotIndex = fName.lastIndexOf(".");
+        if(dotIndex < 0){
+            return type;
+        }
+    /* 获取文件的后缀名 */
+        String end=fName.substring(dotIndex,fName.length()).toLowerCase();
+        if(end=="")return type;
+        //在MIME和文件类型的匹配表中找到对应的MIME类型。
+        for(int i=0;i< MimeType.MIME_MapTable.length;i++){ //MIME_MapTable??在这里你一定有疑问，这个MIME_MapTable是什么？
+            if(end.equals(MimeType.MIME_MapTable[i][0]))
+                type = MimeType.MIME_MapTable[i][1];
+        }
+        return type;
     }
-
-    //分享多张图片
-    public void shareMultipleImage(View view) {
-        ArrayList<Uri> uriList = new ArrayList<>();
-
-        String path = Environment.getExternalStorageDirectory() + File.separator;
-        uriList.add(Uri.fromFile(new File(path+"australia_1.jpg")));
-        uriList.add(Uri.fromFile(new File(path+"australia_2.jpg")));
-        uriList.add(Uri.fromFile(new File(path + "australia_3.jpg")));
-
-        Intent shareIntent = new Intent();
-        shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uriList);
-        shareIntent.setType("image/*");
-        startActivity(Intent.createChooser(shareIntent, "分享到"));
-    }
-
 
     public void onShowItemClick(ItemBean bean) {
         if (bean.isChecked() && !selectList.contains(bean)) {
@@ -616,6 +604,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         listDs.clear();
     }
 
@@ -682,7 +671,16 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
         adapter.setOnShowItemClickListener(this);
         //填充数据集
        // fileslist.setAdapter(adapter);
+        try {
+            if (curdir.getCanonicalPath().contains("DM-3")){
 
+                createExcel.setVisibility(View.VISIBLE);
+            }else{
+                createExcel.setVisibility(View.GONE);
+            }
+        } catch (IOException e) {
+
+        }
         try {
             pathText.setText(curdir.getCanonicalPath());
         } catch (Exception e) {

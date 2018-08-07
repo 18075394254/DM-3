@@ -352,8 +352,8 @@ public class OnTestActivity extends BaseActivity {
             String name = dateStr + "-" + String.valueOf(indexF) + ".ds";
 
             //保存图片到数据库
-        //MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
-        MySeverityGaiView severityView = new MySeverityGaiView(OnTestActivity.this, m_ForceData,m_DisData);
+        MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
+       // MySeverityGaiView severityView = new MySeverityGaiView(OnTestActivity.this, m_ForceData,m_DisData);
 
         bitmap = createViewBitmap(severityView);
 
