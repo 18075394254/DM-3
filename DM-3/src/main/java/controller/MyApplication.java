@@ -9,8 +9,6 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.mob.MobSDK;
-
 import java.util.ArrayList;
 
 import model.User;
@@ -54,7 +52,7 @@ public class MyApplication extends Application{
             helper.add("Administrator", "123456");
         }
         startService(new Intent(this, MyService.class));
-        MobSDK.init(this);
+        //MobSDK.init(this);
     }
     public static Context getContext(){
         return context;

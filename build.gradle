@@ -8,7 +8,8 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:1.5.0'
         // 注册MobSDK
-        classpath 'com.mob.sdk:MobSDK:+'
+
+      //  classpath 'com.mob.sdk:MobSDK:+'
     }
 }
 

@@ -36,12 +36,7 @@ import java.util.Date;
 import java.util.List;
 
 import adapter.Adapter;
-import cn.sharesdk.framework.Platform;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
-import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
-import cn.sharesdk.tencent.qq.QQ;
-import cn.sharesdk.wechat.friends.Wechat;
+
 import controller.MyApplication;
 import controller.PictureDatabase;
 import fragment.DataFragment;
@@ -87,6 +82,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
     SQLiteDatabase db;
 
     String xlsName = "DM-3数据表格.xls";
+    private int type =0;
 
     /* (non-Javadoc)
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -235,11 +231,41 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
                                 //如果是xls文件，就调用系统分享到微信QQ等
                             }else if( fileName.equals(xlsName)) {
+                               final String mPath = curdir.getAbsolutePath()+"/" + fileName;
 
-                                String mPath = curdir.getAbsolutePath();
 
-                                mPath += "/" + fileName;
-                                shareFile(new File(mPath));
+
+                                final String[] arrayClear = new String[] { "打开", "分享"};
+                                Dialog alertDialog = new AlertDialog.Builder(OpenAllActivity.this).
+                                        setTitle("打开 or 分享？").
+                                        setIcon(R.mipmap.launcher)
+                                        .setSingleChoiceItems(arrayClear, 0, new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                if(which == 0) {
+                                                    type = 0;
+                                                }else if(which ==1){
+                                                    type = 1;
+                                                }
+                                            }
+                                        }).setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        shareFile(new File(mPath));
+                                                    }
+                                                }).
+                                                setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // TODO Auto-generated method stub
+                                                    }
+                                                }).
+                                                create();
+                                alertDialog.show();
+
+
 
                             }else{
                                 Toast.makeText(OpenAllActivity.this, "不是电梯门刚度测试文件！", Toast.LENGTH_SHORT).show();
@@ -399,7 +425,13 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
     private void shareFile(File f)
     {
-        Intent intent = new Intent(Intent.ACTION_SEND);
+        Intent intent = null;
+        if (type == 0){
+            intent  = new Intent(android.content.Intent.ACTION_VIEW);
+        }else{
+            intent = new Intent(Intent.ACTION_SEND);
+        }
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         String type = getMIMEType(f);
         intent.setType(type);
