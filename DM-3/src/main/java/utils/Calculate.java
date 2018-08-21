@@ -3,12 +3,18 @@ package utils;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import controller.MyApplication;
 import model.Point;
 
 /**
@@ -253,6 +259,48 @@ public class Calculate {
         } catch (Exception e) {
             e.printStackTrace();
 
+        }
+    }
+    public static String readSetingsToFile(File file) {
+
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            char[] input = new char[fis.available()];
+            isr.read(input);
+            isr.close();
+            fis.close();
+            String in = new String(input);
+            return in;
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static void setAllData(String filename){
+        String content = null;
+        //测试数据的集合
+        ArrayList<Point> m_AllData = new ArrayList<Point>();
+        content =  new Calculate().readSetingsToFile(new File(filename));
+        if (content != null){
+            String[] s = content.split(",");
+            Log.i("points.size ", "s.length = " + s.length);
+            //s.length - 1是为了防止最后一个""信息影响数据解析
+            for (int i = 0; i < s.length -1; i+=2) {
+                if (i % 2 == 0) {
+                    m_AllData.add(new Point(Float.parseFloat(s[i])/10,Float.parseFloat(s[i+1])/10));
+                }
+            }
+            MyApplication.setPointString(m_AllData);
+            Log.i("mtag", "数据读取完成！");
         }
     }
 }

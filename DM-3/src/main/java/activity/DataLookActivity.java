@@ -2,6 +2,7 @@ package activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -14,11 +15,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
@@ -27,9 +34,15 @@ import com.example.user.dm_3.R;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import controller.MyApplication;
 import controller.PictureDatabase;
 import fragment.DataFragment;
+import model.Point;
+import utils.Calculate;
+import view.MySurfaceView;
 
 /**
  * Created by Administrator on 2017/1/20 0020.
@@ -61,11 +74,18 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
     //每个文件的文件名
     private String filename;
 
+    private int ScreenWidth,ScreenHeight;//屏幕宽高
+
+    Map<Integer,String> map = new HashMap<Integer,String>();
+
+    Calculate calculate = new Calculate();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
         setContentView(R.layout.datashow);
+        ScreenWidth = MyApplication.getWindowWidth();
+        ScreenHeight = MyApplication.getWindowHeight();
         viewPager= (ViewPager) findViewById(R.id.viewPager);
 
         pictureDB = new PictureDatabase(this);
@@ -81,6 +101,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         //获得点击的位置
         position=data.getIntExtra("position", 0);
 
+        calculate.setAllData(strFilePath + "/" + name);
 
         curDir = new File(strFilePath);
         curfiles = curDir.listFiles(filter);
@@ -90,10 +111,12 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         Log.i("lll", "fileCount = " + fileCount);
         //根据合适的文件数量添加相应的Fragment
         for (int i=0;i<fileCount;i++){
-            name=curfiles[i].getName();
+                    name=curfiles[i].getName();
+                    //将位置和文件名对应放入map集合
+                    map.put(i,curfiles[i].getAbsolutePath());
                     itemFragment=new DataFragment();
                     Bundle args=new Bundle();
-                    args.putString("name", name);
+                    args.putString("name",name);
                     args.putInt("position", i);
                     itemFragment.setArguments(args);
                     fragmentList.add(itemFragment);
@@ -105,8 +128,28 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         adapter.notifyDataSetChanged();
         //将当前点击的位置去掉不是需要文件的数量得到所需文件的位置
         int curposition = position - (dirCount - fileCount);
-        Log.i("lll", "curposition = " + curposition);
-        viewPager.setCurrentItem(curposition );
+
+        viewPager.setCurrentItem(curposition);
+        MySurfaceView surfaceView = new MySurfaceView(this);
+
+
+        LinearLayout l = new LinearLayout(this);   //l就是当前的页面的布局
+
+        l.addView(surfaceView);   //加入新的view
+        if (MyApplication.getWindowWidth() == 720){
+            l.setPadding(0, 360, 0, 0);  //设置位置
+        }else if(MyApplication.getWindowWidth() == 1080){
+            l.setPadding(0, 550, 0, 0);  //设置位置
+        }else{
+            l.setPadding(0, MyApplication.getWindowWidth()/2, 0, 0);  //设置位置
+        }
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        l.setLayoutParams(p);  //新的view的参数
+        this.addContentView(l, p);  //加入新的view
+        /*FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ScreenWidth, ScreenHeight*9/16);
+
+        addContentView(surfaceView, params);*/
     }
     //查看是不是符合门刚度测试的的条件
     FileFilter filter = new FileFilter()
@@ -132,8 +175,11 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
     public void onChange(int position,int what) {
 
         switch(what) {
+            //上一条，下一条
             case 0:
                 if (position > -1 && position < fileCount) {
+                    String filename = map.get(position);
+                    calculate.setAllData(filename);
                     viewPager.setCurrentItem(position);
                 } else if (position < 0) {
                     Toast.makeText(this, "前面没有数据了", Toast.LENGTH_SHORT).show();
@@ -141,6 +187,8 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
                     Toast.makeText(this, "后面没有数据了", Toast.LENGTH_SHORT).show();
                 }
                 break;
+
+            //删除数据，暂时没用到，与ViewPager冲突，删除后位置错误
             case 1:
 
                 if (position > -1 && position < fragmentList.size()) {
@@ -172,6 +220,13 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
                 }
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        map.clear();
+        MyApplication.setPointString(null);
     }
 
     public class MyViewPagerAdapter extends FragmentStatePagerAdapter{

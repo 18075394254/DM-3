@@ -128,7 +128,7 @@ public class OnTestActivity extends BaseActivity {
                     BigDecimal forceValue2 = new BigDecimal(forceValue);
                     forceValue = forceValue2.setScale(1, BigDecimal.ROUND_HALF_UP).floatValue();
                         //将压力平均值显示到文本中
-                        textForce.setText(forceValue +"");
+                        textForce.setText(forceValue + "");
 
 
                     float disValue =  (d+e+f)/3;
@@ -137,7 +137,7 @@ public class OnTestActivity extends BaseActivity {
                     //将位移平均值显示到文本中
                          textDis.setText(disValue + "");
                    // }
-                    
+                    Log.i("mmmtag","forceValue"+forceValue+"  disValue = "+disValue);
                     //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
                     Log.i("mtag", "接收到B1时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
@@ -162,7 +162,7 @@ public class OnTestActivity extends BaseActivity {
                         dis = (float) map.get("disValue");
                         isQualified = (int) map.get("isQualified");
 
-                        Log.i("2018-06-26 ", "isQualified = " + isQualified);
+
                         onSave();
                         totalData = "";
                         dataString ="";

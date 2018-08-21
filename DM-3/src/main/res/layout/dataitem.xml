@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:id="@+id/lin1"
         android:layout_width="match_parent"
@@ -106,13 +107,20 @@
         android:background="#534a4a"
         android:layout_below="@+id/lin4"
         />
-    <view.PinchImageView
+
+
+         <ImageView
         android:id="@+id/pinchImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@mipmap/ic_launcher"
-        android:layout_below="@+id/tv">
-    </view.PinchImageView>
+        android:layout_below="@+id/tv"
+        />
+    <!--<view.MySurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv"
+        />-->
 
 
 

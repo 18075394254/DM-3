@@ -19,10 +19,13 @@ import android.print.pdf.PrintedPdfDocument;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -140,6 +143,7 @@ public class DataFragment extends Fragment{
         moveToNext=(Button)view.findViewById(R.id.next);
         moveToPrevious=(Button)view.findViewById(R.id.previous);
         moreMessage=(Button)view.findViewById(R.id.allmessage);
+
         click();
         titleText.setText(name);
         String strExt;
@@ -152,6 +156,8 @@ public class DataFragment extends Fragment{
         if(strExt.equals("ds")) {
             // bitmap = getBitmap(pictureDB.getBitmap(db, MyApplication.FORCE,name));
             bitmap = pictureDB.getBitmap(db, MyApplication.FORCEDIS, name);
+            Log.i("mtag","bitmap.width = "+bitmap.getWidth());
+            Log.i("mtag","bitmap.height = "+bitmap.getHeight());
             if (bitmap != null){
                 imageView.setImageBitmap(bitmap);
             }else{
@@ -171,7 +177,7 @@ public class DataFragment extends Fragment{
                 }
 
             }
-            dataList = "测试仪器：DM-3"+"\n"+"测试单位："+"\n"+"测试时间："+name.substring(0,16)+"\n"+"测试人员："+infolist.get(4)+"\n"+"测试地点："+infolist.get(5)+"\n"+"电梯编号："+infolist.get(3)+"\n"+"补充测试信息："+"\n"+"测试压力："+infolist.get(0)+"\n"+"位移量："+infolist.get(1)+"\n";
+
         }
         return view;
 
@@ -202,6 +208,7 @@ public class DataFragment extends Fragment{
                    // new HWPFTemplateTest().testTemplateWrite(wordPath,name.substring(0,16),"吴鹏","中科智能","00011",picPath);
                     GenPDF(wordPath,"DM-3",name.substring(0,16),infolist.get(4),infolist.get(5),infolist.get(3),infolist.get(0),infolist.get(1),bitmap);
                     shareWordFile(wordPath);
+
                 } catch (Exception e) {
                     Toast.makeText(getContext(),"写入文件出错",Toast.LENGTH_SHORT).show();
                 }finally {
@@ -412,6 +419,8 @@ public class DataFragment extends Fragment{
         }
         return sdcardDir.toString();
     }
+
+
     //分享单张图片
     public void shareWordFile(String filepath) {
        // String imagePath2 = Environment.getExternalStorageDirectory().getAbsolutePath()+"/"+ "Pictures"+"/"+"taobao"+"/"+"191983953.jpg";

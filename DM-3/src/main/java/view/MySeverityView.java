@@ -76,8 +76,7 @@ public class MySeverityView extends View {
                 }else{
                 timeLength=7;
             }
-            Log.i("2018-06-26","timeLength = "+timeLength);
-            Log.i("2018-06-26","m_ForceData.size() = "+m_ForceData.size());
+
             for (int i = 0; i < m_ForceData.size(); i++) {
                 points.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_ForceData.get(i)));
               //  forceData.add(m_ForceData.get(i));
@@ -211,16 +210,24 @@ public class MySeverityView extends View {
                 //时间轴坐标值
                 time = timeLength * i + "";
                 canvas.drawText(time, width / 8 - 20 - 15 + (viewWidth) / 10 * i, height * 9 / 16 + 30, paint);
+                //设置画笔的颜色
+                paint.setColor(Color.RED);
                 //压力轴坐标值
                 forceValue = i * 100 + "";
                 canvas.drawText(forceValue, width / 8 - 50 - 15, height / 32 + (viewHeigth) / 10 * (10 - i) + 10, paint);
+                //设置画笔的颜色
+                paint.setColor(Color.BLUE);
                 //位移轴坐标值
                 disValue = i * 10 + "";
                 canvas.drawText(disValue, width * 7 / 8 + 50 + 10 - 15, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
 
             }else{
+                //设置画笔的颜色
+                paint.setColor(Color.RED);
                 canvas.drawText("Force/N", 0, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
+                paint.setColor(Color.BLUE);
                 canvas.drawText("S/mm", width * 7 / 8 - 30, height / 32 + 10, paint);
+                paint.setColor(Color.BLACK);
                 canvas.drawText("Time/S", width * 7 / 8 - 15, height * 9 / 16 + 30, paint);
             }
         }
@@ -284,33 +291,4 @@ public class MySeverityView extends View {
         points.clear();
 
     }
-
-    public Float CalcMax(ArrayList<Float> m_filterData) {
-        float fmax = 0;
-        int size = m_filterData.size();
-        for (int i = 0; i < size; i++) {
-            float value = m_filterData.get(i).floatValue();
-            if (value > fmax) {
-                fmax = value;
-                BigDecimal b = new BigDecimal(fmax);
-                fmax = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-            }
-        }
-        return fmax;
-    }
-
-    public Float CalcMin(ArrayList<Float> m_filterData) {
-        float min = 0;
-        int size = m_filterData.size();
-        for (int i = 0; i < size; i++) {
-            float value = m_filterData.get(i).floatValue();
-            if (value < min) {
-                min = value;
-                BigDecimal b = new BigDecimal(min);
-                min = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-            }
-        }
-        return min;
-    }
-
 }

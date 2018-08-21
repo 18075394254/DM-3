@@ -56,6 +56,7 @@
         <activity android:name="activity.SendReceiveActivity"/>
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
+        <activity android:name="activity.TestActivity"/>
     </application>
 
 </manifest>

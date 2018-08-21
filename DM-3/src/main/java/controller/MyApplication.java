@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import java.util.ArrayList;
 
+import model.Point;
 import model.User;
 import utils.MyService;
 
@@ -24,6 +25,7 @@ public class MyApplication extends Application{
     public static String FORCEDIS="ForceDisDB";
 
     public static String alldata;
+    public static ArrayList<Point> allpoint;
     UserDatabase helper;
     PictureDatabase pdb;
     SQLiteDatabase db;
@@ -35,6 +37,15 @@ public class MyApplication extends Application{
 
     public static void setString(String alldata) {
         MyApplication.alldata = alldata;
+        Log.i("MyApplication","alldata = "+alldata);
+    }
+
+    public static ArrayList<Point> getPointString() {
+        return MyApplication.allpoint;
+    }
+
+    public static void setPointString(ArrayList<Point> allpoint) {
+        MyApplication.allpoint = allpoint;
         Log.i("MyApplication","alldata = "+alldata);
     }
     @Override
