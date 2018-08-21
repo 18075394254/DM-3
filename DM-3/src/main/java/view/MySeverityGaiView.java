@@ -47,7 +47,7 @@ public class MySeverityGaiView extends View {
     private int width=0;
     private int height=0;
     private Path path2=new Path();
-   // int timeLength=1;
+    int timeLength=1;
 
 
     //建议添加，当在java文件中new此控件对象时，运行此构造方法
@@ -60,16 +60,38 @@ public class MySeverityGaiView extends View {
         m_ForceData = forceData;
         m_DisData = disData;
 
-      //将时间轴与压力轴的数据绑定在一起
+        //将时间轴与压力轴的数据绑定在一起
         if (m_ForceData != null) {
-
-            Log.i("2018-06-26","m_ForceData.size() = "+m_ForceData.size());
-            for (int i = 0; i < m_ForceData.size(); i++) {
-                points.add(new Point( m_DisData.get(i), m_ForceData.get(i)));
+            //根据压力数据的个数调整时间轴的长度
+            if (m_ForceData.size() < 800 ){
+                timeLength=2;
+            }else if(m_ForceData.size() > 799  && m_ForceData.size() < 1200){
+                timeLength=3;
+            }else if (m_ForceData.size() > 1199 && m_ForceData.size() < 1600){
+                timeLength=4;
+            }else if (m_ForceData.size() > 1599 && m_ForceData.size() < 2000){
+                timeLength=5;
+            }else if (m_ForceData.size() > 1999  && m_ForceData.size() < 2400){
+                timeLength=6;
+            }else{
+                timeLength=7;
             }
 
+            for (int i = 0; i < m_ForceData.size(); i++) {
+                points.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_ForceData.get(i)));
+                //  forceData.add(m_ForceData.get(i));
+            }
+            //max1 = CalcMax(forceData);
         }
+        //将时间轴与位移轴的数据绑定在一起
+        if (m_DisData != null) {
+            for (int i = 0; i < m_DisData.size(); i++) {
+                points2.add(new Point((float) (0.025 + 0.025 * (i - 1)), m_DisData.get(i)));
 
+                // disData.add(m_DisData.get(i));
+            }
+            // max1 = CalcMax(disData);
+        }
 
 
     }
@@ -141,25 +163,21 @@ public class MySeverityGaiView extends View {
 
         width = dm.widthPixels;
         height = dm.heightPixels;
-        viewHeigth=height*9/16-height/32;
+        viewHeigth=height*17/32;
         viewWidth=width * 7/8+50-width/8;
         //绘制坐标轴
         for(int i=0;i< 9;i++){
-            canvas.drawLine(width/8-15, height/32 +viewHeigth/10 + viewHeigth/10 * i, width * 7/8+50 -15,height/32 +viewHeigth/10 + viewHeigth/10 * i,paint);
-            canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,height/32,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*9/16,paint);
-            if(i==7){
-                //绘制标准线
-                int Y=(height/32  + viewHeigth/10 * i);
-                canvas.drawLine(width /8 - 15, Y, width * 7 / 8 + 50-15, Y, paint4);
-                paint4.setTextSize(40);
-                canvas.drawText("300/N",width/8+10,Y-5,paint4);
+            //划横线
+            canvas.drawLine(width/8-15, viewHeigth/10 + viewHeigth/10 * i, width * 7/8+50 -15,viewHeigth/10 + viewHeigth/10 * i,paint);
+            //划竖线
+            canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,0,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*17/32,paint);
 
-            }
+
         }
 
         //绘制矩形
         paint.setColor(Color.BLACK);
-        canvas.drawRect(width / 8-15, height / 32, width * 7 / 8 + 50-15, height * 9 / 16, paint);
+        canvas.drawRect(width / 8-15, 0, width * 7 / 8 + 50-15, height * 17 / 32, paint);
 
         //绘制文字
         paint.setColor(Color.BLACK);
@@ -179,20 +197,43 @@ public class MySeverityGaiView extends View {
         //画坐标轴上的刻度
         for(int i=0;i<=10;i++) {
             if (i == 0) {
-                canvas.drawText("0", width / 8 - 45 - 15, height * 9 / 16 + 30, paint);
+                canvas.drawText("0", width / 8 - 45 - 15, height * 17 / 32 + 30, paint);
             } else if(i > 0 && i < 10){
+                //设置画笔的颜色
+                paint.setColor(Color.BLACK);
+                //时间轴坐标值
+                time = timeLength * i + "";
+                canvas.drawText(time, width / 8 - 20 - 15 + (viewWidth) / 10 * i, height * 17 / 32 + 30, paint);
+                //设置画笔的颜色
+                paint.setColor(Color.RED);
                 //压力轴坐标值
                 forceValue = i * 100 + "";
-                canvas.drawText(forceValue, width / 8 - 50 - 15, height / 32 + (viewHeigth) / 10 * (10 - i) + 10, paint);
+                canvas.drawText(forceValue, width / 8 - 50 - 15,  (viewHeigth) / 10 * (10 - i) + 10, paint);
+                //设置画笔的颜色
+                paint.setColor(Color.BLUE);
                 //位移轴坐标值
                 disValue = i * 10 + "";
-                canvas.drawText(disValue, width / 8 - 20 - 15 + (viewWidth) / 10 * i, height * 9 / 16 + 30, paint);
+                canvas.drawText(disValue, width * 7 / 8 + 50 + 10 - 15, 10 + (viewHeigth) / 10 * (10 - i), paint);
 
             }else{
-                canvas.drawText("Force/N", 0, height / 32 + 10 + (viewHeigth) / 10 * (10 - i), paint);
-                canvas.drawText("S/mm", width * 7 / 8 - 15, height * 9 / 16 + 30, paint);
+                //设置画笔的颜色
+                paint.setColor(Color.RED);
+                canvas.drawText("Force/N", 0,  25 + (viewHeigth) / 10 * (10 - i), paint);
+                paint.setColor(Color.BLUE);
+                canvas.drawText("S/mm", width * 7 / 8 - 30, 25, paint);
+                paint.setColor(Color.BLACK);
+                canvas.drawText("Time/S", width * 7 / 8 - 15, height * 17 / 32 + 30, paint);
             }
         }
+
+
+
+        canvas.drawLine(width / 8 + 10,  height * 17 / 32/ 10 + height * 17 / 32 / 10 * 10 - 10, (float) width / 8 + 10 + viewWidth / 5, height * 17 / 32 / 10 + height * 17 / 32 / 10 * 10 - 10, paint3);
+        canvas.drawText("压力曲线", (float) width / 8 + 10 + viewWidth / 5 + 20, height * 17 / 32 / 10 + height * 17 / 32 / 10 * 10 + 5, paint);
+
+        canvas.drawLine((float) width / 8 + 10 + 5 * viewWidth / 10,height * 17 / 32 / 10 + height * 17 / 32 / 10 * 10 - 10, (float) width / 8 + 10 + 7 * viewWidth / 10, height * 17 / 32 / 10 + height * 17 / 32 / 10 * 10 - 10, paint2);
+        canvas.drawText("位移曲线", (float) width / 8 + 10 + 7 * viewWidth / 10 + 20, height * 17 / 32 / 10 + height * 17 / 32 / 10 * 10 + 5, paint);
+
 
         if(points != null) {
             for (int i = 0; i < points.size(); i++) {
@@ -201,9 +242,10 @@ public class MySeverityGaiView extends View {
 
         }
         Log.i("RateValueY.size ", "RateValueY.size = " + RateValueY.size());
+        //绘制压力曲线
         for(int i=0;i<RateValueY.size();i++){
-            float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/10);
-            float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/100);
+            float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
+            float y = (float)(height*17/32-(viewHeigth)/10*(RateValueY.get(i).getY())/10);
 
             if (i==0){
                 path.moveTo(x,y);
@@ -214,9 +256,34 @@ public class MySeverityGaiView extends View {
         canvas.drawPath(path, paint3);
 
         RateValueY.clear();
+
+
+
+        if(points2.size() != 0) {
+            for (int i = 0; i < points2.size(); i++) {
+                RateValueY.add(points2.get(i));
+            }
+        }
+    //绘制位移曲线
+        if (RateValueY != null) {
+            for (int i = 0; i < RateValueY.size(); i++) {
+                float x = (width / 8 -15 + (viewWidth) / 10 * RateValueY.get(i).getX()/timeLength);
+                float y = (float) (height * 17 / 32 - (viewHeigth) / 10 * RateValueY.get(i).getY()/10);
+
+                if (i==0){
+                    Log.i("points.size ", "RateValueY2222.get(i).getX() = " + RateValueY.get(i).getX());
+                    path2.moveTo(x,y);
+                }else {
+                    path2.lineTo(x, y);
+                }
+
+            }
+            canvas.drawPath(path2, paint2);
+        }
+
+        RateValueY.clear();
+
         points.clear();
 
     }
-
-
 }

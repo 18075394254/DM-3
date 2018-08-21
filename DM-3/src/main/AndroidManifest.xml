@@ -57,6 +57,11 @@
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
         <activity android:name="activity.TestActivity"/>
+        <receiver android:name="receiver.PairingRequest">
+            <intent-filter android:priority="1000">
+                <action android:name="android.bluetooth.device.action.PAIRING_REQUEST" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -339,8 +339,8 @@ public class ImportAllActivity extends BaseActivity{
         Log.i("importallActivity", " m_DisData。size = " + m_DisData.size() + "m_ForceData.size = " + m_ForceData.size());
         Log.i("importallActivity", " path = " + path);
 
-        MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
-       // MySeverityGaiView forceView = new MySeverityGaiView(ImportAllActivity.this, m_ForceData, m_DisData);
+      //  MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
+        MySeverityGaiView forceView = new MySeverityGaiView(ImportAllActivity.this, m_ForceData, m_DisData);
         bitmap = createViewBitmap(forceView);
         pictureDB.initDataBase(db, bitmap, MyApplication.FORCEDIS, name, MainActivity.s_mLiftId, MainActivity.s_mOperator, MainActivity.s_mLocation, force, dis,isQualified);
             map.clear();

@@ -170,7 +170,7 @@ public class MySeverityView extends View {
             canvas.drawLine(width/8-15, height/32 +viewHeigth/10 + viewHeigth/10 * i, width * 7/8+50 -15,height/32 +viewHeigth/10 + viewHeigth/10 * i,paint);
             canvas.drawLine(width/8-15 +viewWidth/10 + viewWidth/10 * i,height/32,width/8-15 +viewWidth/10 + viewWidth/10 * i,height*9/16,paint);
         if(i==7){
-                //绘制标准线
+               /* //绘制标准线
                 int Y=(height/32  + viewHeigth/10 * i);
                 canvas.drawLine(width /8 - 15, Y, width * 7 / 8 + 50-15, Y, paint4);
                 paint4.setTextSize(40);
@@ -179,7 +179,7 @@ public class MySeverityView extends View {
             float Y2= (float) (height/32  + viewHeigth/10 * 8.5);
             canvas.drawLine(width /8 - 15, Y2, width * 7 / 8 + 50 - 15, Y2, paint4);
             paint4.setTextSize(40);
-            canvas.drawText("15/mm",width * 6 / 8 ,Y2-5,paint4);
+            canvas.drawText("15/mm",width * 6 / 8 ,Y2-5,paint4);*/
             }
         }
 
@@ -207,6 +207,8 @@ public class MySeverityView extends View {
             if (i == 0) {
                 canvas.drawText("0", width / 8 - 45 - 15, height * 9 / 16 + 30, paint);
             } else if(i > 0 && i < 10){
+                //设置画笔的颜色
+                paint.setColor(Color.BLACK);
                 //时间轴坐标值
                 time = timeLength * i + "";
                 canvas.drawText(time, width / 8 - 20 - 15 + (viewWidth) / 10 * i, height * 9 / 16 + 30, paint);
@@ -250,7 +252,7 @@ public class MySeverityView extends View {
         Log.i("RateValueY.size ", "RateValueY.size = " + RateValueY.size());
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
-            float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/100);
+            float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/10);
 
             if (i==0){
                 path.moveTo(x,y);

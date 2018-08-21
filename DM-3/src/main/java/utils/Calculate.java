@@ -296,7 +296,7 @@ public class Calculate {
             //s.length - 1是为了防止最后一个""信息影响数据解析
             for (int i = 0; i < s.length -1; i+=2) {
                 if (i % 2 == 0) {
-                    m_AllData.add(new Point(Float.parseFloat(s[i])/10,Float.parseFloat(s[i+1])/10));
+                    m_AllData.add(new Point(Float.parseFloat(s[i]),Float.parseFloat(s[i+1])));
                 }
             }
             MyApplication.setPointString(m_AllData);

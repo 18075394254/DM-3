@@ -399,7 +399,7 @@ public class BluetoothService {
                                 switch(receiveState){
 
                                     case RECEIVE_B1:
-                                        count++;
+
                                         for(int i=0;i<availableBytes;i++){
                                             all[index]=bt[i];
                                             index++;
@@ -410,17 +410,17 @@ public class BluetoothService {
 
                                             if (msg.contains("B1")){
                                                 mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "B1").sendToTarget();
-
+                                                count=0;
                                             }
                                             index = 0;
-                                            count = 0;
+
                                             sb.delete(0, sb.length());
                                         }
 
                                         break;
 
                                     case RECEIVE_COMMAND:
-                                        count++;
+
                                         for(int i=0;i<availableBytes;i++){
                                             all[index]=bt[i];
                                             index++;
@@ -434,7 +434,7 @@ public class BluetoothService {
                                                 receiveState =  RECEIVE_THREEDATA;
                                             }
                                             index = 0;
-                                            count = 0;
+
                                             sb.delete(0, sb.length());
                                         }
 
@@ -453,13 +453,21 @@ public class BluetoothService {
                                             for (int i = 0;i < index;i+=2){
                                              sb.append(DataTrans.TwoBytesToInt(all[i], all[i + 1]) + " , ");
                                             }
-                                            //将字符串赋值给全局变量
+                                             //将字符串赋值给全局变量
                                             MyApplication.setString(sb.toString());
-                                            //发送A2给测试界面，提示收到三组小数据，可以解析显示了
-                                            mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "A2").sendToTarget();
+                                        /*    if (count == 1){
+                                                //发送A3给测试界面，提示收到三组小数据，可以解析显示了
+                                                mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "A3").sendToTarget();
+
+                                            }else{*/
+                                                //发送A2给测试界面，提示收到三组小数据，可以解析显示了
+                                                mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "A2").sendToTarget();
+
+                                            //}
+
                                             all=new byte[1024*1024*10];
                                             index=0;
-                                            count=0;
+
 
                                             sb.delete(0, sb.length());
                                         }
@@ -476,7 +484,7 @@ public class BluetoothService {
 
                                     //全部导入数据
                                     case RECEIVE_ALLDATA:
-                                        count++;
+
                                         for(int i=0;i<availableBytes;i++){
                                             all[index]=bt[i];
                                             index++;
@@ -513,7 +521,7 @@ public class BluetoothService {
                                                         mHandler.obtainMessage(BluetoothState.MESSAGE_READ, bytes, -1, "D").sendToTarget();
                                                         all = new byte[1024 * 1024 * 10];
                                                         index = 0;
-                                                        count = 0;
+
                                                         sb.delete(0, sb.length());
                                                     } else {
                                                         //表示没有数据导入，自定义发送F

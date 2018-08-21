@@ -150,7 +150,7 @@ public class MainActivity extends BaseActivity {
         IntentFilter filter=new IntentFilter();
         filter.addAction("android.intent.action.mainActivity");
         filter.addAction("android.intent.action.connect");
-        filter.addAction("android.intent.action.disconnect");
+       // filter.addAction("android.intent.action.disconnect");
         filter.addAction("android.intent.action.connectfailed");
         MainActivity.this.registerReceiver(receiver, filter);
 
@@ -162,12 +162,12 @@ public class MainActivity extends BaseActivity {
 
 
         // 注册Receiver来获取蓝牙设备相关的结果
-      /*  IntentFilter intent = new IntentFilter();
+       IntentFilter intent = new IntentFilter();
         intent.addAction(BluetoothDevice.ACTION_FOUND);// 用BroadcastReceiver来取得搜索结果
         intent.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
         intent.addAction(BluetoothAdapter.ACTION_SCAN_MODE_CHANGED);
         intent.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
-        registerReceiver(searchDevices, intent);*/
+        registerReceiver(searchDevices, intent);
 
         //按钮的监听
         onClick();
@@ -405,14 +405,14 @@ public class MainActivity extends BaseActivity {
                 //得到蓝牙的名称
                 deviceName = data.getExtras().getString(BluetoothState.EXTRA_DEVICE_NAME);
                 //判断是不是目标蓝牙，是的话就配对连接，不是就提示
-               // if (deviceName.contains("DM-3") || deviceName.contains("DM-3")) {
+                if (deviceName.contains("DM-3") ) {
                     // mBinder.connectd(deviceAddress, deviceName);
                     BluetoothAdapter btAdapt = BluetoothAdapter.getDefaultAdapter();
                     BluetoothDevice btDev = btAdapt.getRemoteDevice(deviceAddress);
                     try {
                         Boolean returnValue = false;
-                        mBinder.connectd(deviceAddress, deviceName);
-                     /*   if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
+
+                        if (btDev.getBondState() == BluetoothDevice.BOND_NONE) {
                             // Toast.makeText(this, "远程设备发送蓝牙配对请求", Toast.LENGTH_SHORT).show();
                             //这里只需要createBond就行了
                             ClsUtils.createBond(btDev.getClass(), btDev);
@@ -420,13 +420,13 @@ public class MainActivity extends BaseActivity {
                         }else if(btDev.getBondState() == BluetoothDevice.BOND_BONDED){
                             mBinder.connectd(deviceAddress, deviceName);
                             //Toast.makeText(this," ....正在连接..", Toast.LENGTH_SHORT).show();
-                        }*/
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-               /* } else {
+                } else {
                     Toast.makeText(this, "连接的不是测试仪器的蓝牙，请重新选择！", Toast.LENGTH_SHORT).show();
-                }*/
+                }
             }
 
 

@@ -108,20 +108,25 @@
         android:layout_below="@+id/lin4"
         />
 
-
+<!--<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/tv"
+    android:layout_marginTop="50dp"
+    >-->
          <ImageView
         android:id="@+id/pinchImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@mipmap/ic_launcher"
-        android:layout_below="@+id/tv"
+             android:layout_below="@+id/tv"
         />
     <!--<view.MySurfaceView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv"
-        />-->
 
+        />
 
-
+</RelativeLayout>
+-->
 </RelativeLayout>

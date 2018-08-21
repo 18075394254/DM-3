@@ -95,20 +95,25 @@
     </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/layoutImage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
         android:layout_below="@+id/lin3"
-        android:layout_marginTop="15dp"
-        >
 
-        <view.PinchImageView
+        >
+        <ImageView
             android:id="@+id/pinchImageView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:src="@mipmap/ic_launcher">
-        </view.PinchImageView>
-    </LinearLayout>
+        </ImageView>
+
+        <view.MySurfaceView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+        />
+    </RelativeLayout>
 </RelativeLayout>

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 import controller.BaseActivity;
 import controller.MyApplication;
 import controller.PictureDatabase;
+import utils.Calculate;
+import view.MySurfaceView;
+
 /**
  * Created by Administrator on 16-10-13.
  */
@@ -31,12 +35,35 @@ public class ResultActivity extends BaseActivity {
     PictureDatabase pd;
     SQLiteDatabase sd;
     String strExt=null;
+    Calculate calculate = new Calculate();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
         setContentView(R.layout.activity_result);
+
+        //获取打开的文件所在的路径
+        Intent data = this.getIntent();
+        //获得路径
+       String filename = data.getStringExtra("filename");
+        calculate.setAllData(filename);
+
+       /* MySurfaceView surfaceView = new MySurfaceView(this);
+        LinearLayout l = new LinearLayout(this);   //l就是当前的页面的布局
+
+        l.addView(surfaceView);   //加入新的view
+        if (MyApplication.getWindowWidth() == 720){
+            l.setPadding(0, 360, 0, 0);  //设置位置
+        }else if(MyApplication.getWindowWidth() == 1080){
+            l.setPadding(0, 550, 0, 0);  //设置位置
+        }else{
+            l.setPadding(0, MyApplication.getWindowWidth()/2, 0, 0);  //设置位置
+        }
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+        l.setLayoutParams(p);  //新的view的参数
+        this.addContentView(l, p);  //加入新的view*/
 
         forceValue=getView(R.id.forcevalue);
         disValue=getView(R.id.disvalue);
@@ -96,5 +123,9 @@ public class ResultActivity extends BaseActivity {
         });
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyApplication.setPointString(null);
+    }
 }

@@ -200,7 +200,7 @@ public class DataFragment extends Fragment{
                 String sdpath = Environment.getExternalStorageDirectory().getAbsolutePath();
                 String appName = getString(R.string.app_name);
 
-                String wordPath = sdpath + "/" + appName+ "/test.pdf";
+                String wordPath = sdpath + "/" + appName+ "/测试报告.pdf";
                 String picPath = sdpath + "/" + appName+ "/data.png";
                 FileOutputStream  out =null;
                 try {
@@ -323,7 +323,7 @@ public class DataFragment extends Fragment{
         int titleBaseLine = 72;
         int leftMargin = 54;
         int center = w/4;
-        Toast.makeText(activity,"宽度为 = "+center,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(activity,"宽度为 = "+center,Toast.LENGTH_SHORT).show();
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         paint.setTextSize(25);

@@ -83,7 +83,7 @@ public class OnTestActivity extends BaseActivity {
 
     private Intent bindIntent;
     private MyReceiver receiver;
-    String name=null;
+    String filename=null;
     private boolean cantest=true;
 
     Calculate calculate=new Calculate();
@@ -92,6 +92,8 @@ public class OnTestActivity extends BaseActivity {
     private ImageView backimage;
     private TextView textForce;
     private TextView textDis;
+    float firstDisValue = 0;
+
 
     //每条数据的内容，用于写入文件中
     private String dataString ="";
@@ -138,7 +140,26 @@ public class OnTestActivity extends BaseActivity {
                          textDis.setText(disValue + "");
                    // }
                     Log.i("mmmtag","forceValue"+forceValue+"  disValue = "+disValue);
-                    //接收到仪器发送的B1,表示测试完成，开始解析数据
+
+                } else if(message.equals("A3")){
+                    String msgdata = MyApplication.getString();
+                    //将数据拼接起来，当测试完成后，解析数据绘制图形
+                    totalData = totalData + msgdata;
+                    Log.i("mtag", "msgdata" + msgdata);
+
+                    //分隔字符串
+                    String[] s = msgdata.split(",");
+                    //三组数据(压力，位移，压力，位移，压力，位移)
+                    float a = Float.parseFloat(s[0]) / 10;
+                    float b = Float.parseFloat(s[2]) / 10;
+
+                    float c = Float.parseFloat(s[4]) / 10;
+                    float d= Float.parseFloat(s[1]) / 10;
+                    firstDisValue = d;
+                    float e = Float.parseFloat(s[3]) / 10;
+                    float f = Float.parseFloat(s[5]) / 10;
+
+                 //接收到仪器发送的B1,表示测试完成，开始解析数据
                 }else if(message.equals("B1")) {
                     Log.i("mtag", "接收到B1时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                     tv_testStatus.setText("数据上传中...");
@@ -240,11 +261,6 @@ public class OnTestActivity extends BaseActivity {
         bindIntent = new Intent(this, MyService.class);
         bindService(bindIntent, connection, BIND_AUTO_CREATE);
 
-        Intent intent=getIntent();
-        name=intent.getStringExtra("name");
-
-
-
             tv_testWay.setText("测试电梯门刚度:");
             dataResult.setVisibility(View.INVISIBLE);
             dataResult.setClickable(false);
@@ -308,7 +324,7 @@ public class OnTestActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OnTestActivity.this, ResultActivity.class);
-
+                    intent.putExtra("filename",filename);
                     startActivity(intent);
 
             }
@@ -349,11 +365,11 @@ public class OnTestActivity extends BaseActivity {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             Date curDate = new Date(System.currentTimeMillis());//获取当前时间
             String dateStr = formatter.format(curDate);
-            String name = dateStr + "-" + String.valueOf(indexF) + ".ds";
+           String name = dateStr + "-" + String.valueOf(indexF) + ".ds";
 
             //保存图片到数据库
-        MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
-       // MySeverityGaiView severityView = new MySeverityGaiView(OnTestActivity.this, m_ForceData,m_DisData);
+       // MySeverityView severityView = new MySeverityView(OnTestActivity.this, m_ForceData,m_DisData);
+        MySeverityGaiView severityView = new MySeverityGaiView(OnTestActivity.this, m_ForceData,m_DisData);
 
         bitmap = createViewBitmap(severityView);
 
@@ -362,11 +378,11 @@ public class OnTestActivity extends BaseActivity {
             // pointsF.clear();
 
             indexF++;
-            String path = fileDir + "/" + name;
-            File newfile = new File(path);
+            filename = fileDir + "/" + name;
+            File newfile = new File(filename);
             try {
                 newfile.createNewFile();
-                calculate.writeSetingsToFile(newfile, totalData);
+                calculate.writeSetingsToFile(newfile, dataString);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -378,7 +394,7 @@ public class OnTestActivity extends BaseActivity {
         Resources resources = this.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
         int width = dm.widthPixels;
-        int height = dm.heightPixels *10/16;
+        int height = dm.heightPixels *19/32;
         Bitmap bitmap = Bitmap.createBitmap(width, height,
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
