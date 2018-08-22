@@ -14,10 +14,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -303,7 +306,7 @@ public class MainActivity extends BaseActivity {
         list.add("断开蓝牙");
         list.add("使用说明");
         list.add("设备详情");
-        list.add("清空数据");
+        list.add("权限管理");
         list.add("退出程序");
         // ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, list);
 
@@ -313,9 +316,11 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
                     case 0:
+                        //跳转到搜索蓝牙界面
                         startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class), BluetoothState.REQUEST_CONNECT_DEVICE);
                         break;
                     case 1:
+                        //关闭蓝牙连接
                         if (isConnect) {
                             mBinder.closeConnect();
                             Toast.makeText(MainActivity.this, "正在断开蓝牙连接", Toast.LENGTH_SHORT).show();
@@ -324,38 +329,19 @@ public class MainActivity extends BaseActivity {
                         }
                         break;
                     case 2:
+                        //跳转到说明书界面
                         startActivity(new Intent(MainActivity.this,UseExplainActivity.class));
                         break;
                     case 3:
+                        //跳转到设备详情界面
                         startActivity(new Intent(MainActivity.this,DeviceDetailsActivity.class));
                         break;
                     case 4:
-                        if (isConnect) {
-                            Dialog alertDialog = new AlertDialog.Builder(MainActivity.this).
-                                    setTitle("确定要清空数据吗？").
-                                    setIcon(R.mipmap.launcher).
-                                    setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mBinder.sendMessage("C1", BluetoothState.MAINACTIVITY);
-                                            Toast.makeText(MainActivity.this, "设备正在清空数据！", Toast.LENGTH_SHORT).show();
-
-                                        }
-                                    }).
-                                    setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            // TODO Auto-generated method stub
-                                        }
-                                    }).
-                                    create();
-                            alertDialog.show();
-
-                        } else {
-                            Toast.makeText(MainActivity.this, "未连接设备蓝牙", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
+                        //跳转到权限设置界面
+                      //  getAppDetailSettingIntent(MainActivity.this);
+                        Uri packageURI = Uri.parse("package:" + getPackageName());
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageURI);
+                        startActivity(intent);
                     case 5:
                         Dialog alertDialog = new AlertDialog.Builder(MainActivity.this).
                                 setTitle("确定要退出程序吗？").
@@ -385,7 +371,23 @@ public class MainActivity extends BaseActivity {
         super.onStart();
         //mBinder.setupService();
     }
+    /**
+     * 跳转到权限设置界面
+     */
+    private void getAppDetailSettingIntent(Context context){
 
+        Intent intent = new Intent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        if(Build.VERSION.SDK_INT >= 9){
+            intent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+            intent.setData(Uri.fromParts("package", getPackageName(), null));
+        } else if(Build.VERSION.SDK_INT <= 8){
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setClassName("com.android.settings","com.android.settings.InstalledAppDetails");
+            intent.putExtra("com.android.settings.ApplicationPkgName", getPackageName());
+        }
+        startActivity(intent);
+    }
     //页面摧毁时调用的方法
     public void onDestroy() {
         super.onDestroy();

@@ -42,7 +42,7 @@ public class SplashScreenActivity extends BaseActivity
 	{
 		//跳转到登录界面
 		Intent intent = new Intent(this, LogActivity.class);
-		//Intent intent = new Intent(this, TestActivity.class);
+
 		startActivity(intent);
 		this.finish();	
 	}

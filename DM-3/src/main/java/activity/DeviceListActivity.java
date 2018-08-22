@@ -165,7 +165,7 @@ public class DeviceListActivity extends Activity {
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
             //判断这个权限是否已经授权过
-            Log.i("wp123","checkCallPhonePermission = "+checkCallPhonePermission);
+
             if(checkCallPhonePermission != PackageManager.PERMISSION_GRANTED){
 
                 //判断是否需要 向用户解释，为什么要申请该权限,该方法只有在用户在上一次已经拒绝过你的这个权限申请才会调用。

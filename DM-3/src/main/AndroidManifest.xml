@@ -7,17 +7,12 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     //23以上的蓝牙搜索的定位权限
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     //文件读写的权限
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CALL_LOG" />
 
     <application
         android:name="controller.MyApplication"
@@ -30,12 +25,10 @@
         <activity android:name="activity.SplashScreenActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name="activity.LogActivity"/>
-
         <activity android:name="activity.RegisterActivity"/>
         <activity android:name="activity.MainActivity"/>
         <activity android:name="activity.DeviceListActivity"/>
@@ -56,7 +49,6 @@
         <activity android:name="activity.SendReceiveActivity"/>
         <activity android:name="activity.DeviceDetailsActivity"/>
         <service android:name="utils.MyService"></service>
-        <activity android:name="activity.TestActivity"/>
         <receiver android:name="receiver.PairingRequest">
             <intent-filter android:priority="1000">
                 <action android:name="android.bluetooth.device.action.PAIRING_REQUEST" />

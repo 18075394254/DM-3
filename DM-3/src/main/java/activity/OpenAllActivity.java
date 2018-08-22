@@ -1,17 +1,22 @@
 package activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.hardware.ConsumerIrManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -109,9 +114,11 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
         pictureDB=new PictureDatabase(this);
         db=pictureDB.getWritableDatabase();
+        //添加权限
+        setPermissionRW();
 
-
-
+        }
+    public void initView(){
         Intent data = getIntent();
         m_strpath = data.getStringExtra("path");
         // 获取系统的SDCard目录；
@@ -141,9 +148,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
 
             // 使用当前目录下的全部文件、文件夹来填充ListView
             inflateListView(currentFiles);
-
-        }
-
+    }
         fileslist.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
@@ -631,6 +636,7 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
     @Override
     protected void onResume() {
         super.onResume();
+
         batchOpen.setTextColor(Color.BLACK);
     }
 
@@ -734,5 +740,34 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
         }
     }
 
-
+    //开启读写权限
+    private void setPermissionRW() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)   //可读
+                            != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  //可写
+                                    != PackageManager.PERMISSION_GRANTED) {
+                //申请WRITE_EXTERNAL_STORAGE权限
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
+                                , Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1);
+            }else{
+                initView();
+            }
+        }else{
+            initView();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (1 == requestCode) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initView();
+            } else {
+                // 未授权
+            }
+        }
+    }
 }
