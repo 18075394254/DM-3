@@ -252,7 +252,7 @@ public class MySeverityView extends View {
         Log.i("RateValueY.size ", "RateValueY.size = " + RateValueY.size());
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
-            float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/10);
+            float y = (float)(height*9/16-(viewHeigth)/10*(RateValueY.get(i).getY())/100);
 
             if (i==0){
                 path.moveTo(x,y);

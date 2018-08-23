@@ -366,7 +366,8 @@ public class PictureDatabase extends SQLiteOpenHelper {
                 infos.add(operator);
                 String location = c.getString(c.getColumnIndex("location"));
                 infos.add(location);
-
+                String fileName = c.getString(c.getColumnIndex("name"));
+                infos.add(fileName);
             }
             if (c != null){
                 c.close();

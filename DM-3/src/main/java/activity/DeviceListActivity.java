@@ -59,7 +59,7 @@ public class DeviceListActivity extends Activity {
     private static final boolean D = true;
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 23;
 
-    // Member fields
+    //蓝牙适配器
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private Set<BluetoothDevice> pairedDevices;
@@ -88,7 +88,7 @@ public class DeviceListActivity extends Activity {
         	strBluetoothDevices = "Bluetooth Devices";
         tv_title.setText(strBluetoothDevices);
         
-        // Set result CANCELED in case the user backs out
+        // 返回界面时设置的参数
         setResult(Activity.RESULT_CANCELED);
         
 
@@ -99,6 +99,7 @@ public class DeviceListActivity extends Activity {
         scanButton.setText(strScanDevice);
         scanButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
+                //安卓6.0蓝牙搜索还要动态设置模糊定位权限
                 requestBluetoothPermission();
 
             }
@@ -108,26 +109,24 @@ public class DeviceListActivity extends Activity {
         int layout_text = getIntent().getIntExtra("layout_text", R.layout.device_name);
         mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, layout_text);
 
-        // Find and set up the ListView for paired devices
+        // 已经配对过的蓝牙列表
         ListView pairedListView = (ListView) findViewById(R.id.list_devices);
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
         
-        // Register for broadcasts when a device is discovered
+        // 注册广播
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         this.registerReceiver(mReceiver, filter);
-
-        // Register for broadcasts when discovery has finished
         filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         this.registerReceiver(mReceiver, filter);
 
-        // Get the local Bluetooth adapter
+        // 获得蓝牙是适配器
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        // Get a set of currently paired devices
+        // 获取当前配对过的蓝牙设备
         pairedDevices = mBtAdapter.getBondedDevices();
 
-        // If there are paired devices, add each one to the ArrayAdapter
+        // 获得配对蓝牙的名称和地址
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
@@ -189,24 +188,23 @@ public class DeviceListActivity extends Activity {
     }
     protected void onDestroy() {
         super.onDestroy();
-        // Make sure we're not doing discovery anymore
+        // 确认在页面销毁时关闭搜索蓝牙功能
         if (mBtAdapter != null) {
             mBtAdapter.cancelDiscovery();
         }
 
-        // Unregister broadcast listeners
+        // 取消广播注册
         this.unregisterReceiver(mReceiver);
         this.finish();
     }
 
-    // Start device discover with the BluetoothAdapter
+    // 开始搜索蓝牙设备
 	private void doDiscovery() {
         if (D) Log.d(TAG, "doDiscovery()");
         
         // Remove all element from the list
         mPairedDevicesArrayAdapter.clear();
-        
-        // If there are paired devices, add each one to the ArrayAdapter
+
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
@@ -218,16 +216,14 @@ public class DeviceListActivity extends Activity {
             mPairedDevicesArrayAdapter.add(strNoFound);
         }
         
-        // Indicate scanning in the title
+        // 设置标题字符创
         String strScanning = getIntent().getStringExtra("scanning");
         if(strScanning == null) 
         	strScanning = "Scanning for devices...";
         setProgressBarIndeterminateVisibility(true);
         tv_title.setText(strScanning);
 
-        // Turn on sub-title for new devices
-        // findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
-        // If we're already discovering, stop it
+        //判断是否在搜索，是的话就取消搜索
         if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();
         }
@@ -236,10 +232,10 @@ public class DeviceListActivity extends Activity {
         mBtAdapter.startDiscovery();
     }
 
-    // The on-click listener for all devices in the ListViews
+    // 列表条目的点击事件
     private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
-            // Cancel discovery because it's costly and we're about to connect
+            // 点击连接时要先停止蓝牙搜索
             if(mBtAdapter.isDiscovering())
             	mBtAdapter.cancelDiscovery();
 
@@ -247,12 +243,12 @@ public class DeviceListActivity extends Activity {
             if(strNoFound == null) 
             	strNoFound = "No devices found";
 	        if(!((TextView) v).getText().toString().equals(strNoFound)) {
-	            // Get the device MAC address, which is the last 17 chars in the View
+	            //获取蓝牙的MAC地址
 	            String info = ((TextView) v).getText().toString();
+                //截取名称和地址
 	            String address = info.substring(info.length() - 17);
 	            String name = info.substring(0, info.length() - 17);
-                Log.i("5.22","name = "+name);
-	            // Create the result Intent and include the MAC address
+                //将名称和地址返回到上一界面
 	            Intent intent = new Intent();
 	            intent.putExtra(BluetoothState.EXTRA_DEVICE_ADDRESS, address);
                 intent.putExtra(BluetoothState.EXTRA_DEVICE_NAME, name);
@@ -263,15 +259,14 @@ public class DeviceListActivity extends Activity {
         }
     };
 
-    // The BroadcastReceiver that listens for discovered devices and
-    // changes the title when discovery is finished
+    //蓝牙搜索的广播
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             
-            // When discovery finds a device
+            // 当搜索到设备时
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-                // Get the BluetoothDevice object from the Intent
+                // 通过intent获取到BluetoothDevice
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 
                 // If it's already paired, skip it, because it's been listed already
@@ -286,7 +281,7 @@ public class DeviceListActivity extends Activity {
                 	mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
                 }
                 
-            // When discovery is finished, change the Activity title
+            // 搜索完成时
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 String strSelectDevice = getIntent().getStringExtra("select_device");

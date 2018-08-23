@@ -61,7 +61,7 @@ public class ChooseDirActivity extends BaseActivity {
 				return file.isDirectory() && file.canRead() && file.canWrite();
 			}
 		};
-
+	//如果路径为null，就将当前的系统路径赋值给m_savaPath
 		if (m_savaPath == null) {
 			m_savaPath = Environment.getExternalStorageDirectory().getAbsolutePath();
 		}
@@ -70,6 +70,7 @@ public class ChooseDirActivity extends BaseActivity {
 		if (root.exists()) 
 		{
 			curdir = root;
+			//获取文件列表
 			currentFiles = root.listFiles(filter);
 			if(currentFiles != null) {
 
@@ -90,6 +91,7 @@ public class ChooseDirActivity extends BaseActivity {
 			}
 		});
 
+		//跳转到导入数据界面
 		startView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

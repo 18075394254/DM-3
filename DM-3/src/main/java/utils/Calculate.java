@@ -1,6 +1,20 @@
 package utils;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.Environment;
+import android.print.PrintAttributes;
+import android.print.pdf.PrintedPdfDocument;
 import android.util.Log;
+import android.view.View;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -245,7 +259,7 @@ public class Calculate {
      *            写入的内容
      * @return
      */
-    public static void writeSetingsToFile(File file, String content) {
+    public void writeSetingsToFile(File file, String content) {
 
 
         FileOutputStream fos = null;
@@ -261,7 +275,8 @@ public class Calculate {
 
         }
     }
-    public static String readSetingsToFile(File file) {
+    //读文件
+    public String readSetingsToFile(File file) {
 
         try {
             FileInputStream fis = new FileInputStream(file);
@@ -285,7 +300,8 @@ public class Calculate {
         return null;
     }
 
-    public static void setAllData(String filename){
+    //设置数据
+    public void setAllData(String filename){
         String content = null;
         //测试数据的集合
         ArrayList<Point> m_AllData = new ArrayList<Point>();
@@ -303,4 +319,158 @@ public class Calculate {
             Log.i("mtag", "数据读取完成！");
         }
     }
+
+    public void GenPDF(Activity activity,String path,String mType,String date,String people,String location,String number,String force,String dis,Bitmap bitmap) {
+        //获取屏幕宽高
+        int w = MyApplication.getWindowWidth();
+        int h = MyApplication.getWindowHeight();
+        PrintAttributes attributes = new PrintAttributes.Builder()
+                .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                .setResolution(new PrintAttributes.Resolution("1", "print", w, h))
+                .setMinMargins(new PrintAttributes.Margins(0, 0, 0, 0))
+                .setColorMode(PrintAttributes.COLOR_MODE_COLOR)
+                        //.setDuplexMode(PrintAttributes.DUPLEX_MODE_NONE)
+                .build();
+        PrintedPdfDocument pdfDocument = new PrintedPdfDocument(activity, attributes);
+
+        // 绘制PDF
+        PdfDocument.Page page = pdfDocument.startPage(0);   // 创建页，页号从0开始
+        //PdfDocument.PageInfo pageInfo = page.getInfo(); // 获取页信息，可以根据长宽来排版
+
+        Canvas canvas = page.getCanvas();
+
+
+        int titleBaseLine = 72;
+        int leftMargin = 54;
+        int center = w/4;
+        // Toast.makeText(activity,"宽度为 = "+center,Toast.LENGTH_SHORT).show();
+        Paint paint = new Paint();
+        paint.setColor(Color.BLACK);
+        paint.setTextSize(25);
+        canvas.drawText("测试报告", center, titleBaseLine, paint);
+        paint.setTextSize(10);
+        canvas.drawText("测试仪器："+mType, leftMargin, titleBaseLine + 30, paint);
+        canvas.drawText("测试单位：", leftMargin, titleBaseLine + 60, paint);
+        canvas.drawText("测试时间："+date, leftMargin, titleBaseLine + 90, paint);
+        canvas.drawText("测试人员："+people, leftMargin, titleBaseLine + 120, paint);
+        canvas.drawText("测试地点："+location, leftMargin, titleBaseLine + 150, paint);
+        canvas.drawText("电梯编号："+number, leftMargin, titleBaseLine + 180, paint);
+        canvas.drawText("补充信息：", leftMargin, titleBaseLine + 210, paint);
+        canvas.drawText("压力值："+force, leftMargin, titleBaseLine + 240, paint);
+        canvas.drawText("位移值："+dis, leftMargin, titleBaseLine + 270, paint);
+        canvas.drawBitmap(scale(bitmap, 0.4f,0.4f),leftMargin,titleBaseLine+270,paint);
+        pdfDocument.finishPage(page);  // 结束页
+
+        // 输出到文件
+        try {
+            File file = new File(path);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            pdfDocument.writeTo(outputStream);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 图片的缩放方法
+     *
+     * @param src    ：源图片资源
+     * @param scaleX ：横向缩放比例
+     * @param scaleY ：纵向缩放比例
+     */
+    public Bitmap scale(Bitmap src, float scaleX, float scaleY) {
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleX, scaleY);
+        return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(),
+                matrix, true);
+    }
+
+
+    /**
+     * 获取和保存当前屏幕的截图
+     */
+    private void GetandSaveCurrentImage(Activity activty,File file)
+    {
+        //1.构建Bitmap
+        //获取屏幕宽高
+        int w = MyApplication.getWindowHeight();
+        int h = MyApplication.getWindowHeight();
+
+        Bitmap bitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888 );
+
+        //2.获取屏幕
+        View decorView = activty.getWindow().getDecorView();
+        decorView.setDrawingCacheEnabled(true);
+        bitmap = decorView.getDrawingCache();
+
+        //3.保存Bitmap
+        try {
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileOutputStream fos = null;
+            fos = new FileOutputStream(file);
+            if (null != fos) {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
+                fos.flush();
+                fos.close();
+
+                // Toast.makeText(this, "截屏文件已保存至SDCard/AndyDemo/ScreenImage/下", Toast.LENGTH_LONG).show();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 获取SDCard的文件夹路径功能
+     * @return
+     */
+    private String getSDCardPath(){
+        File sdcardDir = null;
+        //推断SDCard是否存在
+        boolean sdcardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+        if(sdcardExist){
+            sdcardDir = Environment.getExternalStorageDirectory();
+        }
+        return sdcardDir.toString();
+    }
+
+
+
+
+
+    public void DeletePng(String picPath) {
+        File file = new File(picPath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    public void CreatePng(String picPath,Bitmap bitmap) {
+        //String picPath = "/mnt/sdcard/tmp/debug01.png";
+
+        File bitmapFile = new File(picPath);
+        FileOutputStream bitmapWtriter = null;
+        try {
+            bitmapWtriter = new FileOutputStream(bitmapFile);
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        bitmap.compress(Bitmap.CompressFormat.PNG, 30, bitmapWtriter);
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(picPath);
+            bitmap  = BitmapFactory.decodeStream(fis);
+        } catch (FileNotFoundException e) {
+
+        }
+
+    }
+
 }

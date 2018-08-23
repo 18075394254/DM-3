@@ -45,7 +45,7 @@ public class DecDisActivity extends BaseActivity {
             if (message.equals("F1")) {
                 btn_startDec.setClickable(true);
                 btn_next.setClickable(true);
-                if (disValue == 25){
+                if (disValue == 20){
                     et_tishi.setText("位移负载标定完成！");
                     btn_startDec.setText("返回上一界面");
                     disValue = 0;

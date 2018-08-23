@@ -709,15 +709,11 @@ public class OpenAllActivity extends Activity implements Adapter.OnShowItemClick
         adapter.setOnShowItemClickListener(this);
         //填充数据集
        // fileslist.setAdapter(adapter);
-        try {
-            if (curdir.getCanonicalPath().contains("DM-3")){
+        if (curdir.getName().equals("DM-3")){
 
-                createExcel.setVisibility(View.VISIBLE);
-            }else{
-                createExcel.setVisibility(View.GONE);
-            }
-        } catch (IOException e) {
-
+            createExcel.setVisibility(View.VISIBLE);
+        }else{
+            createExcel.setVisibility(View.GONE);
         }
         try {
             pathText.setText(curdir.getCanonicalPath());

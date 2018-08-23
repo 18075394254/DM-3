@@ -245,7 +245,7 @@ public class MySeverityGaiView extends View {
         //绘制压力曲线
         for(int i=0;i<RateValueY.size();i++){
             float x = (width/8-15 +(viewWidth)/10*RateValueY.get(i).getX()/timeLength);
-            float y = (float)(height*17/32-(viewHeigth)/10*(RateValueY.get(i).getY())/10);
+            float y = (float)(height*17/32-(viewHeigth)/10*(RateValueY.get(i).getY())/100);
 
             if (i==0){
                 path.moveTo(x,y);

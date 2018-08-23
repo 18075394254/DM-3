@@ -336,8 +336,7 @@ public class ImportAllActivity extends BaseActivity{
         force = (float) map.get("forceValue");
         dis = (float) map.get("disValue");
         isQualified = (int) map.get("isQualified");
-        Log.i("importallActivity", " m_DisData。size = " + m_DisData.size() + "m_ForceData.size = " + m_ForceData.size());
-        Log.i("importallActivity", " path = " + path);
+
 
       //  MySeverityView forceView = new MySeverityView(ImportAllActivity.this, m_ForceData, m_DisData);
         MySeverityGaiView forceView = new MySeverityGaiView(ImportAllActivity.this, m_ForceData, m_DisData);

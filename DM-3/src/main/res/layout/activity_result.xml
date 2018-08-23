@@ -3,11 +3,11 @@
     android:id="@+id/parent"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/lin1"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:orientation="horizontal"
+
         android:background="#4468d4"
         >
         <TextView
@@ -16,10 +16,20 @@
             android:text="@string/testResult"
             android:textColor="@color/white"
             android:textSize="20sp"
-            android:layout_gravity="center_vertical"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:paddingLeft="10dp"
             />
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/shareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="true"
+            android:src="@mipmap/share"/>
+    </RelativeLayout>
     <LinearLayout
 
         android:id="@+id/lin2"
