@@ -73,8 +73,6 @@ public class BluetoothService {
     private ConnectedThread mConnectedThread;
     private int mState;
     private boolean isAndroid = BluetoothState.DEVICE_ANDROID;
-
-    ArrayList<String> forceList=new ArrayList<>();
     private StringBuilder sb=new StringBuilder();
     private int count=0;
     private int index=0;

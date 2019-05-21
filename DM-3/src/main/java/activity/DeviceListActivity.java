@@ -70,7 +70,7 @@ public class DeviceListActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
-        // Setup the window
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         int listId = getIntent().getIntExtra("layout_list", R.layout.activity_device_list);
         setContentView(listId);
@@ -127,15 +127,16 @@ public class DeviceListActivity extends Activity {
         pairedDevices = mBtAdapter.getBondedDevices();
 
         // 获得配对蓝牙的名称和地址
-        if (pairedDevices.size() > 0) {
+        /*if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             }
         } else {
             String noDevices = "No devices found";
             mPairedDevicesArrayAdapter.add(noDevices);
-        }
-
+        }*/
+        String noDevices = "No devices found";
+        mPairedDevicesArrayAdapter.add(noDevices);
     }
 
 
@@ -145,11 +146,12 @@ public class DeviceListActivity extends Activity {
             grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION:
-                Log.i("wp123","grantResults[0]="+grantResults[0]);
+                Log.i("wp123", "grantResults[0]=" + grantResults[0]);
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //授权成功
                     Toast.makeText(DeviceListActivity.this, "正在搜索蓝牙设备...", Toast.LENGTH_SHORT).show();
+                   //开始搜索
                     doDiscovery();
                 } else {
                     //授权拒绝
@@ -160,7 +162,7 @@ public class DeviceListActivity extends Activity {
     }
     private void requestBluetoothPermission(){
         //判断系统版本
-        Log.i("wp123","系统版本为"+Build.VERSION.SDK_INT);
+        Log.i("wp123", "系统版本为" + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= 23) {
             int checkCallPhonePermission = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION);
             //判断这个权限是否已经授权过
@@ -169,20 +171,21 @@ public class DeviceListActivity extends Activity {
 
                 //判断是否需要 向用户解释，为什么要申请该权限,该方法只有在用户在上一次已经拒绝过你的这个权限申请才会调用。
                 if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_COARSE_LOCATION))
-                    Toast.makeText(this,"Need bluetooth permission.",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Need bluetooth permission.", Toast.LENGTH_SHORT).show();
 
                   /*  参数1 Context
                 * 参数2 需要申请权限的字符串数组，支持一次性申请多个权限，对话框逐一询问
                 * 参数3 requestCode 主要用于回调的时候检测*/
 
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
                 return;
             }else{
-                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
 
             }
         } else {
             Toast.makeText(DeviceListActivity.this, "正在搜索蓝牙设备...", Toast.LENGTH_SHORT).show();
+            //开始搜索
             doDiscovery();
         }
     }
@@ -205,16 +208,16 @@ public class DeviceListActivity extends Activity {
         // Remove all element from the list
         mPairedDevicesArrayAdapter.clear();
 
-        if (pairedDevices.size() > 0) {
-            for (BluetoothDevice device : pairedDevices) {
+        /*if (pairedDevices.size() > 0) {
+            *//*for (BluetoothDevice device : pairedDevices) {
                 mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-            }
+            }*//*
         } else {
             String strNoFound = getIntent().getStringExtra("no_devices_found");
             if(strNoFound == null) 
             	strNoFound = "No devices found";
             mPairedDevicesArrayAdapter.add(strNoFound);
-        }
+        }*/
         
         // 设置标题字符创
         String strScanning = getIntent().getStringExtra("scanning");
@@ -270,7 +273,7 @@ public class DeviceListActivity extends Activity {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+              /*  if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     String strNoFound = getIntent().getStringExtra("no_devices_found");
                     if(strNoFound == null) 
                     	strNoFound = "No devices found";                    
@@ -279,17 +282,17 @@ public class DeviceListActivity extends Activity {
                 		mPairedDevicesArrayAdapter.remove(strNoFound);
                 	}
                 	mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-                }
-                
+                }*/
+                mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
             // 搜索完成时
-            } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-                setProgressBarIndeterminateVisibility(false);
-                String strSelectDevice = getIntent().getStringExtra("select_device");
-                if(strSelectDevice == null)
-                    Toast.makeText(DeviceListActivity.this, "搜索完成，点击连接蓝牙", Toast.LENGTH_SHORT).show();
-                strSelectDevice = "Select a device to connect";
-                tv_title.setText(strSelectDevice);
-            }
+        } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+            setProgressBarIndeterminateVisibility(false);
+            String strSelectDevice = getIntent().getStringExtra("select_device");
+            if(strSelectDevice == null)
+                Toast.makeText(DeviceListActivity.this, "搜索完成，点击连接蓝牙", Toast.LENGTH_SHORT).show();
+            strSelectDevice = "Select a device to connect";
+            tv_title.setText(strSelectDevice);
+        }
         }
     };
 

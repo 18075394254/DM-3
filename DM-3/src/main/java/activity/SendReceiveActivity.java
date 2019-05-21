@@ -100,7 +100,7 @@ public class SendReceiveActivity extends BaseActivity {
 
             }else if (message.equals("A2")){
 
-                sb.append(MyApplication.getString());
+                sb.append(MyApplication.getString()+" 下一组 ");
                 receiveText.setText(sb.toString());
             }
 

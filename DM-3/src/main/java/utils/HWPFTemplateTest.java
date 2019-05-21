@@ -32,7 +32,8 @@ import controller.MyApplication;
            // String templatePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "model.doc";
             InputStream is = null;
             AssetManager manager = MyApplication.getContext().getAssets();
-            try {    is = manager.open("model.doc");
+            try {
+                is = manager.open("model.doc");
             } catch (Exception e) {
                 e.printStackTrace();
             }

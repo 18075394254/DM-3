@@ -55,8 +55,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile project(':slidelibrary')
-    compile project(':android-pdf-viewer')
     compile files('libs/jxl.jar')
     compile files('libs/poi-3.9.jar')
     compile files('libs/poi-scratchpad-3.9.jar')
+    compile project(':android-pdf-viewer')
 }

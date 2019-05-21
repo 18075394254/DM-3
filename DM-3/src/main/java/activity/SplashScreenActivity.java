@@ -41,7 +41,7 @@ public class SplashScreenActivity extends BaseActivity
 	public void GoHome() 
 	{
 		//跳转到登录界面
-		Intent intent = new Intent(this, LogActivity.class);
+		Intent intent = new Intent(this, MainActivity.class);
 
 		startActivity(intent);
 		this.finish();	

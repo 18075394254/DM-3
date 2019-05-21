@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -135,6 +136,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制为竖屏
         setContentView(R.layout.activity_main);
         connectButton = getView(R.id.connect);
         setInfoButton = getView(R.id.setinfo);
@@ -289,16 +291,26 @@ public class MainActivity extends BaseActivity {
         ListView listView;
         listView= (ListView) findViewById(R.id.listView);
         Button declare_menu= (Button) findViewById(R.id.declare_menu);
-
+        Button readdata = (Button) findViewById(R.id.readdata);
         declare_menu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // if (isConnect) {
+                if (isConnect) {
                     startActivity(new Intent(MainActivity.this, DeclareActivity.class));
-              /*  }else{
+                }else{
+                    Toast.makeText(MainActivity.this, "蓝牙未连接", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        readdata.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isConnect) {
+                    startActivity(new Intent(MainActivity.this, SendReceiveActivity.class));
+                }else{
                     Toast.makeText(MainActivity.this, "蓝牙未连接", Toast.LENGTH_SHORT).show();
 
-                }*/
+                }
             }
         });
         ArrayList<String> list=new ArrayList<>();
