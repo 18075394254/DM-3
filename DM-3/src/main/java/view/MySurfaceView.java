@@ -71,7 +71,7 @@ public class MySurfaceView extends SurfaceView implements Runnable, Callback {
         mHolder = getHolder(); // 获得SurfaceHolder对象
         mHolder.addCallback(this); // 为SurfaceView添加状态监听
         p = new Paint(); // 创建一个画笔对象
-        p.setColor(Color.GREEN); // 设置画笔的颜色为白色
+        p.setColor(Color.GREEN); // 设置画笔的颜色为绿色
         setFocusable(true); // 设置焦点匹配
         p.setAntiAlias(true);
         p.setStyle(Paint.Style.FILL);

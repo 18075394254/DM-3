@@ -141,7 +141,7 @@ public class OnTestActivity extends BaseActivity {
                    // }
                     Log.i("mmmtag","forceValue"+forceValue+"  disValue = "+disValue);
 
-                } else if(message.equals("A3")){
+                } /*else if(message.equals("A3")){
                     String msgdata = MyApplication.getString();
                     //将数据拼接起来，当测试完成后，解析数据绘制图形
                     totalData = totalData + msgdata;
@@ -160,7 +160,7 @@ public class OnTestActivity extends BaseActivity {
                     float f = Float.parseFloat(s[5]) / 10;
 
                  //接收到仪器发送的B1,表示测试完成，开始解析数据
-                }else if(message.equals("B1")) {
+                }*/else if(message.equals("B1")) {
                     Log.i("mtag", "接收到B1时间" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis())));
                     tv_testStatus.setText("数据上传中...");
                     String[] s = totalData.split(",");
@@ -178,7 +178,7 @@ public class OnTestActivity extends BaseActivity {
 
                          }
                     if(m_DisData.size() != 0){
-                       map =  calculate.getDisValue(m_DisData, m_ForceData, 300);
+                        map =  calculate.getDisValue(m_DisData, m_ForceData, 300);
                         force = (float) map.get("forceValue");
                         dis = (float) map.get("disValue");
                         isQualified = (int) map.get("isQualified");
@@ -388,7 +388,6 @@ public class OnTestActivity extends BaseActivity {
             }
 
     }
-
 
     public Bitmap createViewBitmap(View v) {
         Resources resources = this.getResources();

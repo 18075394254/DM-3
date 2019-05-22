@@ -130,8 +130,7 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         int curposition = position - (dirCount - fileCount);
 
         viewPager.setCurrentItem(curposition);
-       MySurfaceView surfaceView = new MySurfaceView(this);
-
+        MySurfaceView surfaceView = new MySurfaceView(this);
 
         LinearLayout l = new LinearLayout(this);   //l就是当前的页面的布局
 

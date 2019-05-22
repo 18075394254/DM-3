@@ -128,8 +128,7 @@ public class ResultActivity extends BaseActivity {
                         String picPath = sdpath + "/" + appName+ "/data.png";
                         FileOutputStream out =null;
                         try {
-                           // calculate.CreatePng(picPath);
-                            // new HWPFTemplateTest().testTemplateWrite(wordPath,name.substring(0,16),"吴鹏","中科智能","00011",picPath);
+
                             calculate.GenPDF(ResultActivity.this,wordPath, "DM-3", list.get(6).substring(0, 16), list.get(4), list.get(5), list.get(3), list.get(0), list.get(1), bitmap);
                             shareWordFile(wordPath);
 

@@ -353,12 +353,12 @@ public class Calculate {
       //  canvas.drawText("测试单位：", leftMargin, titleBaseLine + 40, paint);
         canvas.drawText("测试时间："+date, leftMargin, titleBaseLine + 40, paint);
         canvas.drawText("测试人员："+people, leftMargin, titleBaseLine + 60, paint);
-        canvas.drawText("测试地点："+location, leftMargin, titleBaseLine + 80, paint);
-        canvas.drawText("电梯编号："+number, leftMargin, titleBaseLine + 100, paint);
-        canvas.drawText("补充信息：", leftMargin, titleBaseLine + 120, paint);
-        canvas.drawText("压力值："+force, leftMargin, titleBaseLine + 140, paint);
-        canvas.drawText("位移值："+dis, leftMargin, titleBaseLine + 160, paint);
-        canvas.drawBitmap(scale(bitmap, 0.4f,0.4f),leftMargin,titleBaseLine+180,paint);
+        canvas.drawText("测试地点："+location, center, titleBaseLine + 20, paint);
+        canvas.drawText("电梯编号："+number, center, titleBaseLine + 40, paint);
+        canvas.drawText("补充信息：", center, titleBaseLine + 60, paint);
+        canvas.drawText("压力值："+force, leftMargin, titleBaseLine + 80, paint);
+        canvas.drawText("位移值："+dis, center, titleBaseLine + 80, paint);
+        canvas.drawBitmap(scale(bitmap, 0.4f,0.4f),leftMargin,titleBaseLine+100,paint);
         pdfDocument.finishPage(page);  // 结束页
 
         // 输出到文件
