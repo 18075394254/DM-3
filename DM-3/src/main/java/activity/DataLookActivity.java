@@ -135,10 +135,11 @@ public class DataLookActivity extends FragmentActivity implements DataFragment.o
         LinearLayout l = new LinearLayout(this);   //l就是当前的页面的布局
 
         l.addView(surfaceView);   //加入新的view
+        Log.i("DataLookActivity","MyApplication.getWindowWidth() = "+MyApplication.getWindowWidth());
         if (MyApplication.getWindowWidth() == 720){
             l.setPadding(0, 360, 0, 0);  //设置位置
         }else if(MyApplication.getWindowWidth() == 1080){
-            l.setPadding(0, 550, 0, 0);  //设置位置
+            l.setPadding(0, 575, 0, 0);  //设置位置
         }else{
             l.setPadding(0, MyApplication.getWindowWidth()/2, 0, 0);  //设置位置
         }
