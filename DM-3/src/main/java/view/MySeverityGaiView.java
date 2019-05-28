@@ -212,7 +212,7 @@ public class MySeverityGaiView extends View {
                 //设置画笔的颜色
                 paint.setColor(Color.BLUE);
                 //位移轴坐标值
-                disValue = i * 10 + "";
+                disValue = i * 5 + "";
                 canvas.drawText(disValue, width * 7 / 8 + 50 + 10 - 15, 10 + (viewHeigth) / 10 * (10 - i), paint);
 
             }else{
@@ -268,7 +268,7 @@ public class MySeverityGaiView extends View {
         if (RateValueY != null) {
             for (int i = 0; i < RateValueY.size(); i++) {
                 float x = (width / 8 -15 + (viewWidth) / 10 * RateValueY.get(i).getX()/timeLength);
-                float y = (float) (height * 17 / 32 - (viewHeigth) / 10 * RateValueY.get(i).getY()/10);
+                float y = (float) (height * 17 / 32 - (viewHeigth) / 10 * RateValueY.get(i).getY()/5);
 
                 if (i==0){
                     Log.i("points.size ", "RateValueY2222.get(i).getX() = " + RateValueY.get(i).getX());

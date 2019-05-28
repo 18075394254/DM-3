@@ -61,7 +61,7 @@ public class UseExplainActivity extends BaseActivity implements OnPageChangeList
             startActivityForResult(intent, REQUEST_CODE);
         } catch (ActivityNotFoundException e) {
 
-            Toast.makeText(this, "Unable to pick file. Check status of file manager.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "无法打开文件，检查文件管理器的状态。", Toast.LENGTH_SHORT).show();
         }
     }
 
